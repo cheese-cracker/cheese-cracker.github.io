@@ -1,0 +1,204 @@
+# Math Methods
+
+Methods so Far
+
+## Basics
+
+- Types of Special Functions-
+    - Heaveside $\delta$ function
+    - Dirac Delta Function
+- Categorizing
+    - Volterra Vs Fredholm
+    - Linear Vs Non-Linear
+    - 1st Kind Vs 2nd Kind
+- Reusing value for solving for eigenvalue
+- Norm of function (Root of Integral of Square)
+- Solving homogenous eqn (indicial eqn) from M3
+- Solving particular eqn (operator method) from M3
+- Getting $ds$ for different coordinate systems from M1
+
+## Solving Integral Equations
+
+### Green's Function
+
+
+### 2. Hilbert Schmit Theory
+
+1. Solve for eigenvalue and eigenfunction of **homogenous integral equation**  (_As if it was completely independant_)
+2. Find Norm of eigenfuncn yn. Take $\phi_n  = \frac{y_n}{||y_n||}$
+3. Find $f_n(x) = \int_a^b F(x) \phi_n (x)$
+4. Use main equation,
+$$ y(x) + \lambda \sum_{\forall n} \frac{f_n}{\lambda_n - \lambda} \phi_n(x)$$
+
+### Successful Substitution Method
+
+### Resolvant Kernel (lambda^n with Kn; Uses Substitution)
+
+### Neumann Series (Uses Resolvant)
+
+### Fredholm Theory Determinant (Uses Neumann)
+
+### Approximation of Fredholm Integral Equation
+
+- Rules to find Diagonal Matrix D (based on points to approximate) -
+    - Trapezoid rule: h/2 1 2 ... 2 1
+    - Simpson's 1/3 rule: h/3 1 4 2 4....4 2 4 1
+    - Simpson's 1/8 rule: 3h/8 1 3 2 3 ... 1
+- Steps to Solve
+    1. h is number of divisions (based on points)
+    2. Calculate D matrix based on rule mentioned
+    3. Get K matrix by putting $K( x, \xi )$ corresponding to K( row, col)
+    4. For D*K, multiply row val of D to the K
+    5. Use Eqn,
+$$[ I - \lambda D K ] y = F(x)$$
+
+### Approximation method of undefined coefficients
+
+1. Compare $y = c_1 x^2 +c_2 x^2 ...$ as much approx as mentioned
+2. Get $\psi_i = \int_a^b K(x, xi) \phi_i(\xi) d\xi$
+3.
+$$ \sum_{i=1}^n \frac{c_i}{s_i} [ \phi_i - \lambda \psi_i] \approx F(x)$$
+
+### Method of Collocation
+
+### Galerkien's Weighting Function Method
+
+1-3 steps from Approximation of Undefined Coeffs
+
+4. Take given weights, $\Psi_1, \Psi_2, ...$ (note capital)
+5. Take,
+$$ \int_a^b [ \sum_{i=1}^{n} c_i s_i (x) - F_i(x) ] \Psi_k dx$$
+
+## Fourier Transform and Related Part
+
+See 2nd part of this[Intro to Fourier in Signals](https://youtu.be/1JnayXHhjlg) and [3blue1brown's Visualization](https://youtu.be/spUNpyF58BY). 
+
+_Without the scaling factor etc., Fourier transforms is just_
+$$ \int_{-\infty}^{\infty} A(v) \sum sine\ waves \rightarrow Fourier\ Transform$$
+_where f(x) becomes the different frequency sine waves (easier from discrete f.t.)_
+
+- Fourier Series ( Sine and Cosine Series)
+- Integral Transform = $\int K(p, x) f(x)$
+- Transform / Inverse Transform
+- Riemann Lebesgue Integral $\lim \lambda \rightarrow \infty$
+- Localization Lemma
+- Convolution Thm (Take exp inside and switch integrals)
+- Fourier Integral Transform Thm Proof
+
+### Properties of Fourier Transform
+
+1. f[ af + bg ] =
+2. f[ f(x/a) ] =
+3. f[ f(x)*e^(iax) ] =
+4. f[ f(x)*cos(bx) ] =      or f[ f(x)*sin(bx) ] =
+5. f[ f(x-a) ] =
+6. f'[ f(x) ] =
+7. F'(E) =
+8. Lim F(E) =
+9. Convolution
+
+For Sine / Cosine Transforms -
+10. Fc'(x) = - Fs (xf) or Fs'(x) = Fc (xf)
+
+### Discrete Fourier Transform
+
+$$f_d [u_j] = U_K = \sum_{j=0}^{N-1} u_j e^{\frac{-2 \pi i j K}{N}}$$
+If one element can generate all the input points (like nth roots of unity or equal phase angles) then it would most likely be that only one of the output set is non-zero.
+
+Inverse is,
+$$f_d^{-1} [U_K] = u_j = \frac{1}{K}\sum_{K=0}^{N-1} U_K e^{ \frac{2 \pi i j K}{N}}$$
+
+### Partial Diff Eqn (Differentiation of F.T.)
+
+_Temperature of infinite bar-type question_
+
+1. Solve first relation between $\frac{\partial{u}}{\partial{t}} = \frac{\partial{u}}{\partial{x}}$ or some order of that. Take $f[u] = U$
+2. Get $\frac{dU}{dt}$ term and other with derivative of standard F.T. term. Solve to get term with constant-like c(x)
+3. Take $u(x,0)$ and take F.T. like -
+    - Standard F.T.: Full plane
+    - Cosine F.T.: Half plane with 1st order P.D. wrt T
+    - Sine F.T.: Half plane with 2nd order P.D. wrt T
+4. Combine two terms to find c(x) in U
+5. Take inverse F.T. depending on which F.T. was chosen for $u(x,0)$
+
+## Calculus of Variation
+
+The playlist of
+[Khan Faculty - Calculus of Variation Intro](https://youtu.be/6HeQc7CSkZs) is useful for visualization and application.
+
+- Functional: The function of functions
+- Extremise Functional = Stationary Function (May be maximum or minimum of integration)
+- Geodesic Based Questions
+- Variational Notation: Functional I is stationary iff $\delta I = 0$
+
+### Euler-Lagrange Equation Forms
+
+Aim of Euler's Equation is to extremise the functional so as to find the maximum/minimum function of the family of functions(functional).
+Find curve in $Y = y + \epsilon \eta$. See Video for derivation.
+
+Main Euler's Equation,
+$$\frac{\partial{F}}{\partial{y}} - \frac{d}{dx}\frac{\partial{F}}{\partial{\dot{y}}} = 0$$
+
+For $y$ and $\dot{y}$ only equations (Beltrami Identity),
+$$ F - \dot{y}\frac{\partial{F}}{\partial{\dot{y}}} = const$$
+
+Variational Notation is obtained by $\delta = \epsilon \eta$.
+
+### Methods For Boundary Condition
+
+- Natural Boundary Conditions
+    - Preassigned: $y(x_1) = y_1$
+    - Not Preassigned:
+$\frac{\partial{F}}{\partial{y}}|_{x = x_1} = 0$
+
+- For Transversal Boundary Conditions,
+    1. Solve using Euler's Function
+    2. Put $y(x_1)=g(x_1)$ and $y(x_2)=g(x_2)$
+    3. Put T. conditions for equation(s) _at values_
+$$ [F + (\dot{g} - \dot{y})\frac{\partial{F}}{\partial{\dot{y}}}]|_{x=x_1} = 0$$
+    4. Solve 4 eqn 4 unknown or less
+
+### Other Methods Involved
+
+- Isoperimetric Problems
+
+    - Main Integral (I) with boundary conditions and constraint J
+    - Like Lagrange Multiplier Method,
+    - Take $H = F + \lambda G$ where I, J are integrals of F and G.
+    - Solve normally with boundary conditions and constraints for constants
+
+- Strum Liouville Problem
+    - Just a condition that can also be derived
+    - For $I_1$ and $I_2$,
+$$ \lambda = I_1/I_2 \Rightarrow \delta I_1 - \lambda \delta I_2$$
+
+### Mechanics-Based Problems
+
+- Hamiltonian Principle
+$$ \int_{t_1}^{t_2} ( \delta T + f \delta r) dr = 0$$
+- Conservative Function
+    - Force is conservative if single-valued function....
+    - Take L = T - V and,
+$$ \delta \int_{t_1}^{t_2} L dt = 0 $$ 
+- Principle of Least Action (Conservative Holonomic) where T = -V
+- Degree of Freedom, Hooke's Law, ...
+
+### Rayleigh-Ritz Method-
+
+- Part of Finite element methods like Collocation and Galerkien. First part is similar
+- Assume Trial Solution, $y(x) = c_1 \phi_1(x) + c_2 \phi_2(x)...$ (take approx based on statement)
+- If differential eqn, convert to variational form
+    - Multiply by $\delta y$
+    - Try to get $\delta$ common outside integral
+    - Sometimes by parts to make others 0
+- Solve for constants (except last) from boundary conditions
+- Take integration of F in boundary
+- Take $\frac{dI}{dc_1}$ for remaining const
+
+## Tips
+- split on Mod / Abs
+- complete square for integration
+- take derivative / find for convolution
+- Learn common convolution
+- Use by parts wherever needed
+
