@@ -63,9 +63,9 @@
 		background: #fff;
 		font-family: 'Source Sans Pro', sans-serif;
 		font-size: 19pt;
-		font-weight: 300;
+		font-weight: 400;
 		line-height: 1.75em;
-		color: #888;
+		color: #444;
 
 		&.is-loading * {
 			@include vendor('transition', 'none !important');
@@ -76,13 +76,13 @@
 	input, textarea, select {
 		font-family: 'Source Sans Pro', sans-serif;
 		font-size: 19pt;
-		font-weight: 300;
+		font-weight: 400;
 		line-height: 1.75em;
-		color: #888;
+		color: #444;
 	}
 
 	h1, h2, h3, h4, h5, h6 {
-		font-weight: 300;
+		font-weight: 400;
 		color: #000;
 		line-height: 1.5em;
 	}
@@ -118,7 +118,7 @@
 	}
 
 	strong, b {
-		font-weight: 300;
+		font-weight: 400;
 		color: #666;
 	}
 
@@ -192,7 +192,7 @@
 
 	dl {
 		dt {
-			font-weight: 300;
+			font-weight: 400;
 			color: #666;
 		}
 		dd {
@@ -529,8 +529,8 @@
 
 	#logo {
 		position: relative;
-		margin: 1.75em 1.5em 1.5em 1.5em;
-		min-height: 48px;
+		margin: .5em .5em .5em .5em;
+		min-height: 128px;
 		cursor: default;
 
 		a {
@@ -643,7 +643,7 @@
 	#main {
 		margin-left: 375px;
 		> section {
-			text-align: center;
+			text-align: left;
 		}
 		> article {
 			text-align: left;
@@ -1052,7 +1052,7 @@
 			h2 {
 				font-size: 1.5em;
 				letter-spacing: 0;
-				font-weight: 300;
+				font-weight: 400;
 			}
 
 			.container {
