@@ -4,7 +4,6 @@ author: Chinmay Hebbar (cheese-cracker)
 layout: note
 ---
 
-<link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet">
 
 
 ### Important Topics
@@ -19,8 +18,7 @@ layout: note
     - Global Stability (Appropriate Lyaponov Function)
         - Test stability by Lyapunov Funcn or any other (V) has derivative negative definate
 
-$$V(x) = x - x^* - x^*ln(\frac{x}{x^*}) 
-+ \frac{k_1}{2}(T- T^*)^2 + \frac{k_2}{2}(U-U^*)^2$$
+$$V(x) = x - x^* - x^*ln(\frac{x}{x^*}) \frac{k_1}{2}(T- T^*)^2 + \frac{k_2}{2}(U-U^*)^2$$
 $$\frac{dV}{dt} = \frac{\dot{x}}{x}( x - x^*) + other$$
 
 - Quick Finding of Eigenvalues (see Prerequisites)
