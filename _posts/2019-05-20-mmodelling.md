@@ -1,7 +1,8 @@
 ---
 title: Math Modelling
 author: Chinmay Hebbar (cheese-cracker)
-layout: note
+category: note
+layout: page
 ---
 
 

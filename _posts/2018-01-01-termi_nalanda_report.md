@@ -1,6 +1,7 @@
 ---
 layout: page
 title: KWoC- Termi-Nalanda Project Report
+category: report
 description: KWoC- Termi-nalanda project report
 ---
 
