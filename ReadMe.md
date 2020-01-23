@@ -4,4 +4,4 @@ This is the repository of cheese-cracker's github page. The website contains inf
 ##### Cheers, CH
 ---
 
-This site contains elements derived from Karl Broman's [simple site](http://kbroman.org/simple_site) (Public Domain).
+This site's theme is derived from chrisbobbe/jekyll-theme-prologue.
