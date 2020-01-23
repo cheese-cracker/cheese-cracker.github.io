@@ -16,10 +16,3 @@ order: 2
 2. Smart India Hackathon, Guwahati (Winner) - Tsunami Prediction system - admin web portal, mobile app, notification in geofenced area, message notification
 3. Yes Bank Datathon - Customer Heatmaps (with folium) on QT display, k-means clustering using pincodes
 4. NEC Hackathon - Dynamically creating bus routes based on customer demand in bus stops. Implemented using Genetic Algorithm with web network interface.
-
-##### Other Projects
- - GSoC Data Extractor
- - [Termi-Nalanda Report](pages/termi_nalanda_report.html)
- - [Perfect .Vimrc](https://github.com/cheese-cracker/perfect-vimrc)
- - [Simple Tk Text Editor](https://github.com/cheese-cracker/text_editor)
- - [Interface+ToolKit](https://github.com/cheese-cracker/Interface-Toolkit-Original)
