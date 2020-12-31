@@ -1,6 +1,6 @@
 ---
 title: Graphs and Networks
-author: Cheese-Cracker (Chinmay Hebbar)
+author: Chinmay Hebbar (cheese-cracker)
 category: note
 created: 2019-03-10
 description: graphs and networks quick notes
@@ -62,7 +62,7 @@ A --> D[Induction]
 - Non-planar
     - Euler's Formula or 5-degree or variants(girth-analysis)
     - Check any Subgraph non-planar
-    - Kuratowski and/or Wagner 
+    - Kuratowski and/or Wagner
 - If no triangles, then relation between q & r (where q unrestricted)
 
 
@@ -90,7 +90,7 @@ A --> D[Induction]
 
 ### Week Wise Review
 
-#### Week 1 
+#### Week 1
 
 - Types of Graphs
 - Graphical Sequence Algorithm
@@ -136,7 +136,7 @@ See Examples for each Case!
 - Contraction of graph, minor of a graph (Contraction)
 - Weakly/Strongly Connected
 
-##### Isomorphic Graphs 
+##### Isomorphic Graphs
 
 <div class="mermaid">
 graph LR
@@ -176,7 +176,7 @@ B --> C[Find Points Mapping]
 
 #### Week 5
 
-- Edge Based 
+- Edge Based
     - eulerian trail( _n-2 even 2 odd_ )
     - eulerian circuit (_all even_)
     - eulerian graph (contains eulerian circuit)
@@ -195,12 +195,12 @@ _Hamiltonian Cycle is just another way of saying subgraph Cn!_
 - Whitney's Thm
 
 #### Network Flows and Related Topics (Week before Midsem)
- 
+
 - Flow - flow, capacity, source, sink
 - Maximum Flow Problem :: Ford-Fulkerson Algo, Residual Graph, Augmented Paths
 - Min Cut Problem :: S-T cut, Cap(A, B), Cut where Residual Graph paths end
 - Flow value Lemma (same as out of source)
-- Max-Flow Min-Cut Thm 
+- Max-Flow Min-Cut Thm
 $$ val(f) = \sum_{out\ of\ a} f(e) - \sum_{in\ to\ a} f(e) = \sum_{out\ of\ a} f(e) = cap(A, B)$$
 - Disjoint Paths - Ford-Fulkerson with capacities all 1
 - Menger's Thm - Min no. of vertices required to be removed to disconnect u-v path

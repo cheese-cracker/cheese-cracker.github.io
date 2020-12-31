@@ -16,6 +16,8 @@ layout: default
             {%- endcapture -%}
             {%- capture _subtitle -%}
                 <!-- {% if _post.author -%}{{- _post.author }} | {% endif %} -->
+                {% if _post.caption -%}{{- _post.caption }} | {% endif %}
+                {{- _post.date | date_to_long_string -}}
             {%- endcapture -%}
             {%- include section.html title=_title subtitle=_subtitle content=_content -%}
         {%- endif -%}
