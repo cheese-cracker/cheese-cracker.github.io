@@ -30,13 +30,13 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: cheese-cracker 
+title: cheese-cracker
 subtitle: Chinmay H's Site
 description: Personal Website  # this means to ignore newlines until "baseurl:"
 author: Chinmay Hebbar
-email: mail.here@mail.com
-avatar: assets/images/chinmay_angel.jpg
-cover: assets/images/avatar.jpg
+email: 4chinmai@gmail.com
+avatar: assets/images/ChinmayPhoto.jpg
+cover: assets/images/cover.png
 
 # You'll want to customize url and baseurl for your own site:
 baseurl: "" # the subpath of your site, e.g. /blog
