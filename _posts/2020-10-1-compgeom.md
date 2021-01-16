@@ -12,7 +12,7 @@ description: Simple Notes for Computational Geometry
 <script>hljs.initHighlightingOnLoad();</script>
 
 ## Key Resources
-1. Book: Computational Geometry - Algorithms and Applications
+1. Textbook: Computational Geometry - Algorithms and Applications
 2. [Coursera Course](https://www.coursera.org/learn/computational-geometry): For the Problemset and Implementations (Till Part 5)
 3. [Philipp Kindermann](https://www.youtube.com/channel/UCuAzKw_VngkAsQh7ummYq0A/playlists?view=50&shelf_id=1)'s Lectures Series (Part 6 and Onwards)
 4. Various Random Resources found on the internet!
@@ -37,10 +37,10 @@ To learn computational geometry, these are the steps/resources I used,
     - This part is more theory oriented and covers Voronoi Diagrams, Delaunay Triangulations too.
     - Again some parts can be followed up from the book as well.
     - Recommended Prerequisite: Basic graph theory (maximal planar graph, duals), basic DSA (analyzing time complexity)
-For those interested only in the theory, I'd recommend following Philip's Lectures from week 1-10 complete, in conjunction with the Book (Comp Geom - Algorithms and Applications).
 
-The first part consists of the principles behind each problem, I did not include the complete code because I ~~wrote ugly code~~ did not want to violate coursera code of conduct.
-Second part consists of notes and pointers from Philip's Lectures which are theoritical.
+For those interested only in the theory, follow Philip's Lectures from week 1-10 complete, in conjunction with the textbook.
+First part is algorithms, this does not include complete code because I ~~wrote ugly code~~ did not want to violate coursera code of conduct.
+Second part consists of notes/pointers from Philip's Lectures which are theoritical.
 
 ##### General Implementation Aspects
 - Use slope pairs
@@ -350,12 +350,13 @@ intersect diagonal_check(vector<vertex>& poly, ll i, ll j){
 ```
 
 2\. Ear-Cutting Algorithm for Triangulation of Convex Polygons
+
 Steps -
-    1. Preprocess: If for every vertex, adjacent vertices form inner diagonal. Mark as Ear. ~O($N^2$ for diagonal_check)
-    2. Start processing ears in-order from a starting vertex (Try to maintain order in which they are checked)
-    3. Delete Current Ear Vertex from the polygon (& is_ear) vector. Insert (diagonal with adjacent verts and the pt) as a triangle.
-    4. Check if vleft, vright is a ear (~O(N))
-    5. Stop when ear-list is empty or polygon has less than 3 vertices (all vertices are done!)
+1. Preprocess: If for every vertex, adjacent vertices form inner diagonal. Mark as Ear. ~O($N^2$ for diagonal_check)
+2. Start processing ears in-order from a starting vertex (Try to maintain order in which they are checked)
+3. Delete Current Ear Vertex from the polygon (& is_ear) vector. Insert (diagonal with adjacent verts and the pt) as a triangle.
+4. Check if vleft, vright is a ear (~O(N))
+5. Stop when ear-list is empty or polygon has less than 3 vertices (all vertices are done!)
 
 Time: $O(N^3)$ (Sum of $N^2$ operations)
 
@@ -771,7 +772,7 @@ $$ CP_i = \{(x, y): R(x, y) \cap P_{i}\} $$
 Lec 3 - Characterizing Configuration Spaces
 - Minkowski's Sum (For Polygon!): $S_1+S_2=\{p + q :  \forall p \in P, q \in Q\}$ where p, q are point vectors
 - Geometric Representation: Replace Copy of S1 in every point of S2 to form the new shape. (or Vice versa; commutative)
-- Inversion in Polygon Algebra: Rotate polygon by 180 around origin. $S2 = -S1 = \{ -p | \forall p \in P \}$
+- Inversion in Polygon Algebra: Rotate polygon by 180 around origin. $S2 =-S1=\{-p : \forall p \in P\}$
 - Configuration Polygon: $CP = P + (- R(0, 0))$ (where '+' is minkowski sum)
 
 ![Configuration Polygon](/assets/plots/compgeom/minkowski_sum_of_polygons.png)
