@@ -91,7 +91,7 @@ $$\int \limits_a^b m(x)dx = \lim_{n \rightarrow \infty} \frac{|b - a|}{n} \sum_{
 So, as we make the partition intervals smaller ($\lim_{n \rightarrow \infty} \frac{1}{n}$), this sum becomes closer to the actual integral.
 
 
-> A [mid-riser or mid-tread quantizer](https://en.wikipedia.org/wiki/Quantization_(signal_processing)#Mid-riser_and_mid-tread_uniform_quantizers) in signal processing, would be analogous to a Riemann sum. The quantizer divides the signal $y(t)$ into discrete bins (and reconstructs). However, the riemann sum would divide the input $t$ into discrete bins.
+> A [mid-riser or mid-tread quantizer](https://en.wikipedia.org/wiki/Quantization_(signal_processing)#Mid-riser_and_mid-tread_uniform_quantizers) in signal processing, would be analogous to a Riemann sum except for one point. The quantizer divides the signal $y(t)$ into discrete bins (and reconstructs). However, the riemann sum would divide the input $t$ into discrete bins.
 
 <div align="center">
 <img src="/plots/des/QuantizationLevels4.png"> </img>
@@ -193,7 +193,7 @@ From this we see the mapping,
 **$j\omega$ axis for the Laplace transform $=$ unit circle for the Z transform**
 
 See [this thread](https://dsp.stackexchange.com/questions/72140/why-not-use-the-same-standard-exponentials-for-both-continuous-and-discrete-ti/72143#72143) to know more.
-Another [stackexchange thread](https://math.stackexchange.com/questions/3169159/why-define-the-z-transform-differently-from-the-laplace-transform), also points out why laplace transform cannot be defined the other way around.
+Another [stackexchange thread](https://math.stackexchange.com/questions/3169159/why-define-the-z-transform-differently-from-the-laplace-transform), also points out why the laplace transform cannot be defined the other way around.
 
 ---
 
@@ -284,3 +284,4 @@ $$ y = C_1 r_1^n + C_2 n r_2^n = C_1 e^{ln(r_1) n} + C_2 n e^{ln(r_2) n}$$
 - A [philosophical and cognitive science view](http://philsci-archive.pitt.edu/4692/1/AnalogDigitalContinuousDiscrete.pdf) of analog, digital, continuous and discrete.
 - [Baby Steps of Statistics](https://medium.com/greyatom/baby-steps-of-statistics-part-1-c76bafb30288)
 - [Fourier Transforms 101](https://medium.com/sho-jp/fourier-transform-101-part-4-discrete-fourier-transform-8fc3fbb763f3)
+- For mental models in other domains, refer [Farnam Street Blog](https://fs.blog/mental-models/) or [Super Thinking Book](https://www.goodreads.com/book/show/41181911-super-thinking)

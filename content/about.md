@@ -3,6 +3,7 @@ title: 'About'
 layout: 'about'
 type: 'about'
 hidden: true
+giscus: false
 ---
 
 
@@ -23,15 +24,17 @@ hidden: true
 #### About Me
 
 
-I am a Maths and Electonics&Instrumentation student at BITS Pilani. I aim to share useful notes and non-personal travelogues through this site.
+I am a Maths and Electonics&Instrumentation student at BITS Pilani. I aim to share useful notes and travelogues through this site.
 Feel free contact me at, [mail.here@mail.com](mailto:mail.here@mail.com) or a more [active email account](mailto:4chinmai@gmail.com).
-Also, I use ArchLinux with [awesome-copycats](https://github.com/lcpz/awesome-copycats).
+
+:computer: = ArchLinux + XFCE + awesome + [awesome-copycats](https://github.com/lcpz/awesome-copycats) + nvim
 
 ### Posts
 
+- [Discrete Vs Continuous Blogpost](http://localhost:1313/posts/discrete-vs-continuous/): Exploring the concept of discrete and continuous as a mental model.
 - [Computational Geometry Notes](/posts/compgeom/): Complete week-wise notes and resources for Computational Geometry!
 - [Unix SIG Slides](https://docs.google.com/presentation/d/1AJCzVH-kLzTQ65O0ee3LGSMUiY7p3giB8hSb2mvRLHo/edit#slide=id.g35f391192_00): Presentation on the unix command line.
-- [BITS-ACM Blog - Command Line Apps](https://blog.bitsacm.in/cli-apps/): Post highlighting useful command line programs, for better productivity on the terminal.
+- BITS-ACM Blog - Command Line Apps: Post highlighting useful command line programs, for better productivity on the terminal.
 - [Principles of Economics Notes](/posts/poe/): Simple notes outline the important concepts in the POE course.
 
 ### Projects
@@ -46,5 +49,5 @@ Also, I use ArchLinux with [awesome-copycats](https://github.com/lcpz/awesome-co
 1. IBM ML Hackathon, IISc Bangalore (Runners Up) - Logistic Regression Model with custom input feature from IBM Watson APIs - NatLang, ToneAnalyzer, Discovery
 2. Smart India Hackathon, Guwahati (Winner) - Tsunami Prediction system - admin web portal, mobile app, notification in geofenced area, message notification
 3. Yes Bank Datathon - Customer Heatmaps (with folium) on QT display, k-means clustering using pincodes
-4. NEC Hackathon - Dynamically creating bus routes based on customer demand in bus stops. Implemented using Genetic Algorithm on networkx graphs o bus routes.
+4. NEC Hackathon - Dynamically creating bus routes based on customer demand in bus stops. Implemented using genetic algorithm on bus route network graph.
 5. Myntra Hackerramp (Finalist) - Shareable wardrobe links with website and dashboard.
