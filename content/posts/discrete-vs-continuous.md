@@ -32,7 +32,8 @@ A simple intuition on continuous and discrete would give us,
 | Scattered | Unionized |
 | Set of Integers $Z$:  Distinct points on the number line | Set of Real Numbers $\Re$: Continuous line on the number line |
 | Sets being dense <small>(in any metric space)</small> |  Set is not dense <small>(in any metric space)</small>|
-| Continuous Probability Distribution | Discrete Probability Distributions |
+| Non-seperable Metric Space<small>(like discrete metric space)</small> |  Seperable Metric Space |
+| Discrete Probability Distribution | Continuous Probability Distributions |
 | Histograms | Kernel Density Estimates |
 | Digital Image Processing | Analog Image Processing |
 | Discrete Delaunay Triangulations | Continuous Voronoi Diagrams |
@@ -285,3 +286,4 @@ $$ y = C_1 r_1^n + C_2 n r_2^n = C_1 e^{ln(r_1) n} + C_2 n e^{ln(r_2) n}$$
 - [Baby Steps of Statistics](https://medium.com/greyatom/baby-steps-of-statistics-part-1-c76bafb30288)
 - [Fourier Transforms 101](https://medium.com/sho-jp/fourier-transform-101-part-4-discrete-fourier-transform-8fc3fbb763f3)
 - For mental models in other domains, refer [Farnam Street Blog](https://fs.blog/mental-models/) or [Super Thinking Book](https://www.goodreads.com/book/show/41181911-super-thinking)
+- Try to find an anology for discrete vs continuous, with separable and non-separable spaces. Good Resources: [Separable Spaces](https://en.wikipedia.org/wiki/Separable_space), [Discrete-like non-separable subspaces in separable spaces](https://math.stackexchange.com/questions/3946786/example-of-non-separable-subspace-of-a-separable-hausdorff-space), [Database of Topological Counterexamples](https://topology.jdabbs.com/properties)
