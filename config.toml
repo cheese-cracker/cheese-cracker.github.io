@@ -23,6 +23,10 @@ enableEmoji = true
 #   [[module.imports]]
 #     path = "github.com/qdzhang/hugo-notepadium-mod"  # Use module to use this theme
 
+# Set RSS to Path to "posts" folder in rss.xml file
+[outputs]
+  home = ["HTML", "RSS"]
+
 [minify]
   disableCSS = false
   disableHTML = false
