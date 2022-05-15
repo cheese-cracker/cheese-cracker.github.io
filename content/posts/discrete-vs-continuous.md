@@ -31,14 +31,14 @@ A simple intuition on continuous and discrete would give us,
 | Dotted Line  | Normal straight Line |
 | Scattered | Unionized |
 | Set of Integers $Z$:  Distinct points on the number line | Set of Real Numbers $\Re$: Continuous line on the number line |
-| Sets being dense <small>(in any metric space)</small> |  Set is not dense <small>(in any metric space)</small>|
+| Sets not dense <small>(in any metric space)</small> |  Set is dense <small>(in any metric space)</small>|
 | Non-seperable Metric Space<small>(like discrete metric space)</small> |  Seperable Metric Space |
 | Discrete Probability Distribution | Continuous Probability Distributions |
 | Histograms | Kernel Density Estimates |
 | Digital Image Processing | Analog Image Processing |
 | Discrete Delaunay Triangulations | Continuous Voronoi Diagrams |
 | Discrete Time Signals | Continuous Time Signals |
-| Area under a continuous curve | Sum of many discrete rectangles|
+| Sum of many discrete rectangles | Area under a continuous curve |
 | Discrete Factorials | Continuous Gamma Function |
 | Discrete Transforms | Continuous Transforms |
 | Discrete Recurrence Relations | Continuous Differential Equations |
