@@ -1,1 +1,2371 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tags on A House of Ideas</title><link>https://cheese-cracker.github.io/tags/</link><description>Recent content in Tags on A House of Ideas</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>©2022 cheese-cracker</copyright><lastBuildDate>Wed, 26 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://cheese-cracker.github.io/tags/index.xml" rel="self" type="application/rss+xml"/></channel></rss>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tags on A House of Ideas</title><link>https://cheese-cracker.github.io/tags/</link><description>Recent content in Tags on A House of Ideas</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>©2022 cheese-cracker</copyright><lastBuildDate>Wed, 26 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://cheese-cracker.github.io/tags/index.xml" rel="self" type="application/rss+xml"/><item><title>Discrete Vs Continuous</title><link>https://cheese-cracker.github.io/posts/discrete-vs-continuous/</link><pubDate>Wed, 26 Jan 2022 00:00:00 +0000</pubDate><guid>https://cheese-cracker.github.io/posts/discrete-vs-continuous/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>In this post, we delve into the &lt;strong>mental model&lt;/strong> (or abstract feeling) of things being &lt;strong>continuous Vs discrete&lt;/strong>.
+In the direction of continuous vs discrete ideas, we look into signal processing, numerical methods and random ideas.&lt;/p>
+&lt;div align="center">
+&lt;img height="300" src="https://cheese-cracker.github.io/plots/des/DvsC.jpg"> &lt;/img>
+&lt;p>&lt;small> Poster originally by mathbytori.blogspot.com &lt;/small>&lt;/p>
+&lt;/div>
+&lt;blockquote>
+&lt;p>Throughout this post, the terms &amp;lsquo;discrete&amp;rsquo; and &amp;lsquo;continuous&amp;rsquo; are somewhat loosely defined.&lt;/p>
+&lt;/blockquote>
+&lt;p>A simple intuition on continuous and discrete would give us,&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th style="text-align:center">Discrete&lt;/th>
+&lt;th style="text-align:center">Continuous&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td style="text-align:center">Distinct, seperate and countable&lt;/td>
+&lt;td style="text-align:center">Fluid, mostly singular&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Dotted Line&lt;/td>
+&lt;td style="text-align:center">Normal straight Line&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Scattered&lt;/td>
+&lt;td style="text-align:center">Unionized&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Set of Integers $Z$: Distinct points on the number line&lt;/td>
+&lt;td style="text-align:center">Set of Real Numbers $\Re$: Continuous line on the number line&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Sets not being dense &lt;small>(in any metric space)&lt;/small>&lt;/td>
+&lt;td style="text-align:center">Set is dense &lt;small>(in any metric space)&lt;/small>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Non-seperable Metric Space&lt;small>(like discrete metric space)&lt;/small>&lt;/td>
+&lt;td style="text-align:center">Seperable Metric Space&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Discrete Probability Distribution&lt;/td>
+&lt;td style="text-align:center">Continuous Probability Distributions&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Histograms&lt;/td>
+&lt;td style="text-align:center">Kernel Density Estimates&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Digital Image Processing&lt;/td>
+&lt;td style="text-align:center">Analog Image Processing&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Discrete Delaunay Triangulations&lt;/td>
+&lt;td style="text-align:center">Continuous Voronoi Diagrams&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Discrete Time Signals&lt;/td>
+&lt;td style="text-align:center">Continuous Time Signals&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Sum of many discrete rectangles&lt;/td>
+&lt;td style="text-align:center">Area under a continuous curve&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Discrete Factorials&lt;/td>
+&lt;td style="text-align:center">Continuous Gamma Function&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Discrete Transforms&lt;/td>
+&lt;td style="text-align:center">Continuous Transforms&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td style="text-align:center">Discrete Recurrence Relations&lt;/td>
+&lt;td style="text-align:center">Continuous Differential Equations&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;blockquote>
+&lt;p>A common trend to notice is that &lt;strong>discrete&lt;/strong> things tend to take a &lt;strong>finite or countable&lt;/strong> set of values.&lt;/p>
+&lt;/blockquote>
+&lt;hr>
+&lt;h2 id="discrete-signals-vs-continuous-signals">Discrete Signals Vs Continuous Signals&lt;/h2>
+&lt;p>Moving to more concrete definitions,
+Let us take the example of Continuous vs Discrete in the context of Signals.
+This divides us into four parts shown below,&lt;/p>
+&lt;div align="center">
+&lt;img height="400" src="https://cheese-cracker.github.io/plots/des/4SignalDiagram.jpg" alt="Four Divisions of Signals"> &lt;/img>
+&lt;p>&lt;small> Clockwise: CT Analog, CT Digital, DT Digital, DT Analog&lt;/small>&lt;/p>
+&lt;/div>
+&lt;p>The differentiating factors are,&lt;/p>
+&lt;ul>
+&lt;li>Discrete time (DT) Vs Continuous time (CT)&lt;/li>
+&lt;li>Analog signal Vs Digital signal&lt;/li>
+&lt;/ul>
+&lt;p>Here, digital signal and analog signals are both continuous in time but the
+CT digital signal has only a discrete set of values for the ouput $y(t)$.&lt;/p>
+&lt;blockquote>
+&lt;p>In this post, the ideas of &amp;lsquo;digital&amp;rsquo; and &amp;lsquo;discrete&amp;rsquo; may be mixed because &amp;lsquo;digital&amp;rsquo; signals are still discrete in the y-axis.&lt;/p>
+&lt;/blockquote>
+&lt;hr>
+&lt;h2 id="area-under-a-continuous-curve-vs-sum-of-many-discrete-rectangles">Area under a Continuous Curve Vs Sum of many Discrete Rectangles&lt;/h2>
+&lt;p>Considering the area under the curve for any continuous function $y(t)$,
+the area is given by $\int_{t_0}^{t_n} y(t)$&lt;/p>
+&lt;p>However, if we consider the digital equivalent of this function (by quantizing the input), the area under the curve can just be the sum of distinct rectangles.&lt;/p>
+&lt;p>So we get,
+$\int_{t_0}^{t_n} y(t) = \sum_{i=0}^{n-1} y(t_i)$.&lt;/p>
+&lt;div align="center">
+&lt;img height="300" src="https://cheese-cracker.github.io/plots/des/MidRiemann2.svg"> &lt;/img>
+&lt;p>&lt;small> Wikipedia: Riemann Sum (taking midpoints)&lt;/small>&lt;/p>
+&lt;/div>
+&lt;p>Taking the value at each midpoints and summing the rectangles we get,
+$$\int \limits_a^b m(x)dx = \lim_{n \rightarrow \infty} \frac{|b - a|}{n} \sum_{k = 1}^{n} m(a + k \frac{|b - a|}{2n})$$
+So, as we make the partition intervals smaller ($\lim_{n \rightarrow \infty} \frac{1}{n}$), this sum becomes closer to the actual integral.&lt;/p>
+&lt;blockquote>
+&lt;p>A &lt;a href="https://en.wikipedia.org/wiki/Quantization_%28signal_processing%29#Mid-riser_and_mid-tread_uniform_quantizers"target="_blank" rel="noopener">mid-riser or mid-tread quantizer&lt;/a> in signal processing, would be analogous to a Riemann sum except for one point. The quantizer divides the signal $y(t)$ into discrete bins (and reconstructs). However, the riemann sum would divide the input $t$ into discrete bins.&lt;/p>
+&lt;/blockquote>
+&lt;div align="center">
+&lt;img src="https://cheese-cracker.github.io/plots/des/QuantizationLevels4.png"> &lt;/img>
+&lt;p>&lt;small> Wikipedia: Quantization of Signal with 4 Levels&lt;/small>&lt;/p>
+&lt;/div>
+&lt;p>Instead of partitioning the continuous function into &lt;strong>rectangles&lt;/strong>, we could take the function values at two points and break it into &lt;strong>trapezoids&lt;/strong>. (Trapezoidal Rule)&lt;/p>
+&lt;div align="center">
+&lt;img height="300" src="https://cheese-cracker.github.io/plots/des/TrapRiemann2.png"> &lt;/img>
+&lt;p>&lt;small> Wikipedia: Trapezoidal Rule &lt;/small>&lt;/p>
+&lt;/div>
+&lt;p>Similarly, we can approximate with even more function points to get the other &lt;a href="https://en.wikipedia.org/wiki/Newton%E2%80%93Cotes_formulas"target="_blank" rel="noopener">Newton Cotes Formulas&lt;/a>.&lt;/p>
+&lt;p>So, all these summations functions are approximations to integrations (each with a same or faster convergence).&lt;/p>
+&lt;hr>
+&lt;h2 id="discrete-factorials-vs-continuous-gamma-function">Discrete Factorials Vs Continuous Gamma Function&lt;/h2>
+&lt;p>Considering another seqn of numbers,
+$$1, 1, 2, 6, 24, 120, 720 &amp;hellip;$$
+Can you guess the sequence?&lt;/p>
+&lt;p>For any given sequence in $N$, there will always be infinitely many continuous functions in $\Re$, that satisfy the sequence.&lt;/p>
+&lt;p>But one special function that represents this is the &lt;strong>gamma&lt;/strong> function,
+$$ \Gamma(z) = \int_0^{\infty} x^{z-1} e^{-x}dx$$&lt;/p>
+&lt;p>Here,
+$$ \Gamma (n + 1) = n!$$
+thus captures the &lt;strong>factorial function&lt;/strong>.&lt;/p>
+&lt;p>(Note that however the gamma function is continuous only in $\Re^{+}$.)&lt;/p>
+&lt;p>For many sequences which are a discrete recurrence relation, a continuous generating function can be also found.&lt;/p>
+&lt;hr>
+&lt;h2 id="discrete-vs-continuous---fourier-like-transforms">Discrete Vs Continuous - Fourier-Like Transforms&lt;/h2>
+&lt;p>Another interesting and useful concept when dealing with signal processing, is the &lt;strong>fourier transforms&lt;/strong>.
+It is a very essential way to transfer a random signal (think square, triangular, wavy, crazy or any time-based oscillation)
+into a mixture of sine ways of different frequencies.
+3blue1brown has an amazing &lt;a href="https://odysee.com/@3Blue1Brown:b/but-what-is-the-fourier-transform-a:b"target="_blank" rel="noopener">visual introduction to the fourier transform&lt;/a>.&lt;/p>
+&lt;p>When considering fourier transforms, there are numerous generalization for different signals.
+The types of transform depends on the 4 differentiating factors,&lt;/p>
+&lt;ol>
+&lt;li>Discrete Signal or Continuous Signal&lt;/li>
+&lt;li>Periodic Signal or Aperiodic (Infinite Period) Signal&lt;/li>
+&lt;li>Transform or Inverse Transform (Analysis or Synthesis)&lt;/li>
+&lt;li>Imaginary exponent Vs Complex(re + im) exponent in equation&lt;/li>
+&lt;/ol>
+&lt;p>Considering the &lt;strong>normal transform in real domain&lt;/strong>, varying points &lt;strong>1&lt;/strong> and &lt;strong>2&lt;/strong>, we get the following table,&lt;/p>
+&lt;div align="center">
+&lt;img height="250" src="https://cheese-cracker.github.io/plots/des/SeriesVsTransform.png"> &lt;/img>
+&lt;p>&lt;small> Fourier Series Vs Fourier Transform&lt;/small>&lt;/p>
+&lt;/div>
+&lt;p>Similar to the CTFT and DTFT, there is also inverse CTFT and inverse DTFT.
+This &lt;a href="https://medium.com/sho-jp/fourier-transform-101-part-4-discrete-fourier-transform-8fc3fbb763f3"target="_blank" rel="noopener">article&lt;/a> has a nice table,&lt;/p>
+&lt;div align="center">
+&lt;img height="500" src="https://cheese-cracker.github.io/plots/des/Medium-FT.jpeg"> &lt;/img>
+&lt;p>&lt;small> Medium: Fourier Transform Table&lt;/small>&lt;/p>
+&lt;p>&lt;small>&amp;lsquo;Complex Fourier Series&amp;rsquo; is the same as &amp;lsquo;Continuous Time Fourier Series&amp;rsquo;&lt;/small>&lt;/p>
+&lt;/div>
+&lt;p>Switching the last parameter &lt;strong>4&lt;/strong> from purely imaginary to complex exponents, give us
+two new transforms -&lt;/p>
+&lt;ul>
+&lt;li>Laplace Transform (Continuous Domain)&lt;/li>
+&lt;li>Z - Transform (Discrete Domain)&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>In the transforms, the real component gives us the $e^x$ curves and the complex exponent gives us the $e^{ix} = cos(x) + isin(x)$ curves.&lt;/p>
+&lt;/blockquote>
+&lt;h4 id="an-ugly-inconsistency">An ugly inconsistency&lt;/h4>
+&lt;p>Considering the laplace transform to be,
+$$ X(s) = \int_{-\infty}^{\infty} x(t) e^{-st} dt $$
+An intuitive definition of Z-transform would be,
+$$ X(z) = \sum_{-\infty}^{\infty} x[n] e^{-zn} $$
+where z just like s would be defined by $z = \sigma + i\omega$&lt;/p>
+&lt;p>Unfortunately, due to ease of usage in digital signal processing the definition of z-transform was made rather unintuitive.
+Hence, it is given by,
+$$X(z) = \sum_{-\infty}^{\infty} x[n] z^{n} $$
+where $z = e^{sT}$ (instead of $z=sT$)&lt;/p>
+&lt;p>From this we see the mapping,&lt;/p>
+&lt;p>&lt;strong>$j\omega$ axis for the Laplace transform $=$ unit circle for the Z transform&lt;/strong>&lt;/p>
+&lt;p>See &lt;a href="https://dsp.stackexchange.com/questions/72140/why-not-use-the-same-standard-exponentials-for-both-continuous-and-discrete-ti/72143#72143"target="_blank" rel="noopener">this thread&lt;/a> to know more.
+Another &lt;a href="https://math.stackexchange.com/questions/3169159/why-define-the-z-transform-differently-from-the-laplace-transform"target="_blank" rel="noopener">stackexchange thread&lt;/a>, also points out why the laplace transform cannot be defined the other way around.&lt;/p>
+&lt;hr>
+&lt;h2 id="discrete-recurrence-relations-vs-continuous-differential-equations">Discrete Recurrence Relations Vs Continuous Differential Equations&lt;/h2>
+&lt;p>Consider two alien species in two different planets with no natural predators
+and sufficient resources to grow.&lt;/p>
+&lt;ol>
+&lt;li>The first alien species breeds naturally with its growth twice its current population (population growth rate 200%).&lt;/li>
+&lt;li>The second alien species reproduces using binary fission. So, one alien essentially splits into two new alien creatures. And all the alien species undergoes this binary fission every new years&amp;rsquo; eve.&lt;/li>
+&lt;/ol>
+&lt;p>Both these cases could be modelled as,&lt;/p>
+&lt;ol>
+&lt;li>$y&amp;rsquo; = 2y$ where $y$ is the population, and $y&amp;rsquo;$ is it&amp;rsquo;s derivative (the population growth rate).&lt;/li>
+&lt;li>$a_n = 2 a_{n-1}$ where $a_n$ is the population in year $n$&lt;/li>
+&lt;/ol>
+&lt;p>Notice that in case of &lt;strong>alien species no. 1&lt;/strong> we are modelling it as a &lt;strong>continuous differential equation&lt;/strong> whereas in the case of &lt;strong>alien species no. 2&lt;/strong> we are modelling it as a &lt;strong>discrete recurrence relation&lt;/strong>.&lt;/p>
+&lt;p>In case of alien species no. 1,
+we have to solve the differential equation which gives us,
+$$y = a_0 e^{2t}$$
+where $a_0$ is a constant representing the original population of aliens.&lt;/p>
+&lt;p>So if there where 1 million aliens, originally,
+there would $e^2 \approx 7.34$ million aliens after just one year.&lt;/p>
+&lt;p>For alien species no. 2,
+it is relatively straightforward to see that a population of 1 million aliens would be 2 million after the first year.&lt;/p>
+&lt;p>It is also intuitive to notice that after any $n$ years the solution to this is,
+$$ a_n = a_0 2^n $$&lt;/p>
+&lt;p>This similarity between the population growth equations can be seen better by modelling the recurrence relation as an diferential equation.&lt;/p>
+&lt;p>Consider the population after 3 years, it is 4 times the population after year 1 so,&lt;/p>
+&lt;p>$$a_3 = 2 * ( 2 * a_1 )$$
+$$a_3 - a_1 = (2^2 - 1) a_1$$&lt;/p>
+&lt;p>So from this we could say for any general points a_{n+k} and a_n,&lt;/p>
+&lt;p>$$ \Delta y \approx \Delta a_n = a_{n + k} - a_n = (2^k - 1) * a_n $$
+$$ \Delta t \approx \Delta n = (n + k) - n = k $$&lt;/p>
+&lt;p>$$ \lim_{\Delta n \rightarrow 0} \frac{\Delta a_n}{\Delta n} = \lim_{\Delta k \rightarrow 0 } \frac{(2^k - 1) * a_n}{k}$$&lt;/p>
+&lt;p>Taking derivative on both numerator and denominator with the &lt;a href="https://en.wikipedia.org/wiki/L%27H%C3%B4pital%27s_rule"target="_blank" rel="noopener">El &amp;lsquo;Hospital&amp;rsquo; rule&lt;/a>,&lt;/p>
+&lt;p>$$ \lim_{\Delta n \rightarrow 0} \frac{\Delta a_n}{ \Delta n} = ln(2) a_n $$&lt;/p>
+&lt;p>Modelling $a_n$ as $y$ and $n$ as $t$ we have,&lt;/p>
+&lt;p>$$ y&amp;rsquo; = ln(2) y $$
+$$ y = a_0 e^{ln(2) t} = a_0 2^t $$&lt;/p>
+&lt;p>Or better expressed as,&lt;/p>
+&lt;p>$$ a_n = a_0 2^n $$&lt;/p>
+&lt;p>Another way to look at the two alien species is that,&lt;/p>
+&lt;ol>
+&lt;li>The 1st alien species is a 100% compound interest which is &lt;a href="https://en.wikipedia.org/wiki/Compound_interest#Continuous_compounding"target="_blank" rel="noopener">continuous compounded&lt;/a>.&lt;/li>
+&lt;li>The 2nd alien species is a 100% compound interest which is compounded annually.&lt;/li>
+&lt;/ol>
+&lt;p>Note that instead if we take any other coeffecient too this would work!&lt;/p>
+&lt;h4 id="for-2nd-order-and-above">For 2nd Order and above&lt;/h4>
+&lt;p>It also works similarly for second order differential equations and second order recurrence relations.
+The technique to solve 2nd order ODE and 2nd order RR are the same,&lt;/p>
+&lt;ol>
+&lt;li>Put the solution as $y = C_0 e^{rt}$ or $a_n = \alpha^n = e^{ln(\alpha)n}$&lt;/li>
+&lt;li>Solve the quadratic equation or &amp;ldquo;characteristic equation&amp;rdquo; that transpires to get the general solution&lt;/li>
+&lt;li>Find the particular solution, this could be with the help of specific boundary conditions etc. and combine.&lt;/li>
+&lt;/ol>
+&lt;p>Without getting into too much detail,
+For the general solution of 2nd order ODE with distinct roots,
+$$ y = C_1 e^{r_1 t} + C_2 e^{r_2 t}$$
+and for repeated root,
+$$ y = C_1 e^{r_1 t} + C_2 t e^{r_2 t}$$&lt;/p>
+&lt;p>For the general solution of a 2nd order recurrence relation with distinct roots,
+$$ y = C_1 r_1^n + C_2 r_2^n = C_1 e^{ln(r_1) n} + C_2 e^{ln(r_2) n}$$
+and for repeated root,
+$$ y = C_1 r_1^n + C_2 n r_2^n = C_1 e^{ln(r_1) n} + C_2 n e^{ln(r_2) n}$$&lt;/p>
+&lt;h2 id="other-interesting-references">Other Interesting References&lt;/h2>
+&lt;ul>
+&lt;li>Can&amp;rsquo;t find a &lt;a href="https://math.stackexchange.com/questions/126803/generating-function-for-the-factorial-sequence"target="_blank" rel="noopener">generating function for factorials&lt;/a>&lt;/li>
+&lt;li>A &lt;a href="http://philsci-archive.pitt.edu/4692/1/AnalogDigitalContinuousDiscrete.pdf"target="_blank" rel="noopener">philosophical and cognitive science view&lt;/a> of analog, digital, continuous and discrete.&lt;/li>
+&lt;li>&lt;a href="https://medium.com/greyatom/baby-steps-of-statistics-part-1-c76bafb30288"target="_blank" rel="noopener">Baby Steps of Statistics&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://medium.com/sho-jp/fourier-transform-101-part-4-discrete-fourier-transform-8fc3fbb763f3"target="_blank" rel="noopener">Fourier Transforms 101&lt;/a>&lt;/li>
+&lt;li>For mental models in other domains, refer &lt;a href="https://fs.blog/mental-models/"target="_blank" rel="noopener">Farnam Street Blog&lt;/a> or &lt;a href="https://www.goodreads.com/book/show/41181911-super-thinking"target="_blank" rel="noopener">Super Thinking Book&lt;/a>&lt;/li>
+&lt;li>Try to find an anology for discrete vs continuous, with separable and non-separable spaces. Good Resources: &lt;a href="https://en.wikipedia.org/wiki/Separable_space"target="_blank" rel="noopener">Separable Spaces&lt;/a>, &lt;a href="https://math.stackexchange.com/questions/3946786/example-of-non-separable-subspace-of-a-separable-hausdorff-space"target="_blank" rel="noopener">Discrete-like non-separable subspaces in separable spaces&lt;/a>, &lt;a href="https://topology.jdabbs.com/properties"target="_blank" rel="noopener">Database of Topological Counterexamples&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Computational Geometry</title><link>https://cheese-cracker.github.io/posts/compgeom/</link><pubDate>Thu, 01 Oct 2020 00:00:00 +0000</pubDate><guid>https://cheese-cracker.github.io/posts/compgeom/</guid><description>&lt;h2 id="key-resources">Key Resources&lt;/h2>
+&lt;ol>
+&lt;li>Textbook: Computational Geometry - Algorithms and Applications&lt;/li>
+&lt;li>&lt;a href="https://www.coursera.org/learn/computational-geometry"target="_blank" rel="noopener">Coursera Course&lt;/a>: For the Problemset and Implementations (Till Part 5)&lt;/li>
+&lt;li>&lt;a href="https://www.youtube.com/channel/UCuAzKw_VngkAsQh7ummYq0A/playlists?view=50&amp;amp;shelf_id=1"target="_blank" rel="noopener">Philipp Kindermann&lt;/a>&amp;rsquo;s Lectures Series (Part 6 and Onwards)&lt;/li>
+&lt;li>Various Random Resources found on the internet!
+&lt;ul>
+&lt;li>&lt;a href="https://geomalgorithms.com/"target="_blank" rel="noopener">Geom Algorithms&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://cp-algorithms.com/"target="_blank" rel="noopener">CP Algorithms&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="further-reading--interesting-resources">Further Reading / Interesting Resources&lt;/h4>
+&lt;ul>
+&lt;li>&lt;a href="https://observablehq.com/@mbostock/to-infinity-and-back-again?collection=@observablehq/algorithms"target="_blank" rel="noopener">ObservableHQ - Infinity and Back Again&lt;/a>: Voronoi Diagrams for Infinite Polygons&lt;/li>
+&lt;li>Book: Foundations of Multidimensional and Metric Data Structures - Hanen Samet (2006)&lt;/li>
+&lt;li>&lt;a href="https://www.youtube.com/playlist?list=PL8FaHk7qbOD4F7nPFfgD0dGdLos1uhUPg"target="_blank" rel="noopener">Josh Hug&amp;rsquo;s Lectures on Multidimensional Data&lt;/a>: Good intuition on k-d trees and quad trees.&lt;/li>
+&lt;li>&lt;a href="https://www.wias-berlin.de/software/tetgen/features.html"target="_blank" rel="noopener">TestGen&lt;/a>: Voronoi Diagrams and Delaunay Tetrahedralizations for 3D Points. Software&lt;/li>
+&lt;li>&lt;a href="https://flylib.com/books/en/2.587.1.38/1/"target="_blank" rel="noopener">Generalization of Voronoi Diagrams&lt;/a>: Originally from a book on (Geometric Data Structures for Computer Graphics, 2005)&lt;/li>
+&lt;/ul>
+&lt;h2 id="overview">Overview&lt;/h2>
+&lt;p>To learn computational geometry, these are the steps/resources I used,&lt;/p>
+&lt;ol>
+&lt;li>Week 1 - Week 5: Coursera - Computational Geometry
+&lt;ul>
+&lt;li>For theory, read from book and/or random resources off the internet. Philipp&amp;rsquo;s lectures are also available for this.&lt;/li>
+&lt;li>Focus on the problemset for the course.&lt;/li>
+&lt;li>Recommended Prerequisite: Good understanding and practice of DSA. Some of the problems have tons of edge cases!&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Week 6 - Week 10: Philipp Kindermann&amp;rsquo;s Lecture Series
+&lt;ul>
+&lt;li>This part is more theory oriented and covers Voronoi Diagrams, Delaunay Triangulations too.&lt;/li>
+&lt;li>Again some parts can be followed up from the book as well.&lt;/li>
+&lt;li>Recommended Prerequisite: Basic graph theory (maximal planar graph, duals), basic DSA (analyzing time complexity)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h5 id="general-implementation-aspects">General Implementation Aspects&lt;/h5>
+&lt;ul>
+&lt;li>Use slope pairs&lt;/li>
+&lt;li>Triangle orientation check (sign of area)&lt;/li>
+&lt;li>Sum of area of triangles to form interior&lt;/li>
+&lt;li>Ray out of a point inside intersects polygon odd times&lt;/li>
+&lt;li>Check line segment intersections by checking orientation of each of the four points (not two!)&lt;/li>
+&lt;li>It also helps to plot sample testcases for debugging&lt;/li>
+&lt;li>Modulo to cyclicly iterate through points of a Polygon&lt;/li>
+&lt;li>Carefully inspect, input/output format as well as edge cases&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// My Header - (Used mostly STL instead of OOP)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#ff79c6">#define ll long long
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define x first
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">#define y second
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">&lt;/span>&lt;span style="color:#ff79c6">typedef&lt;/span> pair&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll,ll&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> vertex;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">typedef&lt;/span> pair&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll,ll&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> point;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">typedef&lt;/span> pair&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>&lt;span style="color:#8be9fd">double&lt;/span>, &lt;span style="color:#8be9fd">double&lt;/span>&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> ppoint;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">const&lt;/span> ppoint INF_POINT &lt;span style="color:#ff79c6">=&lt;/span> {&lt;span style="color:#bd93f9">2e9&lt;/span>, &lt;span style="color:#bd93f9">2e9&lt;/span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">const&lt;/span> &lt;span style="color:#8be9fd">double&lt;/span> EPS &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1e-16&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="week-1">Week 1&lt;/h2>
+&lt;p>1. Point and Vector (Triangle Sign Check)&lt;/p>
+&lt;p>This will be used in most future problems as well. The most generalized template is below. Note that &lt;code>area&lt;/code> is actually twice the actual area.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> &lt;span style="color:#50fa7b">trisign&lt;/span>(ppoint a, ppoint b, ppoint pt){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">double&lt;/span> area &lt;span style="color:#ff79c6">=&lt;/span> a.x &lt;span style="color:#ff79c6">*&lt;/span> b.y &lt;span style="color:#ff79c6">+&lt;/span> b.x &lt;span style="color:#ff79c6">*&lt;/span> pt.y &lt;span style="color:#ff79c6">+&lt;/span> pt.x &lt;span style="color:#ff79c6">*&lt;/span> a.y &lt;span style="color:#ff79c6">-&lt;/span> a.y &lt;span style="color:#ff79c6">*&lt;/span> b.x &lt;span style="color:#ff79c6">-&lt;/span> b.y &lt;span style="color:#ff79c6">*&lt;/span> pt.x &lt;span style="color:#ff79c6">-&lt;/span> pt.y &lt;span style="color:#ff79c6">*&lt;/span> a.x;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span>(area &lt;span style="color:#ff79c6">&amp;gt;&lt;/span> EPS){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }&lt;span style="color:#ff79c6">else&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span>(area &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> &lt;span style="color:#ff79c6">-&lt;/span>EPS){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>2. Point in Triangle&lt;/p>
+&lt;p>Principle is the sum of the 3 individual triangles (2 vertices, 1 point) would be equal to total area (3 vertices).&lt;/p>
+&lt;p>3. Point in Polygon&lt;/p>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/compgeom/point_in_polygon_ray.jpg">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/compgeom/point_in_polygon_ray.jpg" width="auto" height="auto"
+alt="Point in Polygon with ray from infinity"/>&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>Take ray from point to infinity&lt;/li>
+&lt;li>Check intersection with each line segment O(N)&lt;/li>
+&lt;li>Parity of the number of intersection determine inside(odd) or outside(even)&lt;/li>
+&lt;li>Ignore if line segment coincides with the ray.&lt;/li>
+&lt;/ul>
+&lt;p>This is used again in future problems like 4-1/4-2.
+Draw a ray from &lt;code>P&lt;/code> to &lt;code>INF_POINT&lt;/code>. Check the if the no. of intersections are odd or even.
+Make sure an endpoint is not counted twice - that&amp;rsquo;s why &lt;strong>semi-open interval&lt;/strong> is checked (&lt;code>semi_check_intersect&lt;/code>).&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">bool&lt;/span> &lt;span style="color:#50fa7b">inbetween&lt;/span>(ppoint a, ppoint midd, ppoint b){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">double&lt;/span> minx &lt;span style="color:#ff79c6">=&lt;/span> min(a.x, b.x);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">double&lt;/span> miny &lt;span style="color:#ff79c6">=&lt;/span> min(a.y, b.y);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">double&lt;/span> maxx &lt;span style="color:#ff79c6">=&lt;/span> max(a.x, b.x);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">double&lt;/span> maxy &lt;span style="color:#ff79c6">=&lt;/span> max(a.y, b.y);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> (minx &lt;span style="color:#ff79c6">&amp;lt;=&lt;/span> midd.x &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> midd.x &lt;span style="color:#ff79c6">&amp;lt;=&lt;/span> maxx) &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> (miny &lt;span style="color:#ff79c6">&amp;lt;=&lt;/span> midd.y &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> midd.y &lt;span style="color:#ff79c6">&amp;lt;=&lt;/span> maxy);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Only check semi-interval [s1, s2) intersection [d1, d2]
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#8be9fd">bool&lt;/span> &lt;span style="color:#50fa7b">semi_check_intersect&lt;/span>(ppoint d1, ppoint d2, ppoint s1, ppoint s2){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> s1_side &lt;span style="color:#ff79c6">=&lt;/span> trisign(d1, d2, s1);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> s2_side &lt;span style="color:#ff79c6">=&lt;/span> trisign(d1, d2, s2);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> d1_side &lt;span style="color:#ff79c6">=&lt;/span> trisign(s1, s2, d1);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> d2_side &lt;span style="color:#ff79c6">=&lt;/span> trisign(s1, s2, d2);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span>(s1_side&lt;span style="color:#ff79c6">*&lt;/span>s2_side &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> d1_side&lt;span style="color:#ff79c6">*&lt;/span>d2_side &lt;span style="color:#ff79c6">&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// If segment lies completely inside we can ignore it; So check if strictly only s1 is present
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">return&lt;/span> (inbetween(d1, s1, d2) &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#ff79c6">!&lt;/span>inbetween(d1, s2, d2));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }&lt;span style="color:#ff79c6">else&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span>(s1_side&lt;span style="color:#ff79c6">*&lt;/span>s2_side &lt;span style="color:#ff79c6">&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span> &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> d1_side &lt;span style="color:#ff79c6">*&lt;/span> d2_side &lt;span style="color:#ff79c6">&amp;lt;=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">bool&lt;/span> &lt;span style="color:#50fa7b">point_in_polygon&lt;/span>(vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>vertex&lt;span style="color:#ff79c6">&amp;gt;&amp;amp;&lt;/span> poly, pair&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>&lt;span style="color:#8be9fd">double&lt;/span>, &lt;span style="color:#8be9fd">double&lt;/span>&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> p){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> ray_intersects &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> n &lt;span style="color:#ff79c6">=&lt;/span> (&lt;span style="color:#8be9fd">int&lt;/span>)poly.size();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">for&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> k &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>; k &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> n; &lt;span style="color:#ff79c6">++&lt;/span>k){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ray_intersects &lt;span style="color:#ff79c6">+=&lt;/span> semi_check_intersect(p, INF_POINT, poly[k], poly[(k&lt;span style="color:#ff79c6">+&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>) &lt;span style="color:#ff79c6">%&lt;/span> n]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span>(ray_intersects &lt;span style="color:#ff79c6">%&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span> &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }&lt;span style="color:#ff79c6">else&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>4. Points in Convex Polygon&lt;/p>
+&lt;p>The steps I used were as follows -&lt;/p>
+&lt;ul>
+&lt;li>Get Centroid: Choose 3 non-colinear points (&lt;code>trisign&lt;/code>)&lt;/li>
+&lt;li>Sort by Angle: Array of pairs &lt;code>slope_pairs&lt;/code> which stores &lt;code>{atan2(points[i].y - centroid.y, points[i].x - centroid.x), i}&lt;/code> and then sort.&lt;/li>
+&lt;li>Binary Search by Angle (Helper Function): &lt;code>pair&amp;lt;ll, ll&amp;gt; binsearch_angle(vector&amp;lt;pair&amp;lt;double,ll&amp;gt;&amp;gt;&amp;amp; angle_pair, double angle_val)&lt;/code> gives the pair of indices of the two vertices.&lt;/li>
+&lt;li>Check in triangle: Use the previous part to check if point in the triangle given by &lt;code>binsearch_angle&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h2 id="week-2">Week 2&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>Convex Hull Algorithms&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Graham Scan&lt;/p>
+&lt;ol>
+&lt;li>Initialize a pair of points in S&lt;/li>
+&lt;li>Add new point&lt;/li>
+&lt;li>Check if orientation of (n-2)nd point with ((n-3)rd, nth) point is left(ccw)/right(cw) (and 0)&lt;/li>
+&lt;li>Else pop the 2nd last point&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>Andrew&amp;rsquo;s (Preferred - NlogN for sort)&lt;/p>
+&lt;ol>
+&lt;li>Take line (leftmost or minx) point &amp;amp; (rightmost or maxx) point&lt;/li>
+&lt;li>Sort Points in x-coords&lt;/li>
+&lt;li>Partition all other points (by orientation) into Lower or Upper according to below/above the partition line. (stable or resort)&lt;/li>
+&lt;li>Run Graham Scan and pop 2nd last element if right(for Upper Partition) or left(for Lower Partition)&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;p>Points to Note: - Andrew&amp;rsquo;s Scan can also be thought similar to a sweep line - At every event point(p) check orientation of last point in S(n) wrt to S(n-1) and p - Convex Hull can also be used for other polygons (see Unit Circle&amp;rsquo;s questions)&lt;/p>
+&lt;ul>
+&lt;li>Jarvis March
+&lt;ol>
+&lt;li>Take lowest point in H&lt;/li>
+&lt;li>Take 2nd point with smallest polar angle in H&lt;/li>
+&lt;li>Take last (n-1) and (n-2) points as line&lt;/li>
+&lt;li>Find smallest polar angle point wrt. this line&lt;/li>
+&lt;li>Repeat till 1st point is found&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>1. Convex Polygon Check&lt;/p>
+&lt;p>Check if polygon is convex. Stable Partition points to upper part and lower part (like Modified Graham&amp;rsquo;s).
+Check (&lt;code>convex_check&lt;/code>) if all Up points have no lefts. Check again if all Down points have no rights.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">bool&lt;/span> &lt;span style="color:#50fa7b">convex_check&lt;/span>(vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>pair&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll,ll&lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&amp;amp;&lt;/span> points, &lt;span style="color:#8be9fd">int&lt;/span> invsign){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ll sz &lt;span style="color:#ff79c6">=&lt;/span> points.size();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">for&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> i &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>; i &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> sz&lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">2&lt;/span>; &lt;span style="color:#ff79c6">++&lt;/span>i){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// NO Left(&amp;gt;0) if Down, NO Right(&amp;lt;0) if Up
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span>(trisign(points[i], points[i&lt;span style="color:#ff79c6">+&lt;/span>&lt;span style="color:#bd93f9">2&lt;/span>], points[i&lt;span style="color:#ff79c6">+&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>]) &lt;span style="color:#ff79c6">==&lt;/span> invsign){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>invsign&lt;/code> is an integer which is 1 or -1, depending on lower or upper hull.&lt;/p>
+&lt;p>2. Convex Hull&lt;/p>
+&lt;ul>
+&lt;li>Convex hull follows similar to the convex hull check.&lt;/li>
+&lt;li>For each vertex, we check &lt;code>while(hull_size + 1 &amp;gt;= 3)&lt;/code>&lt;/li>
+&lt;li>If &lt;code>trisign(hull[hull_size - 2], points[i], hull[hull_size -1])&lt;/code> matches our &lt;code>invsign&lt;/code> then pop the 2nd last vertex, Or else break out of the &lt;code>while&lt;/code> loop to check the next vertex.&lt;/li>
+&lt;li>Function Header: &lt;code>void construct_convex_hull(vector&amp;lt;pair&amp;lt;ll,ll&amp;gt;&amp;gt;&amp;amp; points, vector&amp;lt;pair&amp;lt;ll,ll&amp;gt;&amp;gt;&amp;amp; hull, int invsign);&lt;/code>&lt;/li>
+&lt;li>After &lt;code>construct_convex_hull&lt;/code> for both partitions, we zip the upper and lower Hulls. Thus forming the CCW convex hull.&lt;/li>
+&lt;/ul>
+&lt;p>3. Tangents to Polygon&lt;/p>
+&lt;p>See &lt;a href="http://www.geomalgorithms.com/a15-_tangents.html"target="_blank" rel="noopener">geomalgorithms.com&lt;/a> for excellent explaination of technique.
+As stated, we need sign(left point) != sign(right point) for tangent
+In our case to find left and right tangents, we can put a condition like this, inside our loop iterating through each point.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> signl &lt;span style="color:#ff79c6">=&lt;/span> trisign(left_pt, points[i], pt);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">int&lt;/span> signr &lt;span style="color:#ff79c6">=&lt;/span> trisign(points[i], right_pt, pt);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">if&lt;/span>(signl &lt;span style="color:#ff79c6">!=&lt;/span> signr){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// CCW =&amp;gt; pt lies L/R wrt. leftpt
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span>(signl &lt;span style="color:#ff79c6">==&lt;/span> sign &lt;span style="color:#ff79c6">||&lt;/span> signr &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#ff79c6">-&lt;/span>sign){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> points[i];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>where &lt;code>sign&lt;/code> is given by whether we want left or right tangent.&lt;/p>
+&lt;p>4. Union of Convex Hulls&lt;/p>
+&lt;p>Take any point Z inside Convex Polygon A. If Z is also inside B, sort the points by angle and apply graham scan. If Z is not inside B, remove inner chain and apply Graham&amp;rsquo;s Scan on outer chain.
+OR
+Just apply Graham&amp;rsquo;s Scan to all the points since both algorithms have worst case, NlogN.
+This may however be slightly less optimal. (But it works :-))&lt;/p>
+&lt;h2 id="week-3">Week 3&lt;/h2>
+&lt;p>1. 2 Line Segment Intersections&lt;/p>
+&lt;p>See &lt;a href="https://cp-algorithms.com/geometry/check-segments-intersection.html"target="_blank" rel="noopener">CP Algorithms&lt;/a> for technique.
+Helper functions for this include, &lt;code>trisign&lt;/code>, &lt;code>inbetween&lt;/code>, &lt;code>determinant&lt;/code> are used.
+Remember to check for &amp;lsquo;No Common Points&amp;rsquo; for both determinant = 0 and not. Watch out for corner cases. (Tons of them!)&lt;/p>
+&lt;p>2. Polygon Intersection&lt;/p>
+&lt;p>Either Clipping (Sutherland Hodgman) or Line Sweep (Shamos-Hoey) could be used. For clipping, see &lt;a href="https://www.geeksforgeeks.org/polygon-clipping-sutherland-hodgman-algorithm-please-change-bmp-images-jpeg-png/"target="_blank" rel="noopener">G4G&lt;/a>.
+The Algorithms are as follows,&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Sutherland-Hodgman&lt;/p>
+&lt;ul>
+&lt;li>First choose a polygon&lt;/li>
+&lt;li>Cut out 2nd polygon from first (check orientation at each line and split half-plane)&lt;/li>
+&lt;li>Go through the vertices of the 2nd polygon and check if next vertices crosses the line or not. ~O(NM) time&lt;/li>
+&lt;li>Also, for convex + non-convex&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Shamos-Hoey (Sweep-Line Like) - (N + M) vertical lines from vertices - Obtain inner fragment at each line (inner up and inner down) - 4 lists of vertices (upper, lower) - Only for convex + convex&lt;/p>
+&lt;pre>&lt;code>Within the same TC but slightly less optimal, a simpler approach using all the previous functions can be used.
+&lt;/code>&lt;/pre>
+&lt;p>Simply, find all line segment intersections and check point in polygon for each vertex.
+Then just order points cw / ccw by sorting by angle from centroid.
+See &lt;a href="https://observablehq.com/@mbostock/sutherland-hodgman-clipping?collection=@observablehq/algorithms"target="_blank" rel="noopener">D3 Mike&amp;rsquo;s ObservableHQ&lt;/a> for an awesome visualization.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>3. Intersection of Horizontal and Vertical Segments&lt;/p>
+&lt;p>This is briefly discussed in &amp;lsquo;Competitive Programming Handbook by Antti&amp;rsquo;.
+Scan the the edges and classify and store as horizontal/vertical segments.
+Store in &lt;code>start&lt;/code>, tuples of the form&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>{x1, 2, vptr}&lt;/code> for vertical segments&lt;/li>
+&lt;li>&lt;code>{xmin, 1, hptr}&lt;/code> and &lt;code>{xmax, 3, hptr}&lt;/code> for horizontal segments
+The operations are 1(Add eventpt), 2(Intersect with vertical), 3(Remove Endpoint).
+Sort the &lt;code>start&lt;/code> array, and perform a line sweep over it.
+Use order-statistic tree (policy-based ds) for the &lt;code>status&lt;/code>. (or implement similar RBT using nodes)&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Horizontal Segment (height)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> hzlevel;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Vertical Segment (height, range)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>pair&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll,ll&lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&lt;/span> vlevel;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Starting Point Tuples (xcoord, operation, index)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll&lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&lt;/span> start;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// In operation 2 we check intersects like this,
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>lo &lt;span style="color:#ff79c6">=&lt;/span> status.order_of_key(vlevel[ix].first);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>hi &lt;span style="color:#ff79c6">=&lt;/span> status.order_of_key(vlevel[ix].second&lt;span style="color:#ff79c6">+&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>intersects &lt;span style="color:#ff79c6">+=&lt;/span> hi &lt;span style="color:#ff79c6">-&lt;/span> lo;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>4. Intersection of Set of Segments&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Classic Sweep Line for Segment Intersections&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Consists (key vars)&lt;/p>
+&lt;ul>
+&lt;li>Event Point
+&lt;ul>
+&lt;li>Upper (or left) Endpoint of Segment is p (U(p))&lt;/li>
+&lt;li>Lower Endpoint of Segment is p (L(p))&lt;/li>
+&lt;li>Intersection/Internal Point of segment is p (C(p))&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>(Q) Event Queue of found event points&lt;/li>
+&lt;li>(S) Set of of all Segements (Array)&lt;/li>
+&lt;li>(T) Set of Status (RB Tree?)&lt;/li>
+&lt;li>Event Queue set to check if already present?&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>FindIntersection(S)&lt;/p>
+&lt;ul>
+&lt;li>Initialize Q and T&lt;/li>
+&lt;li>Push first U( p ) endpoint (and corresponding line segment/index) in Q&lt;/li>
+&lt;li>While Q non-empty, HandleEventPoint&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>HandleEventPoint(p)&lt;/p>
+&lt;ul>
+&lt;li>Consists of U, L, C&lt;/li>
+&lt;li>Generate L( p ) and C( p ) from adjacent segments in T&lt;/li>
+&lt;li>Segments of $L(p) \cup U(p) \cup C(p) \geq 2$
+&lt;ul>
+&lt;li>Report intersection p&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Delete L( p ) since segment ends&lt;/li>
+&lt;li>Delete C( p ) to swap (2nd priority to U)&lt;/li>
+&lt;li>Insert U( p )&lt;/li>
+&lt;li>Insert Back C( p ) (finish swap)&lt;/li>
+&lt;li>If there is no U( p ) and no C( p )
+&lt;ul>
+&lt;li>FindEventPoints(sl, sr, p) where sl, sr are the adjacent segments of p in T&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Else
+&lt;ul>
+&lt;li>Take leftmost segment of U( p ) union C( p ), ie (topmost priority) as sl&lt;/li>
+&lt;li>Take left neighbour of sl in T, s1&lt;/li>
+&lt;li>FindEventPoints(sl, s1, p) // top Segments intersections&lt;/li>
+&lt;li>Take rightmost segment of $U(p) \cap C(p)$, ie (least priority) as sr&lt;/li>
+&lt;li>Take right neighbour of sr in T, s2&lt;/li>
+&lt;li>FindEventPoints(sr, s2, p) // bottom Segments intersections&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Key Features for any Sweep Line&lt;/p>
+&lt;ul>
+&lt;li>Event Point (often coordinate-compressed)&lt;/li>
+&lt;li>Status Set containing elements important for current event point&lt;/li>
+&lt;li>Line sweeps across some direction (Obvious!)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>Unfortunately, I wasn&amp;rsquo;t able to code this one up. However, &lt;a href="https://geomalgorithms.com/a09-_intersect-3.html"target="_blank" rel="noopener">geom algorithms&lt;/a> explains with code the approach to doing this.&lt;/p>
+&lt;h2 id="week-4">Week 4&lt;/h2>
+&lt;p>1. Diagonals of any Simple Polygon&lt;/p>
+&lt;p>For diagonals, one technique is to first check if diagonal intersects with any other polygon line segment.
+Then check if Point-in-Polygon for the midpoint, to know if it is inside/outside.
+So, &lt;code>trisign&lt;/code>, &lt;code>inbetween&lt;/code>, &lt;code>semi_check_intersect&lt;/code>, &lt;code>check_intersect&lt;/code> and &lt;code>point_in_polygon&lt;/code> are needed.
+Note that &lt;code>check_intersect&lt;/code> includes endpoints unlike &lt;code>semi_check_intersect&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>intersect &lt;span style="color:#50fa7b">diagonal_check&lt;/span>(vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>vertex&lt;span style="color:#ff79c6">&amp;gt;&amp;amp;&lt;/span> poly, ll i, ll j){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> n &lt;span style="color:#ff79c6">=&lt;/span> (&lt;span style="color:#8be9fd">int&lt;/span>)poly.size();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Check Intersections
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">for&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> k &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>; k &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> n; &lt;span style="color:#ff79c6">++&lt;/span>k){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span>(k &lt;span style="color:#ff79c6">==&lt;/span> i &lt;span style="color:#ff79c6">||&lt;/span> k &lt;span style="color:#ff79c6">==&lt;/span> j &lt;span style="color:#ff79c6">||&lt;/span> (k&lt;span style="color:#ff79c6">+&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>) &lt;span style="color:#ff79c6">%&lt;/span> n &lt;span style="color:#ff79c6">==&lt;/span> i &lt;span style="color:#ff79c6">||&lt;/span> (k&lt;span style="color:#ff79c6">+&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>) &lt;span style="color:#ff79c6">%&lt;/span> n &lt;span style="color:#ff79c6">==&lt;/span> j) &lt;span style="color:#ff79c6">continue&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> res &lt;span style="color:#ff79c6">=&lt;/span> check_intersect(poly[i], poly[j], poly[k], poly[(k&lt;span style="color:#ff79c6">+&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>)&lt;span style="color:#ff79c6">%&lt;/span>n]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span>(res &lt;span style="color:#ff79c6">==&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>) &lt;span style="color:#ff79c6">return&lt;/span> crossing;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Check if Midpoint in polygon. Assumption: diagonal does not intersect
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> pair&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>&lt;span style="color:#8be9fd">double&lt;/span>, &lt;span style="color:#8be9fd">double&lt;/span>&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> midd &lt;span style="color:#ff79c6">=&lt;/span> {(poly[i].x &lt;span style="color:#ff79c6">+&lt;/span> poly[j].x)&lt;span style="color:#ff79c6">/&lt;/span>&lt;span style="color:#bd93f9">2.0&lt;/span>, (poly[i].y &lt;span style="color:#ff79c6">+&lt;/span> poly[j].y)&lt;span style="color:#ff79c6">/&lt;/span>&lt;span style="color:#bd93f9">2.0&lt;/span>};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span>(point_in_polygon(poly, midd)){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> inner;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }&lt;span style="color:#ff79c6">else&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">return&lt;/span> outer;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>2. Ear-Cutting Algorithm for Triangulation of Convex Polygons&lt;/p>
+&lt;p>Steps -&lt;/p>
+&lt;ol>
+&lt;li>Preprocess: If for every vertex, adjacent vertices form inner diagonal. Mark as Ear. ~O($N^2$ for diagonal_check)&lt;/li>
+&lt;li>Start processing ears in-order from a starting vertex (Try to maintain order in which they are checked)&lt;/li>
+&lt;li>Delete Current Ear Vertex from the polygon (&amp;amp; is_ear) vector. Insert (diagonal with adjacent verts and the pt) as a triangle.&lt;/li>
+&lt;li>Check if vleft, vright is a ear (~O(N))&lt;/li>
+&lt;li>Stop when ear-list is empty or polygon has less than 3 vertices (all vertices are done!)&lt;/li>
+&lt;/ol>
+&lt;p>Time: $O(N^3)$ (Sum of $N^2$ operations)&lt;/p>
+&lt;p>After preprocessing the ears in the &lt;code>is_ear&lt;/code> array, the algorithm proceeds as follows,&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Set start point
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#8be9fd">int&lt;/span> st &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">0&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">while&lt;/span>(n &lt;span style="color:#ff79c6">&amp;gt;&lt;/span> &lt;span style="color:#bd93f9">3&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Start loop at previous triangle endpoint
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">for&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> j &lt;span style="color:#ff79c6">=&lt;/span> st; j &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> st &lt;span style="color:#ff79c6">+&lt;/span> n; &lt;span style="color:#ff79c6">++&lt;/span>j){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> i &lt;span style="color:#ff79c6">=&lt;/span> j &lt;span style="color:#ff79c6">%&lt;/span> n;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">if&lt;/span>(is_ear[i]){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Find First Ear and Delete
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>vertex&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> res_triangle &lt;span style="color:#ff79c6">=&lt;/span> { poly[(i &lt;span style="color:#ff79c6">-&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span> &lt;span style="color:#ff79c6">+&lt;/span> n) &lt;span style="color:#ff79c6">%&lt;/span> n], poly[i], poly[(i &lt;span style="color:#ff79c6">+&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>) &lt;span style="color:#ff79c6">%&lt;/span> n] };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> triangles.pb(res_triangle);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> is_ear.erase(is_ear.begin() &lt;span style="color:#ff79c6">+&lt;/span> i);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> poly.erase(poly.begin() &lt;span style="color:#ff79c6">+&lt;/span> i);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Update Polygon and check ears
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> n &lt;span style="color:#ff79c6">=&lt;/span> (&lt;span style="color:#8be9fd">int&lt;/span>)poly.size();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Lower Vertex
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> is_ear[(i&lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span> &lt;span style="color:#ff79c6">+&lt;/span> n) &lt;span style="color:#ff79c6">%&lt;/span> n] &lt;span style="color:#ff79c6">=&lt;/span> check_ear(poly, (i&lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span> &lt;span style="color:#ff79c6">+&lt;/span> n) &lt;span style="color:#ff79c6">%&lt;/span> n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Upper Vertex (new index -&amp;gt; i % n)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> is_ear[i &lt;span style="color:#ff79c6">%&lt;/span> n] &lt;span style="color:#ff79c6">=&lt;/span> check_ear(poly, i &lt;span style="color:#ff79c6">%&lt;/span> n);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Set start of next iteration
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> st &lt;span style="color:#ff79c6">=&lt;/span> i;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">break&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Finally, add remaining polygon into &lt;code>triangles&lt;/code>.
+The &lt;code>check_ear&lt;/code> functions checks &lt;code>diagonal_check&lt;/code>(from 4-1) on the neighbouring vertices.
+It also helps to plot testcases like this,&lt;/p>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/compgeom/4-2testcase.png">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/compgeom/4-2testcase.png" width="auto" height="auto"
+alt="Testcase for Polygon triangulations"/>&lt;/a>&lt;/p>
+&lt;p>3. Monotone Polygon Triangulation&lt;/p>
+&lt;p>Triangulation of strictly y-monotone polygons. See &lt;a href="http://homepages.math.uic.edu/~jan/mcs481/triangulating.pdf"target="_blank" rel="noopener">MCS481 Slides&lt;/a> for a pretty good psuedocode or the Book is also great.
+For Diagonal check part, time complexity would be high therefore it is better to use Concavity Check with &lt;code>trisign&lt;/code> instead. Remember to add diagonals from last (lowermost) vertex also. &lt;code>sidemap&lt;/code> is used to store Left/Right and &lt;code>vertex&lt;/code> is the merged sorted vertex list.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">triangulate_monotone&lt;/span>(vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>point&lt;span style="color:#ff79c6">&amp;gt;&amp;amp;&lt;/span> verts, map&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>point, &lt;span style="color:#8be9fd">bool&lt;/span>&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> sidemap, vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>polygon&lt;span style="color:#ff79c6">&amp;gt;&amp;amp;&lt;/span> diags){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8be9fd">int&lt;/span> sz &lt;span style="color:#ff79c6">=&lt;/span> (&lt;span style="color:#8be9fd">int&lt;/span>)verts.size();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> deque&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>point&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> rack &lt;span style="color:#ff79c6">=&lt;/span> {verts[&lt;span style="color:#bd93f9">0&lt;/span>], verts[&lt;span style="color:#bd93f9">1&lt;/span>]};
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">for&lt;/span>(&lt;span style="color:#8be9fd">int&lt;/span> j &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">2&lt;/span>; j &lt;span style="color:#ff79c6">&amp;lt;&lt;/span> sz&lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>; &lt;span style="color:#ff79c6">++&lt;/span>j){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> point vlast &lt;span style="color:#ff79c6">=&lt;/span> rack.back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Process Vertex
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">if&lt;/span>(sidemap[verts[j]] &lt;span style="color:#ff79c6">!=&lt;/span> sidemap[rack.back()]){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Opposite Sides
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">while&lt;/span>((&lt;span style="color:#8be9fd">int&lt;/span>)rack.size() &lt;span style="color:#ff79c6">&amp;gt;&lt;/span> &lt;span style="color:#bd93f9">1&lt;/span>){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> diags.pb(vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>point&lt;span style="color:#ff79c6">&amp;gt;&lt;/span>{rack.back(), verts[j]});
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rack.pop_back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rack.pop_back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rack.push_back(vlast);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }&lt;span style="color:#ff79c6">else&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Same Side
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> rack.pop_back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// rack.back() should be inward wrt. vlast and verts[j] -&amp;gt; i.e, match sign of side of vlast
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> &lt;span style="color:#ff79c6">while&lt;/span>(rack.size() &lt;span style="color:#ff79c6">&amp;amp;&amp;amp;&lt;/span> check_concave(vlast, rack.back(), verts[j], sidemap[verts[j]])){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> diags.pb({verts[j], rack.back()});
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> vlast &lt;span style="color:#ff79c6">=&lt;/span> rack.back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rack.pop_back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rack.push_back(vlast);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rack.push_back(verts[j]);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#6272a4">// Add diags from all verts in stack (except top and bottom) to lowermost vertex
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span> rack.pop_front();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rack.pop_back();
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ff79c6">for&lt;/span>(&lt;span style="color:#ff79c6">auto&lt;/span> &lt;span style="color:#8be9fd;font-style:italic">v&lt;/span>: rack){
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> diags.push_back(vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>point&lt;span style="color:#ff79c6">&amp;gt;&lt;/span>{verts[sz&lt;span style="color:#ff79c6">-&lt;/span>&lt;span style="color:#bd93f9">1&lt;/span>], v});
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>4. Number of Triangulations of a Convex Polygon&lt;/p>
+&lt;ul>
+&lt;li>From the &lt;a href="https://en.wikipedia.org/wiki/Catalan_number"target="_blank" rel="noopener">wikipedia page&lt;/a>, A convex polygon with n + 2 sides can be triangulated to n triangles by non-crossing lines.&lt;/li>
+&lt;li>Number of different ways of triangulation is Catalan Nos.&lt;/li>
+&lt;li>For any triangulation, there would be exactly 2 vertices that don&amp;rsquo;t need to be joined by a diagonal.(or whose degrees stay the same!) So, catalan nos. is on the $n-2$ vertices connected by diagonals.&lt;/li>
+&lt;li>The $\sum c_i c_{n-i}$ Form: Recurrence relation is the breaking of the polygons by one of the diagonals.&lt;/li>
+&lt;/ul>
+&lt;h2 id="week-5">Week 5&lt;/h2>
+&lt;ul>
+&lt;li>
+&lt;p>k-D Trees&lt;/p>
+&lt;ul>
+&lt;li>Base Structure: BST&lt;/li>
+&lt;li>Stores values like BST, but instead of ordering only by value like BST, it needs to order by &lt;code>k&lt;/code> params.&lt;/li>
+&lt;li>This is done by selecting a splitting criteria, like for 2D: alternate between &amp;lsquo;X&amp;rsquo; and &amp;lsquo;Y&amp;rsquo; parameters based on whether the depth is even/odd.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>2D Layered Range Trees&lt;/p>
+&lt;ul>
+&lt;li>Base Structure: Red-Black Tree or balanced BST&lt;/li>
+&lt;li>See &lt;a href="https://stackoverflow.com/questions/17466218/what-are-the-differences-between-segment-trees-interval-trees-binary-indexed-t"target="_blank" rel="noopener">differences between some well-known trees&lt;/a>.&lt;/li>
+&lt;li>2D Layered Range tree stores points in its associated array, and optimized for &amp;ldquo;which points fall within a given interval&amp;rdquo; queries.&lt;/li>
+&lt;li>The assoc array of point &lt;code>v&lt;/code> is the two-pointer zip (merge-sort) of &lt;code>2v&lt;/code> and &lt;code>2v+1&lt;/code> vertices.&lt;/li>
+&lt;li>It can be represented similar to 2D segment tree, but value contains &amp;ldquo;the points themselves&amp;rdquo;. (segtree consists of sum of no. of points)&lt;/li>
+&lt;li>Both 2D layering range tree and segment trees can be used interchangeably.&lt;/li>
+&lt;li>Fractional Cascading is technique to store binary_searched index of the element as pointer. So $O(logN)$ extra factor isn&amp;rsquo;t needed. Each element of assoc array of point &lt;code>v&lt;/code> also contains pointers to &lt;code>2v&lt;/code> and &lt;code>2v+1&lt;/code> nodes arrays&amp;rsquo; binary_searched(lower_bound) index.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>2D Priority Search Tree&lt;/p>
+&lt;ul>
+&lt;li>Base Structure: Binary Heap or Priority Queue (Scaled up to 2D).&lt;/li>
+&lt;li>Shows one-sided unbounded range of values.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>1. Closest Point&lt;/p>
+&lt;p>Simple binary-search implementation as points have only 1 parameter.&lt;/p>
+&lt;p>2. Number of Points in Rectangle&lt;/p>
+&lt;p>The easiest implementation in via a Cartesian Tree. (similar to Kdtree)
+My code is a 2D Segment Tree however I &lt;strong>recommend&lt;/strong> using an OOP approach with &lt;strong>Cartesian Tree&lt;/strong> instead!&lt;/p>
+&lt;p>This is was approximate workflow while designing 2D Segment Tree. See &lt;a href="https://cp-algorithms.com/data_structures/segment_tree.html"target="_blank" rel="noopener">CP Algorithms&lt;/a>&amp;rsquo;s
+compression of 2D segment tree for ideas. Fractional Cascading for speeding up!&lt;/p>
+&lt;p>Below are the design notes for the code.&lt;/p>
+&lt;hr>
+&lt;pre tabindex="0">&lt;code>General Design -
+- buildx, buildy, queryx, queryy
+- Range compression (See cp-algorithms.com tips)
+- NlogN memory and (logN)^2 time per query
+Construction -
+- Vector with all x-coords sorted
+- Vector with all y-coords sorted for each node of segtree[x] to lowerbound/upperbound y indices
+- Within each node of segtree[x], store `segtree[][y]` with compressed size 4*log(Sumx_r - Sumx_l)
+Query -
+- Search equivalent indices for x-coords in vec
+- Get each node from segtree query
+- Search equivalent indices for y-coords in each vvec[v_x]
+- Get each node sumval from segtree[v_x] query
+Variable Names-
+- v -&amp;gt; root vertex
+- l, r -&amp;gt; current left/right segment of coords
+- L, R -&amp;gt; required left/right segment
+- Lyc, Ryc -&amp;gt; c indicates coordinate and not index
+Current Progress -
+- Correct Answer and correct Memory Limit
+- Time Limit Exceeded in Building Segtree
+- Building Time: ~ 4min 45 seconds
+- Query Time(for 30000 queries): ~ 5min (9 min 45s in total)
+Optimization -
+- Get rid of binary search for both x &amp;amp; y and instead check coord value
+- Remove coord compression but keep construct_order_y
+- Make D&amp;amp;C of segment tree run on array with unique elements (order_x, order_y) instead
+- Fractional Cascading:
+- Store relation(starts) between unique array (order_x) and points
+- So, construct_order_y does not require to binary search index (remove extra logN factor)
+&lt;/code>&lt;/pre>&lt;p>The Segment Tree is built on the unique x-coordiniates (&lt;code>order_x&lt;/code>) array and 2nd dimension in unique y-coordinates (&lt;code>order_y&lt;/code>).
+It assumes that points do not repeat!&lt;/p>
+&lt;p>CTags-like Overview of global variables,&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">const&lt;/span> ll SZX &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">30001&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ff79c6">const&lt;/span> ll INF &lt;span style="color:#ff79c6">=&lt;/span> &lt;span style="color:#bd93f9">1.5e9&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Segment Tree : 4*SZX and 4*SZY (still only NlogN memory since dynamic length arrays!)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> segtree[&lt;span style="color:#bd93f9">4&lt;/span>&lt;span style="color:#ff79c6">*&lt;/span>SZX];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Unique x-coordinates of points
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> order_x;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Unique Y-coordinates of (vx)th segment tree (4*SZX and SZY)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll&lt;span style="color:#ff79c6">&amp;gt;&lt;/span> order_y[&lt;span style="color:#bd93f9">4&lt;/span>&lt;span style="color:#ff79c6">*&lt;/span>SZX];
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// List of all points in sorted x-coordinate order
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>vector&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>pair&lt;span style="color:#ff79c6">&amp;lt;&lt;/span>ll, ll&lt;span style="color:#ff79c6">&amp;gt;&amp;gt;&lt;/span> points;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Fractional-Cascading like map of unique x indices of order_x to non-unique coordinates&amp;#39; indices in points
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ll starts[SZX];
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Overview of Functions,&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Query the (vx)th segment tree
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ll &lt;span style="color:#50fa7b">queryy&lt;/span>(ll vx, ll vy, ll ly, ll ry, ll Lyc, ll Ryc);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Build (vx)th segment tree on the basis of y-coords (USES queryy for 2*vx, 2*vx+1 segment tree values)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">buildy&lt;/span>(ll vx, ll lx, ll rx, ll vy, ll ly, ll ry);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Construct the base array for the (vx)th segment tree (Called within buildx)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>size_t &lt;span style="color:#50fa7b">construct_order_y&lt;/span>(ll vx, ll lx, ll rx);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Builds the segment tree and proceeds to call construct_order_y and buildy
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>&lt;span style="color:#8be9fd">void&lt;/span> &lt;span style="color:#50fa7b">buildx&lt;/span>(ll vx, ll lx, ll rx);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">// Query the x-coordinate and proceed to call queryy
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#6272a4">&lt;/span>ll &lt;span style="color:#50fa7b">queryx&lt;/span>(ll vx, ll lx, ll rx, ll Lxc, ll Rxc, ll Lyc, ll Ryc);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>start&lt;/code> array is constructed in preprocessing stage before &lt;code>buildx&lt;/code>.
+&lt;code>construct_order_y&lt;/code> uses &lt;code>start&lt;/code> array for copying y-coords of original array (so no logN factor from lower_bound).&lt;/p>
+&lt;p>Building: &lt;code>buildx&lt;/code> -&amp;gt; &lt;code>construct_order_y&lt;/code> -&amp;gt; &lt;code>buildy&lt;/code> -&amp;gt; (either fill value 1 or &lt;code>queryy&lt;/code>)&lt;/p>
+&lt;p>Query: Format input to lower/upper endpoints -&amp;gt; &lt;code>queryx&lt;/code> -&amp;gt; &lt;code>queryy&lt;/code>
+At both &lt;code>queryx&lt;/code> and &lt;code>queryy&lt;/code>(similar but with &lt;code>lxy rxy&lt;/code>),
+&lt;code>ll lxc = order_x[lx], rxc = order_x[rx];&lt;/code>
+line is used. The &lt;code>lxc rxc&lt;/code> (coordinates of query points) are used for all comparisons except for calculation of midpoint where &lt;code>lx rx&lt;/code> (positions) are used.&lt;/p>
+&lt;hr>
+&lt;p>3. Closest Pair of Points&lt;/p>
+&lt;p>K-D Tree Implementation. See &lt;a href="https://rosettacode.org/wiki/K-d_tree"target="_blank" rel="noopener">Rosetta Code&lt;/a> or Stanford ACM&amp;rsquo;s Notebook.
+For intuition on K-D Trees see &lt;a href="https://www.youtube.com/watch?v=cUssdK0Tku4&amp;amp;list=PL8FaHk7qbOD5I3wsXKTC70LwFX6KiA3Yy&amp;amp;index=6"target="_blank" rel="noopener">Josh Hug&amp;rsquo;s lectures&lt;/a>
+General Parameters that can be tuned,&lt;/p>
+&lt;ul>
+&lt;li>Distance Metric
+&lt;ul>
+&lt;li>Euclidean Metric&lt;/li>
+&lt;li>Chessboard Metric (Used for this problem)&lt;/li>
+&lt;li>Manhattan Metric&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Splitting Criteria (X or Y based)
+&lt;ul>
+&lt;li>Parity of Depth/Height of current node&lt;/li>
+&lt;li>Larger of Width or Height of bounding box of current node&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="week-6---point-location-and-trapezoid-maps">Week 6 - Point Location and Trapezoid Maps&lt;/h2>
+&lt;p>Lec 1 - &amp;ldquo;Where the hell am I?&amp;rdquo;&lt;/p>
+&lt;ul>
+&lt;li>Planar Subdivision: A set of polygons that form a large polygon.(Like a map of states of a country)&lt;/li>
+&lt;li>Partition into vertical lines or slabs at every vertex (like Shamos Hoey)&lt;/li>
+&lt;li>Naive Implementation
+&lt;ul>
+&lt;li>Query: Traverse two binary search trees - find vertical lines (bound on x), find region (bound on y);&lt;/li>
+&lt;li>Space Complexity can be n^2 if two full BST&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>Lec 2 - Decreasing Space Complexity&lt;/p>
+&lt;ul>
+&lt;li>Refinement: The Partition of Planar Subdivision S into Slabs induced by vertices. These Partitions would be trapezoids (or degenerate ones).&lt;/li>
+&lt;li>Trapezoidal Map: Splits the trapezoids of a refinement. Very useful technique for space partitioning or mapping regions in general.&lt;/li>
+&lt;li>Unlike the previous partition by vertical lines, this partition only has lines that end at another edge or outer rectangle.&lt;/li>
+&lt;li>Side: Segment of max length contained in boundary of face of trapezoid&lt;/li>
+&lt;li>Trapezoidal partition with $n$ segments have, $T(S) \leq 2n + 2*2n + 4$(segment endpoints, vertical lines, boundary rectangle) vertices and trapezois $\leq 3n + 1$&lt;/li>
+&lt;li>Constructing Trapezoid - Find each up, down left, right endpoints for each trapezoid. Time: 3N + 1 = O(N)&lt;/li>
+&lt;/ul>
+&lt;p>Below is an image of a trapezoidal map of &amp;rsquo;line segments&amp;rsquo; from this &lt;a href="https://github.com/marinimau/GAS-Trapezoidal-maps-final-prject"target="_blank" rel="noopener">GAS&lt;/a>, the same can be done for polygons as well.&lt;/p>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/compgeom/trapezoidal_map_line_segments.png">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/compgeom/trapezoidal_map_line_segments.png" width="auto" height="auto"
+alt="Trapezoidal Map of Line Segments"/>&lt;/a>&lt;/p>
+&lt;p>Lec 3 - Randomized-Incremental Algorithm:&lt;/p>
+&lt;ul>
+&lt;li>O(NlogN) expected preprocess time&lt;/li>
+&lt;li>O(logN) query time (not worst case optimal but randomized)&lt;/li>
+&lt;li>Expected Query Time by Backward Analysis (See Lec04 of series)&lt;/li>
+&lt;/ul>
+&lt;p>Lec 4 - Data Structure Trapezoid Cartesian DAG&lt;/p>
+&lt;ul>
+&lt;li>Trapezoidal Map Data Structure For 2D: Cartesian D.A.G.&lt;/li>
+&lt;li>Make sure to split Trapezoid on map (so it isn&amp;rsquo;t n^2 time)&lt;/li>
+&lt;li>Unlike Tree, Cartesian DAG will just have pointer to that trapezoid&lt;/li>
+&lt;/ul>
+&lt;p>Lec 5 - Query Time for Trapezoid Cartesian DAG&lt;/p>
+&lt;ul>
+&lt;li>LogN Query time (Amortized)&lt;/li>
+&lt;li>Backward Analysis (summation 1/i)&lt;/li>
+&lt;li>Size: O(N + 13N) = O(N) (13N comes from $\sum(3i + 1)*(4/i)$)&lt;/li>
+&lt;li>Construction: NlogN&lt;/li>
+&lt;/ul>
+&lt;h2 id="week-7---voronoi-diagrams--post-office-problem">Week 7 - Voronoi Diagrams &amp;amp; Post Office Problem&lt;/h2>
+&lt;p>Lec 1 - Post Office Problem&lt;/p>
+&lt;ul>
+&lt;li>Post Office Problem: Which is the closest Post Office to place P?&lt;/li>
+&lt;li>Answer: Voronoi Diagram with Euclidean Distance Metric. (Map of region closest to that point)&lt;/li>
+&lt;/ul>
+&lt;p>Lec 2 - Definitions in Voronoi Diagrams&lt;/p>
+&lt;ul>
+&lt;li>Voronoi Cell:
+$$ V(p) = { x \in R^2: d(x, p) &amp;lt; d(x, q) \forall q \in P\ - {p}} $$&lt;/li>
+&lt;li>For Voronoi Cell, Think of definition of Ball in Topology but using relative distances instead of a constant epsilon&lt;/li>
+&lt;li>Voronoi Edge:
+$$ V(p) = { x \in R^2: d(x, p) == d(x, q) \forall q \in P\ - {p}} $$&lt;/li>
+&lt;/ul>
+&lt;p>Lec 3 - Overall Shape of Voronoi Diagrams&lt;/p>
+&lt;ul>
+&lt;li>Lemma: Vor( P ) consists of atmost (2n - 5) vertices and (3n - 6) edges&lt;/li>
+&lt;li>Proof of Lemma from Euler&amp;rsquo;s Polyhedra Formula (Dual is Delaunay Triangulation and Maximal Planar Graph =&amp;gt; 3n - 6)&lt;/li>
+&lt;li>For infinite voronoi diagrams, set dummy vertex at infinity&lt;/li>
+&lt;li>NOTE: Voronoi Vertices != Voronoi Cells (or Faces or Sites)&lt;/li>
+&lt;li>Voronoi Vertex: Circle at vertex &amp;lsquo;x&amp;rsquo; has atleast 3 points on it&amp;rsquo;s largest (circumcircle which does not contain a site/face)
+$$|C_p(x) \cap P| \geq 3$$&lt;/li>
+&lt;li>Voronoi Edge: For edge P to P&amp;rsquo;, there is a vertex &amp;lsquo;x&amp;rsquo; which has P and P&amp;rsquo; on it&amp;rsquo;s largest (circumcircle which does not contain a site/face)
+$$\exists x \in E(P, P&amp;rsquo;) st.,\ \ |C_p(x) \cap P| = {P, P&amp;rsquo;}$$&lt;/li>
+&lt;/ul>
+&lt;p>Lec 4 - Computing Voronoi Diagram&lt;/p>
+&lt;ul>
+&lt;li>BF: Line Segment Intersection, Half Plane Intersections &amp;gt; $O(N^2)$ time&lt;/li>
+&lt;li>Naive Line Sweep: Event Points are not known before swept&lt;/li>
+&lt;li>Fortune&amp;rsquo;s Algorithm or Optimized Line Sweep:
+&lt;ul>
+&lt;li>Parabolas at the visited vertices form the equidistant line&lt;/li>
+&lt;li>Directrix is the Line Sweep at point P, and focus is the visited vertices&lt;/li>
+&lt;li>Beachline($\beta$): The lowerbound of each of the parabolas (from the visited vertices so far) merged together.&lt;/li>
+&lt;li>The intersection points of the parabolas as the line is swept form the edges of the voronoi diagram.&lt;/li>
+&lt;li>See &lt;a href="http://www.raymondhill.net/voronoi/rhill-voronoi.html"target="_blank" rel="noopener">this&lt;/a> for demo. Also, &lt;a href="https://jacquesheunis.com/post/fortunes-algorithm/"target="_blank" rel="noopener">this post&lt;/a> for explaination.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Beachline Event Points
+&lt;ul>
+&lt;li>Site(Face) Event: New Sitepoint is found =&amp;gt; New Arc is created&lt;/li>
+&lt;li>Circle Event: Sweep Line reaches lowest point of circle containing 3 Site Points =&amp;gt; Arc of the inner site point is deleted. Voronoi Points are the centre of the circle formed.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>Lec 5 - Fortune&amp;rsquo;s Line Sweep Algorithm&lt;/p>
+&lt;ul>
+&lt;li>See &lt;a href="https://pvigier.github.io/2018/11/18/fortune-algorithm-details.html"target="_blank" rel="noopener">PVigier&amp;rsquo;s Blog&lt;/a> for implementation resources.&lt;/li>
+&lt;li>Also see this &lt;a href="https://jacquesheunis.com/post/fortunes-algorithm/"target="_blank" rel="noopener">post by Jacques&lt;/a>&lt;/li>
+&lt;li>Key Functions
+&lt;ul>
+&lt;li>Find New Circle Event Points (Site Event Points are already known)&lt;/li>
+&lt;li>Handle Circle Event (once processed; calls findNewCircleEvent)&lt;/li>
+&lt;li>Handle Site Event (once processed; calls findNewCircleEvent)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/compgeom/fortunes.gif">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/compgeom/fortunes.gif" width="auto" height="auto"
+alt="Fortune&amp;amp;rsquo;s Algorithm Wiki"/>&lt;/a>&lt;/p>
+&lt;h2 id="week-8---delaunay-triangulations">Week 8 - Delaunay Triangulations&lt;/h2>
+&lt;p>Lec 1 - Height Interpolation&lt;/p>
+&lt;ul>
+&lt;li>Triangulation: Planar subdivision with all inner faces triangles and outer face is Convex Hull&lt;/li>
+&lt;li>Since Maximal Planar Graph =&amp;gt; (3n - 6) edges. But outer face is CH and needs triangulation (3 - h) edges =&amp;gt; 3n - 3 + h edges in total&lt;/li>
+&lt;/ul>
+&lt;p>Lec 2 - Angle-Optimal Triangulation&lt;/p>
+&lt;ul>
+&lt;li>Height Interpolation Optimization by choosing a better triangulation&lt;/li>
+&lt;li>Angle-Optimal Triangulation to avoid skinny triangles (this causes disparity in length Vs width - based height interpolations)&lt;/li>
+&lt;li>Angle vector $A(T)$ of Triangulation $T$ is the angles of all triangles in sorted order&lt;/li>
+&lt;li>A Triangulation is more optimum if Angle vector is &lt;strong>lexicographically&lt;/strong> better than the other. i.e., $A(T_{optimal}) &amp;gt; A(T)$&lt;/li>
+&lt;li>The best triangulations are called Angle-Optimal.&lt;/li>
+&lt;/ul>
+&lt;p>Lec 3 - Edge-Flips &amp;amp; Legal Triangulations&lt;/p>
+&lt;ul>
+&lt;li>Edge e is illegal in Triangulation T if triangulation obtained by flipping edge e, T&amp;rsquo; has $A(T&amp;rsquo;) &amp;gt; A(T)$&lt;/li>
+&lt;li>Use Extended Thales Thm (Thales++), i.e., check angles by taking circumcircle around edge e&lt;/li>
+&lt;li>Angle-Optimal is always legal.&lt;/li>
+&lt;li>A triangle is &lt;strong>legal&lt;/strong> iff it has no illegal edge&lt;/li>
+&lt;/ul>
+&lt;p>Lec 4 - Voronoi Diagram &amp;amp; Delaunay Triangulation&lt;/p>
+&lt;ul>
+&lt;li>Delaunay Triangulation: Straight Line Drawing of the Dual Graph of Voronoi Diagram&lt;/li>
+&lt;li>Proof
+&lt;ul>
+&lt;li>Take circumcircle on any point in edge between sites p-q in Vor(P)&lt;/li>
+&lt;li>Consider another edge u-v and show crosses lead to contradiction&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Alt Definition: Delauanay Triangulation iff $\forall \Delta \in T : int(C(\Delta) \cap P) = \phi$&lt;/li>
+&lt;li>AKA: Empty Circumcircle property of D.T.&lt;/li>
+&lt;/ul>
+&lt;p>Lec 5 - Correctness and Computation&lt;/p>
+&lt;ul>
+&lt;li>A triangulation is legal iff it is Delaunay&lt;/li>
+&lt;li>Proof
+&lt;ul>
+&lt;li>Back Relation: By Empty Circumcircle Property and Thales++, D.T. is legal&lt;/li>
+&lt;li>Forward Relation:
+&lt;ul>
+&lt;li>By Contradiction, Take a triangle p-q-r and circumcircle. where T is legal&lt;/li>
+&lt;li>Take point s in circumcircle. Now, we need to maximize angle of chord at s. (p-s-q)&lt;/li>
+&lt;li>Take neighbouring triangle p-q-t, t lies outside circumcircle.&lt;/li>
+&lt;li>Get contradiction: angle q-s-t &amp;gt; angle p-s-q (but this is maximal)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>If pointset P is general position(i.e. No 4 points lie on an empty circle) then D.T. is unique and angle-optimal.&lt;/li>
+&lt;li>If pointset P is not general position, then all D.T. have same minimum angle but may not be angle-optimal.&lt;/li>
+&lt;li>D.T. can be constructed in $O(NlogN)$&lt;/li>
+&lt;li>Angle-Optimal Triangulation in non-general position P, can be constructed in $O(N^2)$ time. Holes (4+ points on empty circle) can be filled by trying out each flip.&lt;/li>
+&lt;/ul>
+&lt;p>Below is an image also showing weighted voronoi diagrams and their corresponding delaunay triangulations,
+&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/compgeom/weighted_dt.png">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/compgeom/weighted_dt.png" width="auto" height="auto"
+alt="Weighted and non-Weighted VD and DT"/>&lt;/a>&lt;/p>
+&lt;h2 id="week-9---convex-hull-in-3d">Week 9 - Convex Hull in 3D&lt;/h2>
+&lt;p>Lec 1 - Complexity and Visibility of CH&lt;/p>
+&lt;ul>
+&lt;li>(Upper Bound Theorem) General Time Complexity of Convex Hull in d dimensions: $O(N^{\lfloor d/2 \rfloor})$&lt;/li>
+&lt;li>In 3D, Surface of the Polyhedra forms a Planar Dual Graph =&amp;gt; atmost (3n-6) edges and hence linear complexity. Similar for higher dimensions.&lt;/li>
+&lt;li>Construction by Random-Incremental Algorithm&lt;/li>
+&lt;li>Visibility:
+&lt;ul>
+&lt;li>If we project rays from point P to Convex Polytope.&lt;/li>
+&lt;li>The project rays that are 3D Tangent to the polytope form a ring/shadow, the point that form this is called Horizon.(Last visible edges)&lt;/li>
+&lt;li>Region facing towards P bounded by Horizon is the Visible region.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Define Conflict Graph and create bipartite relation of points with facets. And mark out which facets are visible.&lt;/li>
+&lt;/ul>
+&lt;p>Lec 2 - Randomized Incremental Algorithm&lt;/p>
+&lt;ul>
+&lt;li>Pseudocode/Approach of adding vertex to CH3&lt;/li>
+&lt;li>TC: $O(N^2)$ (Randomized from $O(N^3)$; not worst case optimal)&lt;/li>
+&lt;/ul>
+&lt;p>Lec 3- Analysis&lt;/p>
+&lt;ul>
+&lt;li>Expected No. of Facets Created by CH are bounded to atmost (6n - 20)&lt;/li>
+&lt;li>Degree bounded by 6 for the vertices other than initial 4-point CH3, so 6*(n-4) + 4&lt;/li>
+&lt;li>See this &lt;a href="https://codeforces.com/blog/entry/81768"target="_blank" rel="noopener">Tutorial on 3D CH&lt;/a> for simple implementation as well as some optimized version.&lt;/li>
+&lt;li>Can be further optimized with Configuration Spaces&lt;/li>
+&lt;li>Higher Degree CH are worst case optimal accordingly with Upper Bound Thm.&lt;/li>
+&lt;/ul>
+&lt;p>Lec 4- Convex Hull &amp;amp; Half-Plane Intersections&lt;/p>
+&lt;ul>
+&lt;li>Assume a mapping/relation from spaces P1 and P2, where (&amp;lsquo;primal is the dual of the dual!&amp;rsquo;)
+&lt;ul>
+&lt;li>Line in P1 -&amp;gt; point in P2 (P1 is Dual of P2)&lt;/li>
+&lt;li>Line in P2 -&amp;gt; line in P1 (P2 is Dual of P1)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Convex Hull of a point set in P1 =&amp;gt; Set of Lines in P2
+&lt;ul>
+&lt;li>Traversing the lines corresponding to Lower Hull of P1 alongside intersections, give the Upper Envelope. Similarly for Upper CH.&lt;/li>
+&lt;li>Incidence Preserving: Every point in P1 gives Line in P2. So CH region gives area bounded by upper and lower envelope.&lt;/li>
+&lt;li>Order Preserving: Maintains an ordering through the mapping.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Scaling to 3D: CH3 of points gives 3D Wrapping/Envelope of 3D Lines&lt;/li>
+&lt;/ul>
+&lt;p>Lec 5- Voronoi Diagrams Revisited&lt;/p>
+&lt;ul>
+&lt;li>Distance to Unit Parabola (From Projection of point q to tangent at p&amp;rsquo;) = intercepts $(pq)^2$&lt;/li>
+&lt;li>Take: A (set of planes/halfplanes) have an Upper Envelope (or Supremum or Least Upper Bound 3D Parabola). The planes are thus 3D Tangents to the 3D Parabola or Envelope.&lt;/li>
+&lt;li>When this is projected to the plane,
+&lt;ul>
+&lt;li>Voronoi Centres/Faces/Sites = (Intersection points of Planes and 3D Parabola)&lt;/li>
+&lt;li>Voronoi Edges = (Line Segments that for the Intersection of Planes)&lt;/li>
+&lt;li>Voronoi Vertices = (Intersection of 3 or more Planes)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Take: 3D Convex Hull of (Intersection of Planes and 3D Parabola). The 3D Parabola is now the Lower Envelope (or Infimum or Greatest Lower Bound) of the (3D Convex Hull).&lt;/li>
+&lt;li>When this projected to the plane,
+&lt;ul>
+&lt;li>Delaunay Vertices = (Intersection of Planes and 3D Parabola) or (Points of 3D Convex Hull)&lt;/li>
+&lt;li>Delaunay Edges = (Edges of 3D Convex Hull)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>See &lt;a href="https://www.youtube.com/watch?v=H0IVBBDJ8Kk&amp;amp;list=PLubYOWSl9mIubi50UoQt3Sl_CV9NCjUUm&amp;amp;index=5"target="_blank" rel="noopener">Video for Demo&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Below image is from &lt;a href="https://pages.mtu.edu/~shene/NSF-2/DM2-BETA/index.html"target="_blank" rel="noopener">DesignMentor&lt;/a>, showing delaunay triangulation as a projection of a 3D Convex Hull&lt;/p>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/compgeom/ch3d_as_dt.png">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/compgeom/ch3d_as_dt.png" width="auto" height="auto"
+alt="Delaunay Triangulations as Projection of 3D Convex Hull"/>&lt;/a>&lt;/p>
+&lt;h2 id="week-10---motion-planning">Week 10 - Motion Planning&lt;/h2>
+&lt;p>Lec 1 - Point Shaped Robots&lt;/p>
+&lt;ul>
+&lt;li>Trapezoidal Map for Path with Obstacles. Finding Path: O(NlogN) Construction and O(N) query&lt;/li>
+&lt;/ul>
+&lt;p>Lec 2 - Configuration Space&lt;/p>
+&lt;ul>
+&lt;li>Degrees of Freedom: 2D(2 translation x, y + 1 rotation \theta) = 3, 3D(3 translation x,y,z + 2 rotation $\theta, \phi$) = 5&lt;/li>
+&lt;li>Configuration Polygon: Polygon s.t. foreach point in ConfPol, Robot at point (x, y) (R(x, y)) intersects with obstacle polygon(Pi). (If point robot, then this is just the obstacle polygons.)&lt;/li>
+&lt;/ul>
+&lt;p>$$ CP&lt;em>i = {(x, y): R(x, y) \cap P&lt;/em>{i}} $$&lt;/p>
+&lt;p>Lec 3 - Characterizing Configuration Spaces&lt;/p>
+&lt;ul>
+&lt;li>Minkowski&amp;rsquo;s Sum (For Polygon!): $S_1+S_2={p + q : \forall p \in P, q \in Q}$ where p, q are point vectors&lt;/li>
+&lt;li>Geometric Representation: Replace Copy of S1 in every point of S2 to form the new shape. (or Vice versa; commutative)&lt;/li>
+&lt;li>Inversion in Polygon Algebra: Rotate polygon by 180 around origin. $S2 =-S1={-p : \forall p \in P}$&lt;/li>
+&lt;li>Configuration Polygon: $CP = P + (- R(0, 0))$ (where &amp;lsquo;+&amp;rsquo; is minkowski sum)&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/compgeom/minkowski_sum_of_polygons.png">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/compgeom/minkowski_sum_of_polygons.png" width="auto" height="auto"
+alt="Configuration Polygon"/>&lt;/a>&lt;/p>
+&lt;p>Lec 4 - Complexity and Computation&lt;/p>
+&lt;ul>
+&lt;li>Atmost n+m edges in minkowski sum(S) of P (n edges) and Q (m edges)&lt;/li>
+&lt;li>We can define a map of each edge of S to a pair (i, j) of the edges in P, Q.&lt;/li>
+&lt;li>Quadratic Algorithm: Convex Hull of points where at each corner of P, Try every rotation of Q&lt;/li>
+&lt;li>Linear Algorithm: (Two-Pointers-like) Choose Bottom-Right most point for both. And move p_ptr or q_ptr based on which has a smaller angle.&lt;/li>
+&lt;/ul>
+&lt;p>Lec 5 - Pseudodisks&lt;/p>
+&lt;ul>
+&lt;li>Def: Pair of Planar Objects (P1, P2) form a pseudodisk if (bound-&amp;gt; boundary, int-&amp;gt;interior),
+&lt;ul>
+&lt;li>$bound(O1) \cap int(O2)$ is connected&lt;/li>
+&lt;li>$bound(O2) \cap int(O1)$ is connected&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Consider 2 convex polygons with disjoint interiors.
+&lt;ul>
+&lt;li>Let d1 -&amp;gt; direcion where P1 more extreme, similarly d2.&lt;/li>
+&lt;li>Then P1 is more extreme in [d1, d2] or [d2, d1]. Or in a circle, one boundary part has P1 more extreme and other with P2.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>For P1, P2, take CP1 = P1 + R, CP2 = P2 + R. Then proof by contradiction. So (CP1, CP2) have to be pseudodisks.&lt;/li>
+&lt;/ul>
+&lt;p>Lec 6 - Union Complexity&lt;/p>
+&lt;ul>
+&lt;li>For Convex Polygons P, Q, R,.., the total union has atmost 2*(n+m+l+..) vertices. (since every (two or less) crossings can be mapped to a vertex)&lt;/li>
+&lt;li>For constant complexity convex robot R, translating among S disjoint objects with N edges. We can preprocess in $O(N (logN)^2)$ and compute collision-free path in O(N)&lt;/li>
+&lt;li>Approach
+&lt;ul>
+&lt;li>Triangulate Polygons if Not-Convex to make it convex (NlogN)&lt;/li>
+&lt;li>Compute ConfPol for each Obstacle Polygon (N)&lt;/li>
+&lt;li>Compute Union of Obstacles by sweep line (N $(logN)^2$)&lt;/li>
+&lt;li>Mark out Trapezoidal Maps etc.&lt;/li>
+&lt;li>Query: Find path in complement of unionConfPol with help of Trapezoidal Map&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>Numerical Analysis</title><link>https://cheese-cracker.github.io/posts/numan/</link><pubDate>Mon, 20 Jan 2020 00:00:00 +0000</pubDate><guid>https://cheese-cracker.github.io/posts/numan/</guid><description>&lt;h3 id="resources">Resources&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://www.youtube.com/user/kvyi/playlists"target="_blank" rel="noopener">Jacob Bishop&amp;rsquo;s Tutorials&lt;/a> Part 5-7 covers most topics&lt;/li>
+&lt;li>&lt;a href="https://www.youtube.com/watch?v=EG62xCOdLLA"target="_blank" rel="noopener">Gauss Quadrature Vs Newton Cotes&amp;rsquo; Visualization&lt;/a>&lt;/li>
+&lt;li>Check Calculator function input for Iterative Approximation Methods( Newton-Rhapson, Fixed Point Iteration etc.)&lt;/li>
+&lt;/ul>
+&lt;h2 id="basic-analysis">Basic Analysis&lt;/h2>
+&lt;ul>
+&lt;li>Catastrophic Cancellation&lt;/li>
+&lt;li>Significant Digits Vs Decimal points&lt;/li>
+&lt;li>Sum for minimal error, rounding/chopping&lt;/li>
+&lt;li>Taylor Series&amp;rsquo; Approximation and Error&lt;/li>
+&lt;/ul>
+&lt;h3 id="iterative-methods">Iterative Methods&lt;/h3>
+&lt;ol>
+&lt;li>Bisection&lt;/li>
+&lt;li>Regula Falsi (Method of Chords)&lt;/li>
+&lt;li>Secant
+&lt;ul>
+&lt;li>Swap to whichever is close&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Fixed Point Iteration
+&lt;ul>
+&lt;li>Order of convergences&lt;/li>
+&lt;li>Uniqueness&lt;/li>
+&lt;li>Error Analysis&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Newton Raphson
+&lt;ul>
+&lt;li>Order of convergences&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="matrix-techniques">Matrix Techniques&lt;/h3>
+&lt;ul>
+&lt;li>Pivoting (Partial Pivoting = Every Step)&lt;/li>
+&lt;li>Scaling
+&lt;ul>
+&lt;li>First before Pivoting&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Matrix Norms
+&lt;ul>
+&lt;li>Norm_1(A) = max(col sum)&lt;/li>
+&lt;li>Norm_inf(A) = max(row sum)&lt;/li>
+&lt;li>Norm_2(A) = Spectral Norm = $\sqrt \lambda$ for eigenvalue&lt;/li>
+&lt;li>Norm_F(A) = root of(Sum of all a_ij^2) = Frobenius Norm&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Conditional No. = ||A|| * ||A^-1||&lt;/li>
+&lt;/ul>
+&lt;h3 id="matrix-iterative-methods">Matrix Iterative Methods&lt;/h3>
+&lt;p>In order to solve, systems of equation we have Gauss-El-M, Gauss-Jacobi and Gauss-Siedel. Jacobi and Siedel is mostly used for sparse arrays where G-El-M is highly ineffecient.
+Newton-Raphson, Fixed Point are iterative methods also work while finding solution.&lt;/p>
+&lt;ul>
+&lt;li>Gaussian Elimination&lt;/li>
+&lt;li>G-Jacobi&amp;rsquo;s&lt;/li>
+&lt;li>G-Jacobi&amp;rsquo;s Matrix Version&lt;/li>
+&lt;li>G-Siedel&lt;/li>
+&lt;li>G-Siedel Matrix Version&lt;/li>
+&lt;li>Fixed Point (Matrix)&lt;/li>
+&lt;li>Newton-Raphson (Matrix)&lt;/li>
+&lt;/ul>
+&lt;p>Points to note&lt;/p>
+&lt;ul>
+&lt;li>Matrix must be Diagonally Dominant (see thm) for Jacobi/Gauss-Siedel&lt;/li>
+&lt;/ul>
+&lt;h3 id="interpolation-methods">Interpolation Methods&lt;/h3>
+&lt;ul>
+&lt;li>Polynomial&lt;/li>
+&lt;li>Lagrange
+&lt;ul>
+&lt;li>Error&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Newton Divided Difference&lt;/li>
+&lt;li>Newton Forward Difference*&lt;/li>
+&lt;li>Newton Backward Difference*&lt;/li>
+&lt;li>Hermite&lt;/li>
+&lt;li>Oscullatory (generalized Hermite)&lt;/li>
+&lt;/ul>
+&lt;ul>
+&lt;li>NBD, NFD is only for equally spaced&lt;/li>
+&lt;/ul>
+&lt;h4 id="table-for-ndd-like-interpolation">Table for N.D.D-like Interpolation&lt;/h4>
+&lt;ul>
+&lt;li>NDD : $frac{f_2 - f_1}{ x_2 - x_1 }$ for each el&lt;/li>
+&lt;li>NFD: $f_2 -f_1$ Only&lt;/li>
+&lt;li>NBD: Start Reverse and Take Bottom Row; Same table as NFD $f_2 - f_1$;&lt;/li>
+&lt;li>HERM: Repeat each entry twice; $frac{f_2 - f_1}{x_2 - x_1} if different or differentiation if same&lt;/li>
+&lt;li>OSC: Repeat based on no. of available vals in x, y, y&amp;rsquo; ..; $f_2 - f_1$&lt;/li>
+&lt;/ul>
+&lt;h2 id="approximation-for-integration">Approximation for Integration&lt;/h2>
+&lt;p>In order of specific to generalized.&lt;/p>
+&lt;ul>
+&lt;li>Newton Cotes&amp;rsquo; Formula - Approximate function as polynomial and find area.
+&lt;ul>
+&lt;li>Trapezoid Rule (n = 1 approx:2 data points linear Pn)&lt;/li>
+&lt;li>Simpson&amp;rsquo;s 1/3 Rule (n = 2 approx:3 data points quadratic Pn)&lt;/li>
+&lt;li>Simpson&amp;rsquo;s 3/8 Rule (n = 3 approx:4 data points cubic Pn)&lt;/li>
+&lt;li>Generalized Newton Cotes'&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Gaussian Quadrature Method (Method of Undetermined Coeffecients) - Choose points that make the equivalent polygon (may not be contained)
+&lt;ul>
+&lt;li>Gauss-Chebyshev, Gauss-Legendre, Gauss-Hermite with different weight functions&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="approximations-for-initial-value-problems">Approximations for Initial Value Problems&lt;/h2>
+&lt;p>Use Taylor Series to derive the equations!
+Useful predictor methods also,&lt;/p>
+&lt;ul>
+&lt;li>Euler&amp;rsquo;s Method (RK 1st Order)&lt;/li>
+&lt;li>Modified Euler Method (RK with 2nd Order AKA Heun&amp;rsquo;s Method)&lt;/li>
+&lt;li>Runge Kutta(RK) Schemes: Move along the slope(which is approximated by the order) from one point to the next point&lt;/li>
+&lt;li>Taylor Series Expansion&lt;/li>
+&lt;/ul>
+&lt;p>See Use of Butcher Table also and RK in 2 variable (using 2 variable Taylor Series)!&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Multi-Step Method&lt;/p>
+&lt;ul>
+&lt;li>Predictor: Adams-Bashforth (Derived from previous m+1 points NBD Polynomial approx)&lt;/li>
+&lt;li>Corrector: Adams-Moulton (Derived from previous(and including) m +2 points NBD Polynomial)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Milne&amp;rsquo;s Predictor Formula (Generalized Adams-Besforth by changing limits of integration)&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="approximating-system-of-odes">Approximating System of ODEs&lt;/h2>
+&lt;ul>
+&lt;li>Runge-Kutta 2 variable method&lt;/li>
+&lt;li>Implicit Euler&amp;rsquo;s&lt;/li>
+&lt;li>Milne&amp;rsquo;s Method&lt;/li>
+&lt;/ul>
+&lt;h2 id="approximations-for-boundary-value-problems">Approximations for Boundary Value Problems&lt;/h2>
+&lt;ul>
+&lt;li>Finite Difference Method&lt;/li>
+&lt;li>Finite Element Methods
+&lt;ul>
+&lt;li>Collocation Method&lt;/li>
+&lt;li>Rayleigh Ritz Method&lt;/li>
+&lt;li>Galerekin&amp;rsquo;s Weighting Function Method&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>Math Modelling</title><link>https://cheese-cracker.github.io/posts/mmodelling/</link><pubDate>Mon, 20 May 2019 00:00:00 +0000</pubDate><guid>https://cheese-cracker.github.io/posts/mmodelling/</guid><description>&lt;h3 id="important-topics">Important Topics&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://www.math24.net/routh-hurwitz-criterion/"target="_blank" rel="noopener">Routh Hurwitz Test&lt;/a>&lt;/li>
+&lt;li>Matrix of Variation/Jacobian of dx/dt (and dy/dt)&lt;/li>
+&lt;li>Stability of solution
+&lt;ul>
+&lt;li>Local Stability (Matrix of Variation) Eigenvalues
+&lt;ul>
+&lt;li>Positive Definate : Unstable&lt;/li>
+&lt;li>Negative Definate : Local AS&lt;/li>
+&lt;li>Imaginary Eigenvalues: Spiral&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Global Stability (Appropriate Lyaponov Function)
+&lt;ul>
+&lt;li>Test stability by Lyapunov Funcn or any other (V) has derivative negative definate&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>$$V(x) = x - x^* - x^* ln(\frac{x}{x^*}) \frac{k_1}{2}(T- T^*)^2 + \frac{k_2}{2}(U-U^*)^2$$&lt;/p>
+&lt;p>$$\frac{dV}{dt} = \frac{\dot{x}}{x}( x - x^*) + other$$&lt;/p>
+&lt;ul>
+&lt;li>Quick Finding of Eigenvalues (see Prerequisites)&lt;/li>
+&lt;li>Complex Eigenvalues and Calculation of Spiral&lt;/li>
+&lt;li>Linearization of Solution&lt;/li>
+&lt;li>Logistic regression Model
+$$ \frac{dx}{dt} = rx(1 - \frac{x}{k})$$&lt;/li>
+&lt;li>Persistance / Permanance of Solution&lt;/li>
+&lt;li>Picard-Landlof Theorem - Existence of Solution&lt;/li>
+&lt;li>Sylvester&amp;rsquo;s Criteria - b^2 - 4ac conditions&lt;/li>
+&lt;li>Hamiltonian
+$$ H(x, t, u, \lambda) = g*{divident}(x, t, u) + \lambda f*{capital\ assets}(x, t, u) $$&lt;/li>
+&lt;li>Pontrayagin&amp;rsquo;s Maximum Principle
+$$ \frac{d\lambda}{dt} = -\frac{dH}{dx}$$&lt;/li>
+&lt;li>Bang-Bang and Singular Control (Control Theory)&lt;/li>
+&lt;li>De Carte&amp;rsquo;s Rule of Sign&lt;/li>
+&lt;li>Dulac Bendixson Criteria for periodicity of soln&lt;/li>
+&lt;li>Bionic Equilibrium Conditions (for Optimal Harvesting)&lt;/li>
+&lt;li>Hopf Bifurcation: The point where behavior of system stability changes. Opposite stability before and after critical value.&lt;/li>
+&lt;li>Lebesgue Cycle Stability&lt;/li>
+&lt;li>Basic Reproduction No.&lt;/li>
+&lt;li>LimSup Method for showing boundedness&lt;/li>
+&lt;li>Standard Comparison Theorem, Amax &amp;gt; Bmin, well-posedness &amp;hellip;&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="models">Models&lt;/h3>
+&lt;ol>
+&lt;li>Malthusian Growth Model
+$$ dx/dt = rx$$&lt;/li>
+&lt;li>Logistic Growth Model (inter-specific interference)&lt;/li>
+&lt;li>Resource-Consumer and similar models -
+&lt;ul>
+&lt;li>Prey-Predator Model (or Resource Consumer)
+&lt;ul>
+&lt;li>specialized prey-predator&lt;/li>
+&lt;li>generalized prey-predator&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Competetive Model&lt;/li>
+&lt;li>Cooperation Model&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>3 Species Food Chain Model
+(Logistic Growth with interspecie interface)&lt;/li>
+&lt;li>Opimal Harvesting (fish) Model - Max Sustainable Yield&lt;/li>
+&lt;li>Migration of Fishes Model&lt;/li>
+&lt;li>Pollution Toxicant Models-
+&lt;ul>
+&lt;li>2D Model&lt;/li>
+&lt;li>3D Model - Uptake of Conc (POST-Midsem)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Susceptible-Infected and variant models
+&lt;ul>
+&lt;li>SI Model&lt;/li>
+&lt;li>SIS Model(with immunity)&lt;/li>
+&lt;li>SIR Model(with complete cure forever)&lt;/li>
+&lt;li>SEIR Model(Both Exposed and Recovery types)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h4 id="analysis-of-solution">Analysis of Solution&lt;/h4>
+&lt;ul>
+&lt;li>Boundedness&lt;/li>
+&lt;li>Positivity and Solution Space $\Omega$&lt;/li>
+&lt;li>Persistance of Solution (Show Lower Bound)&lt;/li>
+&lt;li>Periodicity or not (Dulac Bendixson Criteria)&lt;/li>
+&lt;li>Equilibrium Points&lt;/li>
+&lt;li>Local Stability Analysis
+&lt;ul>
+&lt;li>Linearize solution and then find values OR&amp;hellip;&lt;/li>
+&lt;li>Use generalized matrix of variation and plug in values&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Global Stability Analysis
+&lt;ul>
+&lt;li>Choose Lyapanov Function and terms based on Logistic Growth or not&lt;/li>
+&lt;li>Differentiate and show Negative Definate&lt;/li>
+&lt;li>Use Sylvester&amp;rsquo;s Criteria and compare terms using Routh-Hurwitz Criteria&lt;/li>
+&lt;li>Routh Array to show stability&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="other-analysis-techniques">Other Analysis Techniques&lt;/h4>
+&lt;ul>
+&lt;li>Rate $\dot{r}$ for growth and $\dot{\theta}$ for clockwise/anticlockwise in spirals&lt;/li>
+&lt;li>Lebesgue Cycle stability in spirals&lt;/li>
+&lt;li>Critical points in Hopf Bifurcation and stability chart&lt;/li>
+&lt;li>Basic Reproduction Number Calculation&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h4 id="sample-model-to-check-equilibrium-points">Sample Model to check equilibrium points&lt;/h4>
+&lt;div class="mermaid">
+graph TD
+A[Formulate the Rate Diffn Equations] --> AB
+AB[ Find Omega. Check if bounded with limsup and show positive also. Check Persistance/Periodicity] --> B
+B[Find equilibrium points where rate = 0] --> C
+C[Local Stability. Get matrix of variation/Jacobian at these points] --> D
+C --> E[Get Char Eqn with Eigenvalue]
+E --> F[Use Routh Hurwitz to get roots' sign]
+F --> G[From sign of eigenvalues determine stability of Local Solution]
+D[Get Eigenvalues of the matrix of variation] --> G
+G --> H
+H[Global Stability. Use Lyapunov function variants Derivative] --> I[Check if negative definate by adding/subtracting]
+&lt;/div>
+&lt;h4 id="harvesting-model-sample-flow">Harvesting Model Sample Flow&lt;/h4>
+&lt;p>Steps for Solving&lt;/p>
+&lt;ol>
+&lt;li>Formulate the Rate Diffn Equations&lt;/li>
+&lt;li>Find the equilibrium points and conditions&lt;/li>
+&lt;li>Plug x* value in harvesting rate equation qEx&lt;/li>
+&lt;li>Get max E by finding minima at x* and put the value into harvesting rate&lt;/li>
+&lt;/ol>
+&lt;p>For optimal harvesting policy,&lt;/p>
+&lt;ol start="5">
+&lt;li>Find hamiltonian with - f as &lt;em>net revenue in continuous time stream&lt;/em> - g as &lt;em>rate of change of assets&lt;/em>
+$$ H = e^{-\delta t}(pqx-c)E + \lambda_1 \frac{dx}{dt} +\lambda_2 \frac{dy}{dt}$$&lt;/li>
+&lt;li>Find &lt;strong>minima of H wrt. E&lt;/strong> .Get switching func and equate to 0 for singular control&lt;/li>
+&lt;li>Apply Pontrayagin&amp;rsquo;s Max Principle Condition and use with step 6.&lt;/li>
+&lt;li>Find discount value and check notes of these points&lt;/li>
+&lt;/ol>
+&lt;p>Bionic Equilibrium is value of E at
+$$\dot{x} = \dot{y} = 0$$&lt;/p>
+&lt;hr>
+&lt;h4 id="sir-model">SIR Model&lt;/h4>
+&lt;p>Steps for Solving,&lt;/p>
+&lt;ol>
+&lt;li>Show Bounded by taking sum of population(N) and finding LimSupN(t) will be const&lt;/li>
+&lt;li>Take S(t) and with Comparison Theorem, show &amp;gt;=0&lt;/li>
+&lt;li>Use Dulac Bendixson with H = 1/SI, and show no sign change so not periodic&lt;/li>
+&lt;li>Find Equilibrium Points (approx E*) with reproduction no. &amp;lsquo;R&amp;rsquo;&lt;/li>
+&lt;li>Matrix of Variation with &amp;lsquo;R&amp;rsquo; cases&lt;/li>
+&lt;li>Lyapunov Function and one term will not allow sylvester&amp;rsquo;s criteria&lt;/li>
+&lt;li>Choose C = S* to get,
+$$ \dot{V} = -\beta I (S - S^*) -\beta S^* (I-I^*)( S - S^* ) &amp;lt; 0 $$&lt;/li>
+&lt;/ol>
+&lt;h4 id="other-useful-prerequisites">Other Useful Prerequisites&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>Green&amp;rsquo;s Thm&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Stoke&amp;rsquo;s Thm&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Gauss Divergent Thm&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Finding Eigenvalues fast
+$$ \lambda^2 - Tr(A)\lambda + Det(A) $$
+&lt;em>Trace is sum of diagonal entries&lt;/em>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Routh Hurwitz Criteria
+See &lt;a href="https://www.math24.net/routh-hurwitz-criterion/"target="_blank" rel="noopener">Routh Hurwitz Test&lt;/a> - Conditions - All positive coeff always - All minors must be positive - 2nd Degree: no more conditions - 3rd Degree a1*a2 - a3*a0 &amp;gt; 0 (for 3 degree see below)&lt;/p>
+&lt;p>$$
+Routh\ Array =
+\begin{bmatrix}
+a_{N} &amp;amp; - a_{N-2} \
+a_{N-1} &amp;amp; a_{N-3} \
+\end{bmatrix}
+$$&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Another view to understand &lt;a href="https://youtu.be/WBCZBOB3LCA"target="_blank" rel="noopener">Routh Hurwitz Graphical&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>Background
+&lt;ul>
+&lt;li>If one sign different =&amp;gt; one is positive. Hence unstable.&lt;/li>
+&lt;li>If all negative =&amp;gt; same as all positive coeff&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul></description></item><item><title>Principles of Economics</title><link>https://cheese-cracker.github.io/posts/poe/</link><pubDate>Mon, 20 May 2019 00:00:00 +0000</pubDate><guid>https://cheese-cracker.github.io/posts/poe/</guid><description>&lt;h3 id="introduction">Introduction&lt;/h3>
+&lt;p>These are my notes for POE. The notes were written using markdown and vim (see iamcco/markdown.nvim plugin) and Pandoc (with eisvogel template).
+Feel free to collaborate to the &lt;strong>&lt;a href="https://hackmd.io/PtXbIdS-R52MuXXW6gc9uA?both"target="_blank" rel="noopener">Online Version of POE Notes&lt;/a>&lt;/strong>.
+These are only supplementary notes and NOT Lecture Notes.
+Some useful resources.&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>&lt;a href="https://youtu.be/ucJBO9UTmwo"target="_blank" rel="noopener">ACDC ECON Tutorials&lt;/a>&lt;/strong> by Jacob Cliffords for both Micro and Macro&lt;/li>
+&lt;li>&lt;strong>&lt;a href="https://www.khanacademy.org/economics-finance-domain/microeconomics/choices-opp-cost-tutorial/marginal-utility-tutorial/v/marginal-utility"target="_blank" rel="noopener">Khan Academy - Microeconomics&lt;/a>&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;h3 id="elasticity-curves-part">Elasticity Curves Part&lt;/h3>
+&lt;p>Elasticity : % change quantity / % change price
+$$\epsilon = \frac{ \% \Delta Q}{\% \Delta P}$$&lt;/p>
+&lt;p>(Similar to sensitivity)&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Inelastic&lt;/p>
+&lt;ul>
+&lt;li>monopoly&lt;/li>
+&lt;li>necessity&lt;/li>
+&lt;li>small E = Not much choice&lt;/li>
+&lt;li>E &amp;lt; 1 ( or slope &amp;gt; 45)&lt;/li>
+&lt;li>TR decreases for increase in quantity&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Elastic&lt;/p>
+&lt;ul>
+&lt;li>perfectly competetive&lt;/li>
+&lt;li>large E = plenty choice&lt;/li>
+&lt;li>E &amp;gt; 1 ( or slope &amp;lt; 45)&lt;/li>
+&lt;li>TR increases for increase in quantity&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="types-of-elasticity">Types of Elasticity&lt;/h4>
+&lt;ul>
+&lt;li>Cross Price Elasticity &lt;strong>sensitivity of A&lt;/strong> has, $\epsilon_{cross\ price} = \frac{ \% \Delta Q\ of\ B}{ \% \Delta P\ of\ A}$&lt;/li>
+&lt;li>Income Elasticity $\epsilon_{income} = \frac{ \% \Delta Q}{ \% \Delta Income}$&lt;/li>
+&lt;/ul>
+&lt;h4 id="other-terms">Other Terms&lt;/h4>
+&lt;ul>
+&lt;li>Consumer Surplus = Buyer&amp;rsquo;s Max - Price (Upper Triangle)&lt;/li>
+&lt;li>Producer Surplus = Price - Seller&amp;rsquo;s Min (Lower Triangle/Part)
+&lt;blockquote>
+&lt;p>See CH-13 Monopoly and Antitrust for Graph and Explaination&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="6---household-behavior-and-customer-choice">6 - Household behavior and Customer Choice&lt;/h3>
+&lt;ul>
+&lt;li>Household Demand Factors- Price, Income, relative prices preferences&lt;/li>
+&lt;li>Budget Constraint (Eqn)&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>
+&lt;p>Utility&lt;/p>
+&lt;ul>
+&lt;li>Rule of Diminishing Marginal Utility, Saturating curve of TU&lt;/li>
+&lt;li>Utility Maximizing Rule $\frac{MU}{Price}$&lt;/li>
+&lt;li>Diamond-Water Paradox &lt;em>Water becomes granted so diminishing MU
+and downward-sloping (double derivative +ve)&lt;/em>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Income and Substitution Effect&lt;/p>
+&lt;ul>
+&lt;li>Income effect is the &lt;strong>change in consumption of a product&lt;/strong> due
+to the relative change in &lt;strong>price of product&lt;/strong> (well-being)
+&lt;code>Parallel Shift of Budget Constraint&lt;/code>&lt;/li>
+&lt;li>Substitution effect is the &lt;em>relatively cheap&lt;/em> as compared to
+competitors hence shift in purchasing towards that product (not
+substitutes) &lt;code>Angle turn along the Indifference Curve&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>
+&lt;p>Income Effect on Labour Supply Curve
+Labour Supply Curve is Backward Sloping Curve&lt;/p>
+&lt;ul>
+&lt;li>Substitution is upward slope part&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>you have to work hard coz you earn more now&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Income Effect is reverse slope part&lt;br>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>if you become rich, then you wanna party and do play!&lt;/em>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>Indifference Curves&lt;/p>
+&lt;ul>
+&lt;li>Curve that yields same total utility&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>consumer is indifferent between any points on curve&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Diminishing MRS (law of diminishing utility)&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>that&amp;rsquo;s why it slopes asymptoetically&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Chooses highest curve touching budget constraint&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>slope of indifference curve = slope of budget line&lt;/em>&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="7---production-process-behavior-of-profit-maximizing-firms">7 - Production Process: behavior of Profit-Maximizing Firms&lt;/h3>
+&lt;p>Analagous to Chapter 6 but slightly different. Production process is in
+terms of inputs and outputs. K(capital)-L(labour) is the new
+Price-Quantity with MRTS slope&lt;/p>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/costmineq.jpg">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/costmineq.jpg" width="auto" height="auto"
+alt="Cost Min Eq"/>&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Behavior of Profit Maximizing Firms&lt;/p>
+&lt;ul>
+&lt;li>how much output to supply&lt;/li>
+&lt;li>how to produce that output&lt;/li>
+&lt;li>how much of each input demand&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>
+&lt;p>Profit and Economic Costs&lt;/p>
+&lt;ul>
+&lt;li>Total Revenue, Total Cost, Economic Profit&lt;/li>
+&lt;li>Most Important factor of production for opportunity cost =
+capital&lt;/li>
+&lt;li>Rate of return : annual net income % of total income
+(breaks into shares?) so it&amp;rsquo;s just enough to keep owners happy
+(like risk-free bonds)&lt;/li>
+&lt;li>Normal Rate of Return = zero profit equilibrium point&lt;/li>
+&lt;li>Input Type
+&lt;ul>
+&lt;li>Fixed&lt;/li>
+&lt;li>Variable&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Short Run and Long Run&lt;/p>
+&lt;ul>
+&lt;li>short run : fixed rate of production (no scaling up/down or
+no exiting/entering)&lt;/li>
+&lt;li>long run : firms can choose to expand or contract&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Others-&lt;/p>
+&lt;blockquote>
+&lt;p>See Optimal method of production chart in CH-8 below&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;li>
+&lt;p>Production Process&lt;/p>
+&lt;p>Total, Average and Normal Product of Labour. See Curves in CH-8&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Equivalent-Law of diminishing returns (MP of Labour)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>3 Stages of TP, AP, MP Curve-&lt;/p>
+&lt;ol>
+&lt;li>MP reaches maximum (double derivative 0)&lt;/li>
+&lt;li>AP = MP&lt;/li>
+&lt;li>MP = 0 and thus TP is maximum&lt;/li>
+&lt;/ol>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Equivalent behavior (Others)&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Producer Market&lt;/th>
+&lt;th>Consumer Market&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Isoquant&lt;/td>
+&lt;td>Indifference Curve&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Isocost&lt;/td>
+&lt;td>Budget Constraint&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>X&lt;/td>
+&lt;td>Labour(L)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Y&lt;/td>
+&lt;td>Capital&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MRTS&lt;/td>
+&lt;td>MRS&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Cost-Min Eq&lt;/td>
+&lt;td>Utility-Max Eq&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="8---short-run-costs-and-output-decisions">8 - Short Run Costs and Output Decisions&lt;/h3>
+&lt;p>TC (overhead), TFC, TVC, AFC, AVC, MC (=MVC), AP, MP See Curves.&lt;/p>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/shortruncosts.jpg">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/shortruncosts.jpg" width="auto" height="auto"
+alt="Table 8.4 Short Run Costs of Firm"/>&lt;/a>&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Types of Costs&lt;/p>
+&lt;p>Main Types Costs&lt;/p>
+&lt;ul>
+&lt;li>Fixed Cost&lt;/li>
+&lt;li>Variable Cost&lt;/li>
+&lt;/ul>
+&lt;p>Analyze costs as&lt;/p>
+&lt;ul>
+&lt;li>Total Cost&lt;/li>
+&lt;li>Average Cost = $\frac{TC}{Q}$ where Q is quantity at that time&lt;/li>
+&lt;li>Marginal Cost = increase in TC for production of 1 more unit
+output&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Cost Curves&lt;/p>
+&lt;ul>
+&lt;li>Variable costs depends on -
+&lt;ul>
+&lt;li>techniques of production&lt;/li>
+&lt;li>prices of inputs required&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Plot has &lt;code>x-axis = Output and y-axis = type of cost&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>
+&lt;p>Fixed Cost Curves&lt;/p>
+&lt;p>Spreading Overhead&lt;/p>
+&lt;ul>
+&lt;li>Fall of total fixed cost by increasing quantity (small cost
+per quantity; down asymptoete)&lt;/li>
+&lt;li>TFC still remains line parallel x-axis(Output)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Variable Cost Curve&lt;/p>
+&lt;p>Increases with quantity&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Marginal Cost Curve&lt;/p>
+&lt;p>&lt;em>slight decrease till max then increase all the way&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Marginal Cost increases with output (since no change in
+scale of production&lt;/li>
+&lt;li>diminshing returns = increasing marginal cost&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Notes on Curves&lt;/p>
+&lt;ul>
+&lt;li>Marginal Costs is slope of TVC&lt;/li>
+&lt;li>The dip point (minima) of MC is the inflection point of TVC&lt;/li>
+&lt;li>MC cuts AVC at min of AVC and ATC at min of
+ATC&lt;/li>
+&lt;li>&lt;strong>&lt;a href="https://www.khanacademy.org/economics-finance-domain/ap-microeconomics/production-cost-and-the-perfect-competition-model-temporary/short-run-production-costs/v/graphical-impact-of-cost-changes-on-marginal-and-average-costs"target="_blank" rel="noopener">Short Run Curves&lt;/a>&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>&lt;em>Where MC crosses is where others stop falling&lt;/em>&lt;/p>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/POE_Curves.jpg">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/POE_Curves.jpg" width="auto" height="auto"
+alt="Product and Cost Curves"/>&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Output Decisions and Summary&lt;/p>
+&lt;ul>
+&lt;li>Marginal Revenue Curve and Demand Curve identical in a
+&lt;strong>perfectly competetive market&lt;/strong>&lt;/li>
+&lt;li>Profit Maximizing- Take $MR = MC$
+(where Price from Demand Curve cuts MC for competetive)&lt;/li>
+&lt;li>&lt;em>Firms will produce only as long as MR &amp;gt; MC&lt;/em>&lt;/li>
+&lt;li>&lt;em>Profit Maximizing Rule is the Loss Minimizing Rule&lt;/em>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Types of Questions-&lt;/p>
+&lt;ul>
+&lt;li>Table-based question (fill the table of TFC, TVC, AVC, MC&amp;hellip;.)&lt;/li>
+&lt;li>Equation of TC in Q given&lt;/li>
+&lt;li>Sketch graphs for different situations&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="9---long-run-costs-and-output-decisions">9 - Long Run Costs and Output Decisions&lt;/h3>
+&lt;ul>
+&lt;li>Terms
+&lt;ul>
+&lt;li>Shutdown Point TR &amp;lt; TFC (or P &amp;lt; AVC)&lt;/li>
+&lt;li>Long term contraction if TR &amp;lt; TC (Contracts and then exits)&lt;/li>
+&lt;li>Operating Profit: TR - TVC (may be losses!)&lt;/li>
+&lt;li>Economic Profit Vs Accounting Profit at 0-profit point&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h5 id="long-run-average-cost-curve">Long Run Average Cost Curve&lt;/h5>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/lrac.jpg">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/lrac.jpg" width="auto" height="auto"
+alt="LRAC"/>&lt;/a>&lt;/p>
+&lt;p>The graph is split into 3 parts-&lt;/p>
+&lt;ol>
+&lt;li>Economies of Scale (Beginning Drop) : More Cost but More Quantity = Less ATC&lt;/li>
+&lt;li>Constant Returns (Constant Line at Min) : Same as short run&lt;/li>
+&lt;li>Diseconomies of Scale (Upward after Dip) : More Cost but not much more Quantity = More ATC&lt;/li>
+&lt;/ol>
+&lt;h5 id="long-run-industry-supply-curve">Long Run Industry supply Curve&lt;/h5>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/lrisdecreasing.jpg">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/lrisdecreasing.jpg" width="auto" height="auto"
+alt="LRIS in Decreasing Cost Industry"/>&lt;/a>&lt;/p>
+&lt;p>Decreasing Cost Industry Above&lt;/p>
+&lt;p>LRIS Calculation&lt;/p>
+&lt;ul>
+&lt;li>Demands expands to D2&lt;/li>
+&lt;li>Prices Rise to P1'&lt;/li>
+&lt;li>New Firms enter and supply shifts to SRS3&lt;/li>
+&lt;li>Price goes down to P3&lt;/li>
+&lt;li>Based on decrease in price (Decreasing cost) or increase (Increasing Cost)&lt;/li>
+&lt;li>Since P3 &amp;lt; P0 so LRAC decreases and Decreasing Cost-Ind&lt;/li>
+&lt;/ul>
+&lt;h3 id="10---labour-and-land-markets">10 - Labour and Land Markets&lt;/h3>
+&lt;ul>
+&lt;li>Shifts in Input Demand Curves
+&lt;ul>
+&lt;li>Demand for Outputs&lt;/li>
+&lt;li>Quanitity of Complementary and Substitute&lt;/li>
+&lt;li>Price of other inputs&lt;/li>
+&lt;li>Technology Change&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Profit Maximizing&lt;/li>
+&lt;/ul>
+&lt;h5 id="labour-market">Labour Market&lt;/h5>
+&lt;ul>
+&lt;li>Derived Demand: Indirect demand like Labour not Goods and Services&lt;/li>
+&lt;li>Marginal Product of Labour: Additional Output produced by adding another unit of labour&lt;/li>
+&lt;li>Marginal Product of Labour Increases then decreases. e.g-
+&lt;blockquote>
+&lt;p>&lt;em>Too many cooks, spoil the broth&amp;hellip;.. too few cooks, can&amp;rsquo;t make the broth?&lt;/em>&lt;/p>
+&lt;/blockquote>
+&lt;/li>
+&lt;li>Marginal Revenue Product MRP(L): Price of output X MR(L)&lt;/li>
+&lt;li>Market Labour Supply Curve&lt;/li>
+&lt;li>Profit-Maximizing (from MR = MC): MRP(L) = Wage(W)&lt;/li>
+&lt;li>In perfectly competetive firms, combine all MRP(L) have common price of output (see questions)&lt;/li>
+&lt;/ul>
+&lt;h5 id="land-market">Land Market&lt;/h5>
+&lt;ul>
+&lt;li>Demand Determinant: Price determined exclusively by its demand. Supply is Fixed (perfectly inelastic). e.g - Land&lt;/li>
+&lt;li>Pure Rent: Return to factor of production with fixed supply&lt;/li>
+&lt;/ul>
+&lt;h3 id="11---capital-market-and-investment-decisions">11 - Capital Market and Investment Decisions&lt;/h3>
+&lt;h3 id="market-structures-and-151">Market Structures (and 15.1)&lt;/h3>
+&lt;ul>
+&lt;li>Perfect Competition (E = $\infty$)&lt;/li>
+&lt;li>Monopolistic Competition (Not Monopoly-Like!)&lt;/li>
+&lt;li>Oligopoly&lt;/li>
+&lt;li>Monopoly (E = 0)&lt;/li>
+&lt;/ul>
+&lt;h4 id="151-monopolistic-competition---industry-characterstics">15.1 Monopolistic Competition - Industry Characterstics&lt;/h4>
+&lt;ul>
+&lt;li>Large no. of firm&lt;/li>
+&lt;li>No barriers to entry&lt;/li>
+&lt;li>Product Differentiation&lt;/li>
+&lt;/ul>
+&lt;h3 id="13---monopoly-and-antitrust">13 - Monopoly and Antitrust&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>Marginal Revenue -&lt;/p>
+&lt;ul>
+&lt;li>For Monopoly, TR is max when MR = 0&lt;/li>
+&lt;li>For Competetive Firm, MR = price (varied by market)&lt;/li>
+&lt;li>MR has slope less (more -ve) coz Additional Output =&amp;gt; Lower Price for more demand.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/monopolycomparison.png">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/monopolycomparison.png" width="auto" height="auto"
+alt="Monopoly Firm Welfare Loss and Prices"/>&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Pricing and Ineffeciencies-&lt;/p>
+&lt;ul>
+&lt;li>Firm produces Q at $MR = MC$ (at Q1) but prices Demand Curve (P1)&lt;/li>
+&lt;li>Leads to Dead Weight Loss (Allocated Ineffeciency) - unecessarily less customers = A-B-C Triangle&lt;/li>
+&lt;li>Consumer Surplus - Lost high pricing for rich customers = Triangle P1-A-F&lt;/li>
+&lt;li>Producer Surplus - Price of good higher than cost-to-manufacture = Area of E-C-P1-A&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Barriers to Entry -&lt;/p>
+&lt;ul>
+&lt;li>Economies of Scale - Very Large (or high advertisement costs)
+(Predatory Pricing &amp;hellip;See Oligopoly)&lt;/li>
+&lt;li>Patents - (Mostly Medicine Companies)&lt;/li>
+&lt;li>Government Rules - Laws favouring Gov Monopolies or through Lobbying&lt;/li>
+&lt;li>Ownership of Exclusive Capital - Own Diamond Mines etc.&lt;/li>
+&lt;li>Network Externalities - Dependant on the popularity of the product&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Social Costs of Monopoly -&lt;/p>
+&lt;ul>
+&lt;li>Deadweight Loss (Depriving Customers of the product)&lt;/li>
+&lt;li>Rent-Seeking behavior (through lobbying and building Barriers)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="14---oligopoly">14 - Oligopoly&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>Measures for Oligopoly&lt;/p>
+&lt;ul>
+&lt;li>HHI = Sum of Squared-Market-Shares (&amp;gt;1,800 for High)&lt;/li>
+&lt;li>CR (Conc. Ratio) = % Share of top n companies (&amp;gt;80% for High)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Types of Oligopoly&lt;/p>
+&lt;ul>
+&lt;li>Non-Collusive
+&lt;ul>
+&lt;li>Cournot&amp;rsquo;s Duopoly&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Collusive (Can be Tacit or Non-Tacit)
+&lt;ul>
+&lt;li>Price Leadership&lt;/li>
+&lt;li>Cartels and Collusion&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Price Leadership - Dominant Firm decides market price for smaller firm.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Predatory Pricing - Temporarily selling at artificially low price to kill competitors&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Cartel Duopoly - Use like monopoly with $MR = MC_1 = MC_2$&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="cournots-model">Cournot&amp;rsquo;s Model&lt;/h4>
+&lt;ul>
+&lt;li>Assumptions- Identical Firms with homogenous products&lt;/li>
+&lt;li>Response Func = Func of output of a Firm&lt;/li>
+&lt;li>Inverse Demand Func - price of product&lt;/li>
+&lt;li>Same Equilibrium for both firms&lt;/li>
+&lt;li>Steps to solve
+&lt;ul>
+&lt;li>Equate $MR = MC$ for each firm&lt;/li>
+&lt;li>Output of each firm as func of other firm (Response Func)&lt;/li>
+&lt;li>Intersection of Responses (Can be plotted) is the Nash Eq.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="game-theory">Game Theory&lt;/h4>
+&lt;ul>
+&lt;li>Dominant Strategy - Player has a strategy which is better &lt;strong>irrespective&lt;/strong> of the other&amp;rsquo;s solution&lt;/li>
+&lt;li>Nash Equilibrium - All players play their best strategy (Need not be dominant-dominant!)&lt;/li>
+&lt;li>Maximin Strategy - Low risk to maximize the min gain (opposed to minmax)&lt;/li>
+&lt;li>Tit-for-tat Strategy - Response Based Strategy&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/prisonersdilemma.png">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/prisonersdilemma.png" width="auto" height="auto"
+alt="Prisoner&amp;amp;rsquo;s Dilemma"/>&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>Prisoner&amp;rsquo;s Dilemma (see above) - Dominant-Dominant is not Nash Eq. (or best strategies)&lt;/li>
+&lt;/ul>
+&lt;h3 id="20---intro-to-macro">20 - Intro to Macro&lt;/h3>
+&lt;ul>
+&lt;li>Aggregate: To refer to sums only&lt;/li>
+&lt;li>Recession/Slump or Expansion/Boom&lt;/li>
+&lt;li>Depression = Long lasting depression&lt;/li>
+&lt;li>Business Cycle: One cycle of slight recession and expansion&lt;/li>
+&lt;li>Macroeconomic Concerns
+&lt;ul>
+&lt;li>Output Growth: Aggregate Output&lt;/li>
+&lt;li>Unemployment: unemployment rate not too low(business will not have labour) and not too high (jobless people)&lt;/li>
+&lt;li>Inflation and Deflation:
+Mild Inflation rate is required - Hyperinflation: rapid and devaluation (Venzuala, Turkey..) - Deflation: Nobody buys anything = No businesses (Japan)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Circular Flow Diagram between Household, Gov, Firms, World&lt;/li>
+&lt;/ul>
+&lt;h4 id="class-notes-terms">Class Notes Terms&lt;/h4>
+&lt;ol>
+&lt;li>Goods and Services Market&lt;/li>
+&lt;li>Financial Markets - Trading Securities (equities&lt;/li>
+&lt;li>Money Markets&lt;/li>
+&lt;/ol>
+&lt;p>Policies,&lt;/p>
+&lt;ol>
+&lt;li>Fiscal Policy - Tax &amp;amp; Spending policies of Gov&lt;/li>
+&lt;li>Monetary Policies -
+&lt;ul>
+&lt;li>CRR: Cash Reserve Ratio (~4%)&lt;/li>
+&lt;li>SLR: Statutory Liquidity Ratio (~19.4%)&lt;/li>
+&lt;li>Repo Rate: Repurchase Agreement&lt;/li>
+&lt;li>Reverse Repo Rate: Reverse Repurchase Agreement&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="21---measure-outputs-and-income-national">21 - Measure Outputs and Income (National)&lt;/h3>
+&lt;ul>
+&lt;li>Domestic Vs National : Region-based Vs Nationality(citizenship) based.
+&lt;em>See Honda Plant in Nagpur Example&lt;/em>&lt;/li>
+&lt;li>Gross Vs Net: Without Depreciation Vs True with Depreciation&lt;/li>
+&lt;/ul>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/gdpconversion.jpg">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/gdpconversion.jpg" width="auto" height="auto"
+alt="Conversions for GDP"/>&lt;/a>&lt;/p>
+&lt;ul>
+&lt;li>Note that depreciation is mostly considered only for net domestic-private investments and not others&lt;/li>
+&lt;/ul>
+&lt;h5 id="exclusions-to-gdp">Exclusions to GDP&lt;/h5>
+&lt;ul>
+&lt;li>Final Goods and Services only not intermediate&lt;/li>
+&lt;li>Value added method for calculating GDP&lt;/li>
+&lt;li>Exclude Used Goods - No new production or revenue generation (except rent)&lt;/li>
+&lt;li>Exclude Paper Transactions (like stocks and bonds but not broker fees) - No new production and only exchanges.&lt;/li>
+&lt;li>Only domestically owned production - Only region based and not on citizenship (see GNP).&lt;/li>
+&lt;/ul>
+&lt;h5 id="expenditure-approach">Expenditure Approach&lt;/h5>
+&lt;p>$$GDP = C + I + G +(Ex -Im)$$&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>Personal Consumption C: Household spending on goods and services&lt;/p>
+&lt;ul>
+&lt;li>Durable: Furniture, cars&amp;hellip;&lt;em>(longer lasting)&lt;/em>&lt;/li>
+&lt;li>Nondurable: Food, clothing, gasoline..&lt;em>(short lived)&lt;/em>&lt;/li>
+&lt;li>Services: Doctors, Educations&amp;hellip;&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Gross Private Domestic Investment I: Purchase of new capital like&lt;/p>
+&lt;ul>
+&lt;li>Residential: Houses etc.&lt;/li>
+&lt;li>Non-Residential: Machines, Tools, Plants&lt;/li>
+&lt;li>Change in Business Inventory: Goods produced for later sale in inventories&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Government Consumption and Gross Investment G: Goods (schools, government programmes, institutions&amp;hellip;) and services (military salaries&amp;hellip;)&lt;/p>
+&lt;ul>
+&lt;li>Central (or Federal)&lt;/li>
+&lt;li>State&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Net Exports (Ex - Im):&lt;/p>
+&lt;ul>
+&lt;li>Exports by the country shows production&lt;/li>
+&lt;li>Imports is production from other countries&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h5 id="income-approach">Income Approach&lt;/h5>
+&lt;p>This approach to GDP is from National income which is in decreasing order of magnitude from,&lt;/p>
+&lt;ol>
+&lt;li>Compensation of Employees&lt;/li>
+&lt;li>Proprietors&amp;rsquo; Income (Uncorporated businesses&amp;rsquo; income)&lt;/li>
+&lt;li>Rental Income&lt;/li>
+&lt;li>Corporate Profits&lt;/li>
+&lt;li>Net Interest (!only interest from businesses)&lt;/li>
+&lt;li>Indirect Taxes minus subsidies&lt;/li>
+&lt;li>Net Business Transfers Payments by Businesses&lt;/li>
+&lt;li>Surplus from Government Institutions (often -ve unlike others)&lt;/li>
+&lt;/ol>
+&lt;h6 id="national-income-to-personal-saving">National Income to Personal Saving&lt;/h6>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/nationalpersonal.jpg">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/nationalpersonal.jpg" width="auto" height="auto"
+alt="National Income"/>&lt;/a>&lt;/p>
+&lt;h5 id="nominal-vs-real-gdp">Nominal Vs Real GDP&lt;/h5>
+&lt;ul>
+&lt;li>Real GDP = Nominal GDP adjusted for price change&lt;/li>
+&lt;li>Real Vs Nominal Output&lt;/li>
+&lt;li>Fixed-Weight Procedure: Prices in base year as weights for reference&lt;/li>
+&lt;li>GDP Deflator Method - Using series of % changes to measure overall price&lt;/li>
+&lt;li>Problems of fixed-weight procedure&lt;/li>
+&lt;/ul>
+&lt;h5 id="limitations">Limitations&lt;/h5>
+&lt;ul>
+&lt;li>GDP does not reflect crime rate, increase in leisure time, pollution, domestic work and social ill.&lt;/li>
+&lt;li>Informal Economy - illegal transactions and tax evasion&lt;/li>
+&lt;li>Gross National Income per Capita as measure&lt;/li>
+&lt;/ul>
+&lt;h3 id="251-2---money-and-banks">25(.1, .2) - Money and Banks&lt;/h3>
+&lt;p>&lt;strong>&lt;a href="https://www.khanacademy.org/economics-finance-domain/core-finance/money-and-banking/banking-and-money"target="_blank" rel="noopener">Khan Academy - Money and Banking&lt;/a>&lt;/strong>&lt;/p>
+&lt;p>Money as,&lt;/p>
+&lt;ol>
+&lt;li>Medium of Exchanges (&lt;em>Not like barter, where we trade goods like cocoa&lt;/em>)&lt;/li>
+&lt;li>Store of value - Asset that can be used to transport purchasing power (&lt;em>you can save for now and still spend later&lt;/em>)&lt;/li>
+&lt;li>Unit of account (&lt;em>compare price of pizza and banana&lt;/em>)&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>
+&lt;p>Commodity Monies - Using cigerretes / Ramen as money in Jails.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Fiat Money / Token Money - Money that is intrinsically useless (&lt;em>paper of rupee notes aren&amp;rsquo;t useful&lt;/em>)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Legal tender - What RBI says can be accepted as &amp;lsquo;money&amp;rsquo; (ONLY currency!)
+&lt;em>see 51% torn part of dollar bill is legal tender in US&lt;/em>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Currency Debasement - Hyperinflation of currency value due to too much supply of currency (&lt;em>zimbabwe, post-war Germany, Venzuala&amp;hellip;&lt;/em>)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Measuring Money Supply?
+Money Supply = Currency + Deposits&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Types of Money&lt;/p>
+&lt;ul>
+&lt;li>M1 = Currency + Demand Deposits + Other Deposits&lt;/li>
+&lt;li>M2 = M1 + Saving Deposits with Post Office&lt;/li>
+&lt;li>M3 = M1 + Time Deposits with Bank ( Most Useful )&lt;/li>
+&lt;li>M4 = M3 + Total Deposits with Post Office Saving Organization (excluding NSC)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="creation-of-money-by-banks">Creation of Money by Banks&lt;/h4>
+&lt;p>&lt;a target="_blank" rel="noopener noreferrer"
+href="https://cheese-cracker.github.io/plots/creationofmoney.png">&lt;img loading="lazy" src="https://cheese-cracker.github.io/plots/creationofmoney.png" width="auto" height="auto"
+alt="Creation of Money by Banks"/>&lt;/a>&lt;/p>
+&lt;p>(&lt;strong>See Table 25.3 of Textbook for better understanding&lt;/strong>)&lt;/p></description></item><item><title>Graphs and Networks</title><link>https://cheese-cracker.github.io/posts/graphsnetworks/</link><pubDate>Sun, 10 Mar 2019 00:00:00 +0000</pubDate><guid>https://cheese-cracker.github.io/posts/graphsnetworks/</guid><description>&lt;h3 id="list-of-algorithms">List of Algorithms&lt;/h3>
+&lt;ol>
+&lt;li>
+&lt;p>Minimum Spanning Trees&lt;/p>
+&lt;ul>
+&lt;li>Krusikal&amp;rsquo;s (Any point but min with no cycle)&lt;/li>
+&lt;li>Prim&amp;rsquo;s (From starting point)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Graph Traversal Techniques&lt;/p>
+&lt;ul>
+&lt;li>BFS&lt;/li>
+&lt;li>DFS&lt;/li>
+&lt;li>Djkstra&amp;rsquo;s Shortest Path&lt;/li>
+&lt;li>Apply DFS for checking cut vertex&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Eulerian/Hamiltonian Graphs&lt;/p>
+&lt;ul>
+&lt;li>Eulerian Graph even degree&lt;/li>
+&lt;li>Fleury&amp;rsquo;s Algorithm&lt;/li>
+&lt;li>Closure of Graph&lt;/li>
+&lt;li>Sufficient conditions of Hamiltonian Graph (and Restricted
+Hamiltonian Algo)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Travelling Salesman Problem&lt;/p>
+&lt;ul>
+&lt;li>TSP1- From weight matrix, draw tables&lt;/li>
+&lt;li>TSP2 - Take min span, DFS from leaf node and join all endpoints&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>Network Flow Algo - MaxFlow Mincut&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="resources">Resources&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/mrpandey/d3graphTheory"target="_blank" rel="noopener">D3 Graph Theory&lt;/a>&lt;/li>
+&lt;li>Algebraic Graph Theory Courses by &lt;a href="http://www.cs.yale.edu/homes/spielman/"target="_blank" rel="noopener">Dan Spielman&lt;/a> and his &lt;a href="https://youtu.be/CDMQR422LGM"target="_blank" rel="noopener">Miracles video&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.youtube.com/playlist?list=PLdWX5TZJp5AbxTuiLuNc-wsnbp8Q1ajBy"target="_blank" rel="noopener">Spectral Graph Theory Course&lt;/a> and sources from &lt;a href="http://www.cs.yale.edu/homes/spielman/eigs/"target="_blank" rel="noopener">Dan&amp;rsquo;s Course&lt;/a>&lt;/li>
+&lt;li>&lt;a href="http://www.cs.yale.edu/homes/spielman/eigs2/papers.html"target="_blank" rel="noopener">Recommended Papers for Eigenvalues of Graphs with applications by Dan&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="proofquestion-hints">Proof/Question Hints&lt;/h3>
+&lt;div class="mermaid">
+graph TD
+A[Proof Types in Graphs and Networks] --> B[Contradiction]
+A --> C[Construction or deletion]
+A --> D[Induction]
+&lt;/div>
+&lt;p>&lt;em>Induction is by far the most popular. Contradiction is sometimes used with a construction&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Take Longest path in graph (delete or not)&lt;/li>
+&lt;li>Check type of cycles in graph&lt;/li>
+&lt;li>Adjacency Matrix, Caylay Matrix, Graph Laplacian and Incidence Matrix based approach&lt;/li>
+&lt;li>Number of components more or less (cut-edge, hamiltonian&amp;hellip;)&lt;/li>
+&lt;li>If cycle length 2, Bipartite&lt;/li>
+&lt;li>Planar = draw planar drawing&lt;/li>
+&lt;li>Non-planar
+&lt;ul>
+&lt;li>Euler&amp;rsquo;s Formula or 5-degree or variants(girth-analysis)&lt;/li>
+&lt;li>Check any Subgraph non-planar&lt;/li>
+&lt;li>Kuratowski and/or Wagner&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>If no triangles, then relation between q &amp;amp; r (where q unrestricted)&lt;/li>
+&lt;/ul>
+&lt;h3 id="list-of-theorems">List of Theorems&lt;/h3>
+&lt;ol>
+&lt;li>Isomorphic if complement is isomorphic&lt;/li>
+&lt;li>Every tree (with &amp;gt;= 2 vertices) has &amp;gt;=2 leaves&lt;/li>
+&lt;li>Simple G with n vert, k components, has atleast n-k edges&lt;/li>
+&lt;li>Characterstics of Tree&lt;/li>
+&lt;li>If G has walk, G contains path&lt;/li>
+&lt;li>Every closed odd walk contains odd cycle&lt;/li>
+&lt;li>&lt;strong>Bipartite iff no odd cycle&lt;/strong>&lt;/li>
+&lt;li>Kirchoff&amp;rsquo;s Matrix-Tree Thm&lt;/li>
+&lt;li>Caylay Thm&lt;/li>
+&lt;li>Euler even degree (and disjoint cycle) thm&lt;/li>
+&lt;li>Whitney&amp;rsquo;s Thm&lt;/li>
+&lt;li>Euler&amp;rsquo;s Planar Graph Formula and Thm&lt;/li>
+&lt;li>Max Planar Graph thms using Girth Formula&lt;/li>
+&lt;li>Planarity of Graphs - Kuratowski and Wagner Thms&lt;/li>
+&lt;li>Graph Coloring
+&lt;ul>
+&lt;li>Simple graph with K-blocks has max chromatic no. of blocks&lt;/li>
+&lt;li>For any simple graph, max chromatic no. &amp;lt; max degree + 1&lt;/li>
+&lt;li>Five Color Theorem (Step towards of 4 Color Thm)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h3 id="week-wise-review">Week Wise Review&lt;/h3>
+&lt;h4 id="week-1">Week 1&lt;/h4>
+&lt;ul>
+&lt;li>Types of Graphs&lt;/li>
+&lt;li>Graphical Sequence Algorithm&lt;/li>
+&lt;li>Degree Sum and Edges relation&lt;/li>
+&lt;li>Neighbourhood (open/close)&lt;/li>
+&lt;li>k-regular graphs&lt;/li>
+&lt;li>Isomorphic or not&lt;/li>
+&lt;li>Subgraphs and Induced Subgraphs&lt;/li>
+&lt;/ul>
+&lt;h5 id="types-of-graphs">Types of Graphs&lt;/h5>
+&lt;ul>
+&lt;li>Null&lt;/li>
+&lt;li>Complete&lt;/li>
+&lt;li>Bipartite&lt;/li>
+&lt;li>Complete Bipartite&lt;/li>
+&lt;li>Cycle&lt;/li>
+&lt;li>Path&lt;/li>
+&lt;li>(Graphs n = 1, 2 vertices)&lt;/li>
+&lt;li>(self-compliment Graphs)&lt;/li>
+&lt;li>(planar graphs)&lt;/li>
+&lt;/ul>
+&lt;h4 id="week-2">Week 2&lt;/h4>
+&lt;div class="mermaid">
+graph TD
+A[Walk] --> B[Trails]
+A --> C[Closed Walk]
+B --> D[Paths]
+B --> E[Circuits]
+C --> E
+E --> F[Cycle]
+&lt;/div>
+&lt;p>See Examples for each Case!&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>walk :: anything from start_vertex to end_vertex&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>trail :: edges distinct&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>path :: vertices distinct&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>closed walk :: start_vertex = end_vertex&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Connectivity, Components&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Cut-Edge, Cut-Vertex&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Contraction of graph, minor of a graph (Contraction)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Weakly/Strongly Connected&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h5 id="isomorphic-graphs">Isomorphic Graphs&lt;/h5>
+&lt;div class="mermaid">
+graph LR
+A[Degree Sequence] --> B[Degrees of connection of those vertices]
+B --> C[Find Points Mapping]
+&lt;/div>
+&lt;ul>
+&lt;li>Odd/Even Cycles and/or biparitite&lt;/li>
+&lt;li>Compliment Isomorphism&lt;/li>
+&lt;/ul>
+&lt;h4 id="week-3">Week 3&lt;/h4>
+&lt;ul>
+&lt;li>Trees, Forests (star, path)&lt;/li>
+&lt;li>Represent arithematical equations graphically&lt;/li>
+&lt;li>Every tree has k leaves&lt;/li>
+&lt;li>G contains atleast $E - V + 1$ cycles&lt;/li>
+&lt;li>Characterstics of Tree (see proof)&lt;/li>
+&lt;li>distance: shortest u,v path in tree (don&amp;rsquo;t count start!)&lt;/li>
+&lt;li>eccentricity: max of distance between all u-v path for u&lt;/li>
+&lt;li>diameter: max of eccentricites of all vertices (farthest two points)&lt;/li>
+&lt;li>center: point with min eccentricity&lt;/li>
+&lt;li>radius: min of eccentricities (or eccentricity of center)&lt;/li>
+&lt;li>rooted trees, ordered rooted trees, parent, child, ancestor, descendants, siblings&lt;/li>
+&lt;li>Binary trees, Regular binary trees (deg 3 or less)&lt;/li>
+&lt;/ul>
+&lt;h4 id="week-4">Week 4&lt;/h4>
+&lt;ul>
+&lt;li>wiring, spanning trees, spanning forests&lt;/li>
+&lt;li>Three main types of Matrices
+&lt;ul>
+&lt;li>Adjacency Matrix: (V, V) based and shows no. of edges between each pair of vertices (1 or 0 only for simple graphs)&lt;/li>
+&lt;li>Incidence Matrix: which edges are incident for each vertex (V, E)&lt;/li>
+&lt;li>Graph Laplacian: Degree of vertices along diagonal. -1 wherever edge. 0 wherever no edges. See &lt;a href="https://youtu.be/PFE3VMsR2AU"target="_blank" rel="noopener">graph laplacian video&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Kirchoff&amp;rsquo;s Matrix-Tree Thm&lt;/li>
+&lt;li>Minimum Cost Spanning Trees, Weight Func&lt;/li>
+&lt;li>Krusikal and Prim&amp;rsquo;s Min Spanning Tree finding algo&lt;/li>
+&lt;/ul>
+&lt;h4 id="week-5">Week 5&lt;/h4>
+&lt;ul>
+&lt;li>Edge Based
+&lt;ul>
+&lt;li>eulerian trail( &lt;em>n-2 even 2 odd&lt;/em> )&lt;/li>
+&lt;li>eulerian circuit (&lt;em>all even&lt;/em>)&lt;/li>
+&lt;li>eulerian graph (contains eulerian circuit)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Euler-Path finding algorithm (and proof of even degree)&lt;/li>
+&lt;li>Fleury&amp;rsquo;s Algo&lt;/li>
+&lt;li>Hamiltonian path, hamiltonian graph, sufficient conditions for hamiltonian graph&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>Hamiltonian Cycle is just another way of saying subgraph Cn!&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>Hamiltonian closure and finding hamiltonian graphs&lt;/li>
+&lt;li>TSP1 and TSP2 graph algos&lt;/li>
+&lt;/ul>
+&lt;h4 id="week-6">Week 6&lt;/h4>
+&lt;ul>
+&lt;li>Connectivity, edge cuts, k-edge-connected(returns bool), edge-connectivity (returns int connectivity)&lt;/li>
+&lt;li>Vertex Connectivity, Vertex-Cut Set, min degree, max degree&lt;/li>
+&lt;li>Whitney&amp;rsquo;s Thm&lt;/li>
+&lt;/ul>
+&lt;h4 id="network-flows-and-related-topics-week-before-midsem">Network Flows and Related Topics (Week before Midsem)&lt;/h4>
+&lt;ul>
+&lt;li>Flow - flow, capacity, source, sink&lt;/li>
+&lt;li>Maximum Flow Problem :: Ford-Fulkerson Algo, Residual Graph, Augmented Paths&lt;/li>
+&lt;li>Min Cut Problem :: S-T cut, Cap(A, B), Cut where Residual Graph paths end&lt;/li>
+&lt;li>Flow value Lemma (same as out of source)&lt;/li>
+&lt;li>Max-Flow Min-Cut Thm
+$$ val(f) = \sum*{out\ of\ a} f(e) - \sum*{in\ to\ a} f(e) = \sum_{out\ of\ a} f(e) = cap(A, B)$$&lt;/li>
+&lt;li>Disjoint Paths - Ford-Fulkerson with capacities all 1&lt;/li>
+&lt;li>Menger&amp;rsquo;s Thm - Min no. of vertices required to be removed to disconnect u-v path&lt;/li>
+&lt;li>k-connected k-vertex disjoint paths&lt;/li>
+&lt;/ul>
+&lt;h6 id="blocks-and-block-diagrams">Blocks and Block Diagrams&lt;/h6>
+&lt;div class="mermaid">
+graph TD
+A[Find all cut vertices] --> B[Mark out Blocks such that one not contained in other]
+B --> C[Draw Graph with block dots and cut vertex dots]
+&lt;/div>
+&lt;h4 id="week-7">Week 7&lt;/h4>
+&lt;ul>
+&lt;li>Planar Graphs, Planar Embeddings&lt;/li>
+&lt;li>Planar Drawing&lt;/li>
+&lt;li>Face, Boundary&lt;/li>
+&lt;li>Euler&amp;rsquo;s Graph Formula p - q + r = 2&lt;/li>
+&lt;li>Maximal Planar Graphs and Girth Formula
+$$ \frac{g(n-2)}{g-2}$$&lt;/li>
+&lt;li>Homeomorphic and Subdivisions&lt;/li>
+&lt;li>Kuratowski and Wagner Thms&lt;/li>
+&lt;li>Duality / Dual Plane&lt;/li>
+&lt;li>Crossing Number&lt;/li>
+&lt;/ul>
+&lt;h6 id="kuratowskiwagner-thm">Kuratowski/Wagner Thm&lt;/h6>
+&lt;div class="mermaid">
+graph LR;
+A[Indentify partition of vertices] --> B[Delete Edges to trim down to Bipartite];
+&lt;/div>
+&lt;h4 id="week-8">Week 8&lt;/h4>
+&lt;ul>
+&lt;li>Chromatic Number of Graph, k-colorable&lt;/li>
+&lt;li>Chromatic No. of Blocks thm and max degree + 1 thms&lt;/li>
+&lt;li>Booke&amp;rsquo;s Thm Neither Complete nor odd cycle &amp;lt; max degree&lt;/li>
+&lt;li>5 Color Thm (Towards 4-color)&lt;/li>
+&lt;li>Edge Chromatic No. and Thm for Bipartite graphs and simple graph&lt;/li>
+&lt;/ul>
+&lt;h4 id="graph-numbers-and-their-relations">Graph Numbers and their relations&lt;/h4></description></item></channel></rss>
