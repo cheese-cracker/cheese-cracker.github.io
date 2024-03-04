@@ -1,6 +1,6 @@
 baseURL = "https://cheese-cracker.github.io/"
-title = "A House of Ideas"
-copyright = "©2022 cheese-cracker"
+title = "Futuristic ideas"
+copyright = "©2024 cheese-cracker"
 theme = "hugo-notepadium-mod"
 summaryLength = 30
 
@@ -9,14 +9,14 @@ defaultContentLanguage = "en"
 hasCJKLanguage = true
 
 enableRobotsTXT = true
-paginate = 7  # The number of articles in per page
+paginate = 5  # The number of articles in per page
 enableEmoji = true
 
 # Enable Disqus
 #disqusShortname = "XXX"
 
-# Google Analytics
-#googleAnalytics = "UA-123-45"
+# Google Analytics (Not supported anymore)
+# googleAnalytics = "G-VK520LPFV1"
 
 
 # [module]
