@@ -1,4 +1,180 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Futuristic ideas</title><link>https://cheese-cracker.github.io/</link><description>Recent content on Futuristic ideas</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>©2024 cheese-cracker</copyright><lastBuildDate>Thu, 11 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://cheese-cracker.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Discrete Vs Continuous</title><link>https://cheese-cracker.github.io/posts/discrete-vs-continuous/</link><pubDate>Wed, 26 Jan 2022 00:00:00 +0000</pubDate><guid>https://cheese-cracker.github.io/posts/discrete-vs-continuous/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Futuristic ideas</title><link>https://cheese-cracker.github.io/</link><description>Recent content on Futuristic ideas</description><generator>Hugo -- gohugo.io</generator><language>en</language><copyright>©2024 cheese-cracker</copyright><lastBuildDate>Thu, 11 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://cheese-cracker.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Money macro</title><link>https://cheese-cracker.github.io/posts/money-macro/</link><pubDate>Thu, 11 Apr 2024 00:00:00 +0000</pubDate><guid>https://cheese-cracker.github.io/posts/money-macro/</guid><description>&lt;h2 id="what-is-money-">What is Money ?&lt;/h2>
+&lt;p>An oversimplified view of the economic system goes like the following:&lt;/p>
+&lt;ul>
+&lt;li>When Fed increases the money supply, it means banks can now lend more money so loans are provided at a lower rate of interest to companies and people. A common depiction in pop culture is Powell going brrr with the money printer.&lt;/li>
+&lt;li>When Fed reduces the money supply through &lt;a href="https://www.youtube.com/watch?v=KTWVyFFpGXQ"target="_blank" rel="noopener">Quantitative Tightening&lt;/a>, banks find it harder to lend money and thus provide loans at a much higher rate.&lt;/li>
+&lt;/ul>
+&lt;div align="center">
+&lt;img height="480" src="https://cheese-cracker.github.io/plots/money/money_printer_go_brr.jpg" alt="Money Printer going brrrr during 2020"> &lt;/img>
+&lt;p>&lt;small>Meme: Money printer going brrrr during 2020&lt;/small>&lt;/p>
+&lt;/div>
+&lt;p>With the Fed raising the fed funds rate (AKA interest rate) and selling bonds (or letting bonds expire?), they are kind of deprinting money from the economy.&lt;/p>
+&lt;p>For a better idea of this, I would request you to watch:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.khanacademy.org/economics-finance-domain/ap-macroeconomics/ap-financial-sector/definition-measurement-and-functions-of-money-ap/v/money-supply-m0-m1-and-m2"target="_blank" rel="noopener">Khan Academy: M0, M1, M2, M3 Money Supply&lt;/a> and other notes&lt;/li>
+&lt;li>&lt;a href="https://youtu.be/mzoX7zEZ6h4"target="_blank" rel="noopener">Coldfusion - What is money&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;div align="center">
+&lt;iframe src='https://d3fy651gv2fhd3.cloudfront.net/embed/?s=unitedstamonsupm1&amp;v=202401240217V20230410&amp;w=850&amp;h=400&amp;d1=20140101&amp;d2=20240101&amp;h=360&amp;w=720' height='360' width='720' frameborder='10' scrolling='no'>&lt;/iframe>
+&lt;br />
+&lt;small>&lt;a href='https://tradingeconomics.com/united-states/money-supply-m1'>tradingeconomics.com&lt;/a>: Graph showing M1 money supply of dollars. Essentially, the amount of money liquid in the banks. &lt;/small>
+&lt;/div>
+&lt;p>Every other central bank in the world, is indirectly linked to the Feds decision of money supply.
+This is due to the fact that the dollar is the reserve currency.&lt;/p>
+&lt;p>How was USD made the reserve currency?&lt;/p>
+&lt;ol>
+&lt;li>1950s: Brenton Woods agreement made most of the major countries at the time use USD for trade.&lt;/li>
+&lt;li>Dollar was to be backed by gold. This lasted till the 1970s&lt;/li>
+&lt;li>1970s: Dollar was removed from the gold standard thus causing a bubble and unprecedented growth in the 1980s.&lt;/li>
+&lt;li>Current: The USD is now indirectly backed by a (Military + Petroleum) alliance, &amp;ldquo;Petrodollar&amp;rdquo; *
+which helps prevent the financial bubble from collapsing.&lt;/li>
+&lt;/ol>
+&lt;div align="center">
+&lt;img height="600" src="https://cheese-cracker.github.io/plots/money/petrodollar_recycling.png"> &lt;/img>
+&lt;p>&lt;small> &lt;a href="https://medium.com/@harbdulharkeem_34944/bitcoin-and-the-petrodollar-economy-85d7387b30ad"target="_blank" rel="noopener">Medium&lt;/a>: An oversimplified example of &lt;a href="https://www.imf.org/en/News/Articles/2015/09/28/04/53/sp032306a"target="_blank" rel="noopener">petrodollar recycling&lt;/a>&lt;/small>&lt;/p>
+&lt;/div>
+&lt;p>*&lt;em>For obvious reasons, military-oil alliances are not particularly discussed in economic textbooks. However, folks can draw their own inferences by reading &lt;a href="https://en.wikipedia.org/wiki/Petrodollar_recycling#Petrodollar_warfare"target="_blank" rel="noopener">news sources&lt;/a> and from the reasons for the US interventions in Libya, Iraq etc.&lt;/em>&lt;/p>
+&lt;h2 id="why-is-analyzing-moneyfinancial-instruments-important">Why is analyzing money/financial instruments important?&lt;/h2>
+&lt;p>Throughout history, innovations in financial instruments and institution have tremendously boosted the growth of countries in the past.&lt;/p>
+&lt;p>For example, Innovation of the &lt;a href="https://en.wikipedia.org/wiki/Financial_history_of_the_Dutch_Republic#The_Stock_Market"target="_blank" rel="noopener">stock market in Holland&lt;/a> lead to the Dutch East India Company.
+And the financial crash of the stock market in holland, lead to the boom in the London Stock Exchange at the time.
+Subsequently, boosting the Britain which went on to colonize much of the world.
+However, the sudden growth with lack of ethical values, meant that the British companies would cause exploitation and harm to the colonies to keep the profits rolling (and to prevent the valuation bubble from collapsing).&lt;/p>
+&lt;p>Analyzing the major economic bubbles from the past we have:&lt;/p>
+&lt;ul>
+&lt;li>1630s &lt;a href="https://en.wikipedia.org/wiki/Tulip_mania"target="_blank" rel="noopener">Dutch Tulip Mania&lt;/a>&lt;/li>
+&lt;li>1700s Mississippi Company and South Sea Company&lt;/li>
+&lt;li>1930s &lt;a href="https://en.wikipedia.org/wiki/Great_Depression"target="_blank" rel="noopener">Great Depression&lt;/a>&lt;/li>
+&lt;li>1987 Black Monday&lt;/li>
+&lt;li>2000 Dot-com Bubble&lt;/li>
+&lt;li>2008 &lt;a href="https://en.wikipedia.org/wiki/Subprime_mortgage_crisis"target="_blank" rel="noopener">Subprime Mortgage Crises&lt;/a>&lt;/li>
+&lt;li>2022 &lt;a href="https://en.wikipedia.org/wiki/Cryptocurrency_bubble"target="_blank" rel="noopener">Crypto Bubble&lt;/a> and &lt;a href="https://en.wikipedia.org/wiki/Chinese_property_sector_crisis_%282020%E2%80%93present%29"target="_blank" rel="noopener">Chinese Property Crises&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Numerous, &lt;a href="https://dariusforoux.com/stock-market-cycles/"target="_blank" rel="noopener">sector-wise stock market bubbles&lt;/a> keep forming from time to time.&lt;/p>
+&lt;p>Financial innovation represents the forefront of enabling new technologies, which is why most countries try to adopt new innovations in the financial system.&lt;/p>
+&lt;p>Some financial innovations that lead to faster money transfers in the recent past, that are slowly being adopted across countries include:&lt;/p>
+&lt;ul>
+&lt;li>Card-based payment networks: VISA / Mastercard (US), JCB (Japan), Rupay (India), UnionPay (China)&lt;/li>
+&lt;li>Fund-transfer among Banks: &lt;a href="https://en.wikipedia.org/wiki/Real-time_gross_settlement"target="_blank" rel="noopener">Real-Time Gross Settlement&lt;/a>, &lt;a href="https://en.wikipedia.org/wiki/Automated_clearing_house"target="_blank" rel="noopener">Automated Clearing House&lt;/a>&lt;/li>
+&lt;li>Crossborder Payment Systems: SWIFT, CIPS (China), SFMS (Russia), SPFS (India), Wise, Visa B2B&lt;/li>
+&lt;li>Smartphone P2P payments apps: PayTM/PhonePe (UPI), CashApp/ApplePay, WeChat Pay / Alipay&lt;/li>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/History_of_CBDCs_by_country"target="_blank" rel="noopener">CBDCs&lt;/a>: Digital Yuan, E-rupee&lt;/li>
+&lt;/ul>
+&lt;p>Although controversial, the book &lt;a href="https://en.wikipedia.org/wiki/Sapiens:_A_Brief_History_of_Humankind"target="_blank" rel="noopener">Sapiens&lt;/a> provides useful examples of the financial bubbles in the past.&lt;/p>
+&lt;h2 id="incentive-schemes---why-is-it-needed">Incentive Schemes - Why is it needed?&lt;/h2>
+&lt;p>Money is a unique and extremely useful incentive scheme since it provides,&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>Store of Value&lt;/strong> - Intrinsic value provided by individuals/businesses can be quantitatively rewarded.&lt;/li>
+&lt;li>&lt;strong>Medium of Exchange&lt;/strong> - Rewards can be transferred.&lt;/li>
+&lt;/ol>
+&lt;p>The likely fall of communism into capitalism in most countries like USSR and China, is perhaps due to the fact that there was no better incentive scheme to replace money.
+Communism thus providing immense short-term gain for the first 10-15 years, possible failed to keep up with a robust incentive scheme like capitalism.&lt;/p>
+&lt;p>An insightful fictional case study is that of &lt;a href="https://www.youtube.com/watch?v=SmBs5d_Ip60"target="_blank" rel="noopener">20th Century Motor Company&lt;/a> from the book Atlas Shrugged. It shows how a company could fail by providing incentives that seem morally right at first. Such systems indirectly reward people who exploit the &lt;a href="https://www.investopedia.com/terms/t/tragedy-of-the-commons.asp"target="_blank" rel="noopener">tragedy of the commons&lt;/a> at the start, before the entire system slowly crumbles.&lt;/p>
+&lt;p>Clearly, money/currency is not the best indicator of driving innovation or maximizing overall happiness either.&lt;/p>
+&lt;div align="center">
+&lt;img height="480" src="https://cheese-cracker.github.io/plots/money/lvmh-vs-boeing.jpg" alt="companiesmarketcap.com: Luxury Goods Conglomerate LVMH Vs Aircraft Manufacturer Boeing"> &lt;/img>
+&lt;p>&lt;small>companiesmarketcap.com: Luxury Goods Conglomerate LVMH Vs Aircraft Manufacturer Boeing&lt;/small>&lt;/p>
+&lt;/div>
+A luxury goods conglomerate like LVMH which makes Louis Vuitton bags has a higher marketcap than Boeing, an aircraft manufacturer. Even though an aircraft manufacturer like Boeing is likely driving more innovation. In another sense, it could also mean &lt;b>more top talent could be hired for driving sales of luxury handbags instead of designing future aircrafts&lt;/b>.
+&lt;br/>
+So then, how do we well-distribute wealth and supercharge innovation?
+&lt;br/>
+&lt;h2 id="a-foray-into-ubi">A foray into UBI&lt;/h2>
+&lt;p>Is giving people free money or a &lt;a href="https://www.investopedia.com/terms/b/basic-income.asp"target="_blank" rel="noopener">universal basic income&lt;/a>, a good idea?&lt;/p>
+&lt;p>Some flaws of this model would be:&lt;/p>
+&lt;ul>
+&lt;li>May ultimately lead to the same economic inequality without providing any public gain like better roads, public transport etc.&lt;/li>
+&lt;li>Also, all products consumed by the average citizen would go up in price leading directly to inflation in prices.&lt;/li>
+&lt;li>People who perform better or provide more value won&amp;rsquo;t be adequately rewarded. (So, people may move to other countries/regions)&lt;/li>
+&lt;li>Lots of the money may be ultimately spent on pursuing short term gains/goods, instead of longer term gains that help the economy.&lt;/li>
+&lt;/ul>
+&lt;p>A real life example of this is the COVID stimulus packages in the U.S. which acts sort of like UBI :&lt;/p>
+&lt;ul>
+&lt;li>Run a media campaigns and manipulate plebs to buy into unregulated crypto/NFT assets with the covid stimulus packages&lt;/li>
+&lt;li>Once pumped up, the rich person sells the crypto positions&lt;/li>
+&lt;/ul>
+&lt;p>Increase in prices of daily goods is usually analyzed using the CPI Inflation rate chart.&lt;/p>
+&lt;div align="center">
+&lt;img height="480" src="https://cheese-cracker.github.io/plots/money/cpi_constitutes.png" alt="Goods and Services under CPI"> &lt;/img>
+&lt;p>&lt;small> Investopedia: Goods and services under the CPI. CPI is usually a weighted average of the price increases in each of these goods and services.&lt;/small>&lt;/p>
+&lt;/div>
+&lt;div align="center">
+&lt;iframe src='https://d3fy651gv2fhd3.cloudfront.net/embed/?s=cpi+yoy&amp;v=202401111349V20230410&amp;w=850&amp;h=400&amp;d1=20140101&amp;d2=20240101&amp;h=360&amp;w=720' height='360' width='720' frameborder='10' scrolling='no'>&lt;/iframe>&lt;br />
+&lt;p>&lt;small> &lt;a href='https://tradingeconomics.com/united-states/inflation-cpi'>tradingeconomics.com&lt;/a>: US CPI Inflation Rate 2014-2024 &lt;/small>&lt;/p>
+&lt;/div>
+Clearly, the COVID stimulus packages (UBI) caused very high inflation rates. Ultimately, the increase in prices
+of daily goods, ends up erasing all the benefits of providing money in the first place.
+&lt;p>Other approaches to UBI, like providing food rations and free education may work better in developing society.&lt;/p>
+&lt;h2 id="analyzing-money-in-a-better-way">Analyzing Money in a Better Way&lt;/h2>
+&lt;p>Economists would have much better techniques to analyze money but here I attempt to find simpler techniques to analyze money/incentive schemes.&lt;/p>
+&lt;p>Some ways to analyze money include,&lt;/p>
+&lt;ul>
+&lt;li>Utility Vs Time - Shows how an asset&amp;rsquo;s price would age with time. A car would most likely be a depreciating asset with a sloping curve.&lt;/li>
+&lt;/ul>
+&lt;div align="center">
+&lt;img height="360" src="https://cheese-cracker.github.io/plots/money/utility_vs_time_flight_ticket.png" alt="Utiltiy Time
+Curves"> &lt;/img>
+&lt;p>&lt;small>Utility vs Time Curve for a flight ticket.&lt;/small>&lt;/p>
+&lt;/div>
+&lt;ul>
+&lt;li>&lt;a href="https://vitalik.eth.limo/general/2022/10/28/revenue_evil.html"target="_blank" rel="noopener">Rivalrousness Vs Excludability&lt;/a> - This article from vitalik&amp;rsquo;s blog goes into much depth about it.
+&lt;ul>
+&lt;li>Rivalrousness: to what extent does one person enjoying the good reduce another person&amp;rsquo;s ability to enjoy it?&lt;/li>
+&lt;li>Excludability: how difficult is it to prevent specific individuals, eg. those who do not pay, from enjoying the good?&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;div align="center">
+&lt;img height="360" src="https://cheese-cracker.github.io/plots/money/vitalik_excludable_rivalrous.png" alt="Rivalrousness Vs
+Excludablity Chart"> &lt;/img>
+&lt;p>&lt;small>&lt;a href="https://vitalik.eth.limo/general/2022/10/28/revenue_evil.html"target="_blank" rel="noopener">Vitalik&amp;rsquo;s Blog&lt;/a>: Rivalrousness Vs Excludability Chart &lt;/small>&lt;/p>
+&lt;/div>
+&lt;ul>
+&lt;li>Different concepts of money in the future
+&lt;ul>
+&lt;li>Future money with expiry dates
+&lt;ul>
+&lt;li>Inflation already does this to some extent even today&lt;/li>
+&lt;li>Gift Cards and Vouchers already do this to some extent&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;a href="https://a16zcrypto.com/posts/article/the-future-of-work-daos-crypto-networks/"target="_blank" rel="noopener">DAOs&lt;/a> - Corporations based on group contributions.&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>Broad ways to make money more useful could be by designing it to better,
+A future form of money would be more optimal in,&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Reducing &lt;a href="https://en.wikipedia.org/wiki/Deadweight_loss"target="_blank" rel="noopener">deadweight loss&lt;/a>&lt;/strong> or in simpler terms, preventing any supply-demand mismatch in in products bought using money. (e.g.- Food being wasted since no one to eat it)&lt;/li>
+&lt;li>&lt;strong>Encouraging use of sustainable products/methods&lt;/strong>. (Possibly, the original intent of &lt;a href="https://www.blackrock.com/us/financial-professionals/tools/esg-360-methodology"target="_blank" rel="noopener">Blackrock&amp;rsquo;s ESG scores&lt;/a> before being corrupted by politics?)&lt;/li>
+&lt;li>&lt;strong>Helping innovative/research companies&lt;/strong> receive adequate monetary funding till value can be
+provided.&lt;/li>
+&lt;/ul>
+&lt;h2 id="further-reading">Further Reading&lt;/h2>
+&lt;p>In the context of nations, governments tend to focus on other aspects of money like,&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://www.investopedia.com/terms/v/velocity.asp#toc-example-of-velocity-of-money"target="_blank" rel="noopener">Velocity of money&lt;/a>: How fast money is spent. The more different people it is traded with, the more people it provides value/goods/services to.&lt;/li>
+&lt;li>How much has prices for necessary items increased for the average person (Consumer Price Index or Inflation)&lt;/li>
+&lt;li>Numerous other indicators are available on &lt;a href="https://tradingeconomics.com/india/indicators"target="_blank" rel="noopener">trading economics indicators&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Alternatives to Money - Other vague incentive schemes for innovation/work in the modern world:&lt;/p>
+&lt;ol>
+&lt;li>Political power. (President Vs Factory Worker)&lt;/li>
+&lt;li>Work type (Work in AI/ML Vs Work in Agriculture)&lt;/li>
+&lt;li>Self-satisfaction (Sports Player Vs Factory Worker)&lt;/li>
+&lt;li>Idealogy - Crusades could be an example of religious idealogies, open source development could be an example of a utilitarian one.&lt;/li>
+&lt;/ol>
+&lt;p>References&lt;/p>
+&lt;ul>
+&lt;li>Political reasons why money flows to where it does: &lt;a href="https://www.youtube.com/watch?v=rStL7niR7gs"target="_blank" rel="noopener"> Rules for Rulers by CGP Grey &lt;/a>&lt;/li>
+&lt;li>Simpler Analysis on QT/QE: &lt;a href="https://www.youtube.com/watch?v=KTWVyFFpGXQ"target="_blank" rel="noopener">Plain Bagel - Quantitative Tightening&lt;/a>&lt;/li>
+&lt;li>Complicated/Deeper Analaysis on QT/QE (rabbit hole): &lt;a href="https://www.youtube.com/watch?v=qaIgj987Xrs"target="_blank" rel="noopener">FedGuy Joshua Wang on Quantitative Tightening&lt;/a> (Also a blog post)&lt;/li>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/Econophysics"target="_blank" rel="noopener">Econophysics&lt;/a>: Takes various concepts from physics and applies it to economics. (Dampening factors when money echoes through markets etc.?)&lt;/li>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/Sapiens:_A_Brief_History_of_Humankind"target="_blank" rel="noopener">Sapiens&lt;/a> - Although controversial for its factual inaccuracies, it provides a good overall mental model of development and progress throughout history.&lt;/li>
+&lt;li>&lt;a href="https://en.wikipedia.org/wiki/Atlas_Shrugged"target="_blank" rel="noopener">Atlas Shrugged&lt;/a> - Rather lengthy book, but first two parts provide an excellent view of the downsides of a lack of incentive schemes.&lt;/li>
+&lt;li>Simplified overview of the recessions in the past: &lt;a href="https://www.youtube.com/watch?v=uGx6HatpGPY"target="_blank" rel="noopener">Slidebean - List of past recessions&lt;/a>&lt;/li>
+&lt;li>Modelling a DAO: &lt;a href="https://vitalik.eth.limo/general/2022/09/20/daos.html"target="_blank" rel="noopener">Vitalik - DAOs are not corporations&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>Discrete Vs Continuous</title><link>https://cheese-cracker.github.io/posts/discrete-vs-continuous/</link><pubDate>Wed, 26 Jan 2022 00:00:00 +0000</pubDate><guid>https://cheese-cracker.github.io/posts/discrete-vs-continuous/</guid><description>&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>In this post, we delve into the &lt;strong>mental model&lt;/strong> (or abstract feeling) of things being &lt;strong>continuous Vs discrete&lt;/strong>.
 In the direction of continuous vs discrete ideas, we look into signal processing, numerical methods and random ideas.&lt;/p>
 &lt;div align="center">
