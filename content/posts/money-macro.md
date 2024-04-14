@@ -3,7 +3,7 @@ title: "Money macro"
 author: Cheese-Cracker (Chinmay Hebbar)
 created: Fri Dec 15 12:00:00 AM IST 2023
 excerpt: 'An analysis of money as an incentive scheme for society. Speculation of future kinds of money and reward incentives.'
-date: "2024-04-11"
+date: 2024-04-11
 description: Analysis of Money
 tags: [ "economics", "mentalmodels", "markets", "finance", ]
 categories: [ "ideas" ]
