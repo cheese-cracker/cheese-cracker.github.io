@@ -7,7 +7,7 @@ giscus: false
 ---
 
 <div align="center">
-<img height="200" src="/img/ChinmayPhotoVacation.jpg" alt="My Photo"> </img>
+<img height="200" src="/img/ChinmayPhotoNew.jpg" alt="My Photo"> </img>
 
 :wave: Hi, I am Chinmay Hebbar!
 
@@ -26,12 +26,12 @@ giscus: false
 #### About Me
 
 
-Hi, I'm a ~~Maths and Electonics & Instrumentation student at BITS Pilani~~ Software Engineer at VISA. 
+Hi, I'm a ~~Maths and Electonics & Instrumentation student at BITS Pilani~~ Founding Engineer at an AI-enabled B2B Marketing Platform. 
 
 
 In the past, I have worked on interesting personal and professional projects.
 
-Experimenting with new software and learning new things like [polyphasic sleeping](https://www.polyphasic.net), [computational geometry](https://www.youtube.com/playlist?list=PLubYOWSl9mIvTio-1bXWnhE9LdeXfox1z) and [accounting 101](https://www.youtube.com/playlist?list=PLUkh9m2BorqmKaLrNBjKtFDhpdFdi8f7C) interest me!
+Experimenting with new software and learning new things like [polyphasic sleeping](https://web.archive.org/web/20240102214241/https%3A%2F%2Fwww.polyphasic.net%2F), [computational geometry](https://www.youtube.com/playlist?list=PLubYOWSl9mIvTio-1bXWnhE9LdeXfox1z) and [accounting 101](https://www.youtube.com/playlist?list=PLUkh9m2BorqmKaLrNBjKtFDhpdFdi8f7C) interest me!
 
 Hopefully, this site will prove useful in sharing ideas and notes.
 
