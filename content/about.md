@@ -7,7 +7,7 @@ giscus: false
 ---
 
 <div align="center">
-<img height="200" src="/img/ChinmayPhotoNew.jpg" alt="My Photo"> </img>
+<img height="250" src="/img/ChinmayPhotoNew.jpg" alt="My Photo"> </img>
 
 :wave: Hi, I am Chinmay Hebbar!
 

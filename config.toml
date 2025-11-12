@@ -9,8 +9,10 @@ defaultContentLanguage = "en"
 hasCJKLanguage = true
 
 enableRobotsTXT = true
-paginate = 5  # The number of articles in per page
 enableEmoji = true
+
+[pagination]
+pagerSize = 5  # The number of articles in per page
 
 # Enable Disqus
 #disqusShortname = "XXX"
@@ -75,16 +77,12 @@ unsafe = true  # enable raw HTML in Markdown
     startLevel = 2
 
 [permalinks]
-  post = "/posts/:filename/"
-
-[author]
-    name = "cheese-cracker"  # Change to your name
-
+  post = "/posts/:contentbasename/"
 
 [params]
 author = "cheese-cracker"
 description = "A place for interesting ideas, notes and blogposts"
-style = "auto"  # default: auto. light: light theme, dark: dark theme, auto: based on system.
+style = "dark"  # default: auto. light: light theme, dark: dark theme, auto: based on system.
 # logo = "/img/cheese-cracker.jpg"
 slogan = ""
 #license = "<a rel=license href=http://creativecommons.org/licenses/by-nc-sa/4.0/><img alt=Creative Commons License style=border-width:0 src=https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png /></a><br />This work is licensed under a <a rel=license href=http://creativecommons.org/licenses/by-nc-sa/4.0/>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>."
