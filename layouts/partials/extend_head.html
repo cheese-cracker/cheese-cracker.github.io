@@ -54,12 +54,14 @@
       const d = Delaunay.from(pts).voronoi([0, 0, w, hh]);
       ctx.clearRect(0, 0, w, hh);
       const dark = document.body.className.includes('dark');
-      const accent = getComputedStyle(document.documentElement).getPropertyValue('--ir-accent').trim() || '#7aa2f7';
+      const cs = getComputedStyle(document.documentElement);
+      const accent = cs.getPropertyValue('--ir-voronoi').trim() || '#7aa2f7';
+      const dotCol = cs.getPropertyValue('--ir-voronoi-dot').trim() || accent;
       // tune here: [cell edges, seed points]
       const EDGE = dark ? 0.30 : 0.22, DOT = dark ? 0.60 : 0.45;
       ctx.lineWidth = 1.1;
       ctx.strokeStyle = accent;
-      ctx.fillStyle = accent;
+      ctx.fillStyle = dotCol;
       ctx.globalAlpha = EDGE;
       ctx.beginPath(); d.render(ctx); ctx.stroke();
       ctx.globalAlpha = DOT;

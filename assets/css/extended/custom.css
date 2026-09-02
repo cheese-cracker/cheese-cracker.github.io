@@ -1,4 +1,8 @@
-:root { --ir-accent: #7aa2f7; }
+:root {
+  --ir-accent: #7aa2f7;
+  --ir-voronoi: #e0af68;      /* cell edges */
+  --ir-voronoi-dot: #f7768e;  /* seed points */
+}
 
 body { font-family: 'Averia Sans Libre', ui-sans-serif, system-ui, sans-serif; }
 .post-content code, .post-content pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
