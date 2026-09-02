@@ -6,6 +6,10 @@ tags: [ "economics", ]
 categories: [ "notes" ]
 layout: page
 toc: true
+cover:
+  image: "/plots/costmineq.jpg"
+  alt: "Principles of Economics"
+  relative: false
 ---
 
 ### Introduction

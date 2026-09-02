@@ -7,8 +7,11 @@ date: 2022-01-26
 description: Continuous Vs Discrete
 tags: [ "signalprocessing", "math", "mentalmodels", "numericalmethods",]
 categories: [ "ideas" ]
-imgs: ['/plots/des/DvsC.jpg']
 toc: true
+cover:
+  image: "/plots/des/DvsC.jpg"
+  alt: "Discrete Vs Continuous"
+  relative: false
 ---
 
 ## Introduction
