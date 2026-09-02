@@ -6,6 +6,10 @@ tags: [ "math", "numericalmethods",]
 categories: [ "notes" ]
 date: 2020-01-20
 description: Table of Contents Sheet / Course Map for Numerical Analysis
+cover:
+  image: "/covers/numan.svg"
+  alt: "Numerical Analysis"
+  relative: false
 ---
 
 

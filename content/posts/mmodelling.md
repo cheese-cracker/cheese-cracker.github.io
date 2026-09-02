@@ -6,6 +6,10 @@ tags: [ "math" ]
 categories: [ "notes" ]
 mermaid: true
 layout: page
+cover:
+  image: "/covers/mmodelling.svg"
+  alt: "Math Modelling"
+  relative: false
 ---
 
 ### Important Topics
