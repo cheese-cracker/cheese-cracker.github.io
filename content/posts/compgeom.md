@@ -9,8 +9,11 @@ created: Oct 2020
 description: Simple Notes for Computational Geometry
 tags: ["cs", "math", "c++", "graphs"]
 categories: ["notes"]
-imgs: ["plots/compgeom/ch3d_as_dt.png"]
 toc: true
+cover:
+  image: "/plots/compgeom/ch3d_as_dt.png"
+  alt: "Computational Geometry"
+  relative: false
 ---
 
 ## Key Resources

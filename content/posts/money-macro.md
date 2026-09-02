@@ -7,8 +7,11 @@ date: 2024-04-11
 description: Analysis of Money
 tags: [ "economics", "mentalmodels", "markets", "finance", ]
 categories: [ "ideas" ]
-imgs: ['/plots/money/money_printer_go_brr.jpg']
 toc: true
+cover:
+  image: "/plots/money/money_printer_go_brr.jpg"
+  alt: "Reward Systems - Money and More"
+  relative: false
 ---
 
 
