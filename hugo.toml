@@ -1,0 +1,139 @@
+baseURL = "https://cheese-cracker.github.io/"
+title = "cheese-cracker"
+copyright = "©2026 cheese-cracker"
+theme = "PaperMod"
+
+locale = "en-us"
+defaultContentLanguage = "en"
+
+enableRobotsTXT = true
+enableEmoji = true
+enableInlineShortcodes = true
+summaryLength = 30
+
+[pagination]
+  pagerSize = 10
+
+[permalinks]
+  posts = "/posts/:contentbasename/"
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+# ── outputs ───────────────────────────────────────────────────────────────
+# JSON feeds the Fuse.js search index; llms is the AEO surface.
+[outputs]
+  home = ["HTML", "RSS", "JSON", "llms"]
+
+[outputFormats.llms]
+  mediaType = "text/plain"
+  baseName = "llms"
+  isPlainText = true
+
+[markup.goldmark.renderer]
+  unsafe = true          # required: 21 raw <div>, 13 <img>, 2 <iframe> in posts
+
+[markup.highlight]
+  codeFences = true
+  guessSyntax = false
+  noClasses = true
+  style = "dracula"
+
+[markup.tableOfContents]
+  startLevel = 2
+  endLevel = 3
+  ordered = false
+
+[params]
+  env = "production"
+  author = "Chinmay Hebbar"
+  description = "A place for interesting ideas, notes and blogposts"
+  keywords = ["mathematics", "computational geometry", "numerical analysis", "economics", "engineering"]
+  DateFormat = "January 2, 2006"
+  defaultTheme = "dark"
+  disableThemeToggle = false
+  mainSections = ["posts"]
+
+  ShowReadingTime = true
+  ShowShareButtons = false
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+  ShowRssButtonInSectionTermList = true
+  ShowToc = true
+  TocOpen = false
+  hidemeta = false
+  hideSummary = false
+  showtoc = true
+
+  [params.assets]
+    disableHLJS = true   # chroma handles highlighting (dracula, noClasses)
+    favicon = "/favicon.ico"
+    favicon16x16 = "/favicon-16x16.png"
+    favicon32x32 = "/favicon-32x32.png"
+    apple_touch_icon = "/apple-touch-icon.png"
+    safari_pinned_tab = "/safari-pinned-tab.svg"
+
+  [params.schema]
+    publisherType = "Person"
+
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 0
+    keys = ["title", "permalink", "summary", "content"]
+
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/cheese-cracker"
+  [[params.socialIcons]]
+    name = "linkedin"
+    url = "https://www.linkedin.com/in/chinmay-hebbar/"
+  [[params.socialIcons]]
+    name = "x"
+    url = "https://x.com/chinmayhebbar"
+  [[params.socialIcons]]
+    name = "telegram"
+    url = "https://t.me/cheese_cracker"
+  [[params.socialIcons]]
+    name = "instagram"
+    url = "https://www.instagram.com/ch.nm.y/"
+  [[params.socialIcons]]
+    name = "rss"
+    url = "index.xml"
+
+# ── nav ───────────────────────────────────────────────────────────────────
+[[menu.main]]
+  identifier = "posts"
+  name = "posts"
+  url = "/posts/"
+  weight = 10
+[[menu.main]]
+  identifier = "tags"
+  name = "tags"
+  url = "/tags/"
+  weight = 20
+[[menu.main]]
+  identifier = "archives"
+  name = "archives"
+  url = "/archives/"
+  weight = 30
+[[menu.main]]
+  identifier = "about"
+  name = "about"
+  url = "/about/"
+  weight = 40
+[[menu.main]]
+  identifier = "search"
+  name = "search"
+  url = "/search/"
+  weight = 50
+
+[minify]
+  disableXML = true
+  minifyOutput = true

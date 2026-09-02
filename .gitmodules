@@ -1,3 +1,5 @@
-[submodule "themes/hugo-notepadium-mod"]
-	path = themes/hugo-notepadium-mod
-	url = https://github.com/qdzhang/hugo-notepadium-mod.git
+[submodule "themes/PaperMod"]
+	shallow = true
+	path = themes/PaperMod
+	url = https://github.com/adityatelange/hugo-PaperMod.git
+	branch = master
