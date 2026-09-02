@@ -27,7 +27,21 @@ body { font-family: 'Averia Sans Libre', ui-sans-serif, system-ui, sans-serif; }
 
 /* v2 — Voronoi field sits behind everything, costs no layout */
 #voronoi-bg {
-  position: fixed; inset: 0; z-index: -1;
-  width: 100vw; height: 100vh; pointer-events: none;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: -1;
+  width: 100vw; pointer-events: none;   /* top + height set by script, below the nav */
 }
 .main, .header { position: relative; }
+
+/* ── header: triangulated seam, and an opaque ground so the Voronoi
+      field stops cleanly at the nav instead of running under it ─────── */
+.header {
+  position: relative;
+  z-index: 1;
+  background: var(--theme);
+  border-bottom: 0;
+  padding-bottom: 9px;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='9' viewBox='0 0 240 9'%3E%3Cpath d='M0 9 L24 1 L48 8 L72 2 L96 7 L120 1 L144 8 L168 3 L192 7 L216 1 L240 8' fill='none' stroke='%23e0af68' stroke-opacity='.55' stroke-width='1.2'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: bottom left;
+}

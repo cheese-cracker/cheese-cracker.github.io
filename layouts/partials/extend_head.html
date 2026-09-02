@@ -48,7 +48,11 @@
     const ctx = cv.getContext('2d');
 
     const draw = () => {
-      const w = cv.width = innerWidth, hh = cv.height = innerHeight;
+      // The nav seam is the diagram's top boundary: cells are clipped to it,
+      // so edges terminate on the header line instead of running behind it.
+      const top = Math.round(document.querySelector('.header')?.getBoundingClientRect().bottom ?? 0);
+      cv.style.top = top + 'px';
+      const w = cv.width = innerWidth, hh = cv.height = Math.max(1, innerHeight - top);
       const n = Math.round(w * hh / 26000);
       const pts = Array.from({ length: n }, () => [rand() * w, rand() * hh]);
       const d = Delaunay.from(pts).voronoi([0, 0, w, hh]);
