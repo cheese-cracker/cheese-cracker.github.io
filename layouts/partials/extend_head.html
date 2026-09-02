@@ -32,3 +32,42 @@
   document.querySelectorAll('.mermaid').forEach(el => el.dataset.src = el.innerHTML);
 </script>
 {{- end }}
+
+{{- /* v2 — live Voronoi field, seeded per page so each URL gets its own cells */}}
+<script type="module">
+  import { Delaunay } from 'https://cdn.jsdelivr.net/npm/d3-delaunay@6/+esm';
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && innerWidth > 720) {
+    const seedStr = {{ .RelPermalink }};
+    let h = 2166136261;
+    for (const c of seedStr) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+    const rand = () => (h = Math.imul(h ^ h >>> 15, 2246822507) ^ Math.imul(h ^ h >>> 13, 3266489909), ((h >>>= 0) / 4294967296));
+
+    const cv = document.createElement('canvas');
+    cv.id = 'voronoi-bg';
+    document.body.prepend(cv);
+    const ctx = cv.getContext('2d');
+
+    const draw = () => {
+      const w = cv.width = innerWidth, hh = cv.height = innerHeight;
+      const n = Math.round(w * hh / 26000);
+      const pts = Array.from({ length: n }, () => [rand() * w, rand() * hh]);
+      const d = Delaunay.from(pts).voronoi([0, 0, w, hh]);
+      ctx.clearRect(0, 0, w, hh);
+      const dark = document.body.className.includes('dark');
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--ir-accent').trim() || '#7aa2f7';
+      // tune here: [cell edges, seed points]
+      const EDGE = dark ? 0.30 : 0.22, DOT = dark ? 0.60 : 0.45;
+      ctx.lineWidth = 1.1;
+      ctx.strokeStyle = accent;
+      ctx.fillStyle = accent;
+      ctx.globalAlpha = EDGE;
+      ctx.beginPath(); d.render(ctx); ctx.stroke();
+      ctx.globalAlpha = DOT;
+      for (const [x, y] of pts) { ctx.beginPath(); ctx.arc(x, y, 1.5, 0, 6.284); ctx.fill(); }
+    };
+    const reseed = () => { h = 2166136261; for (const c of seedStr) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } draw(); };
+    addEventListener('load', reseed);
+    addEventListener('resize', reseed);
+    document.getElementById('theme-toggle')?.addEventListener('click', () => setTimeout(reseed, 30));
+  }
+</script>

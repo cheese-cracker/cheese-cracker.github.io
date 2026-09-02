@@ -20,3 +20,10 @@ body { font-family: 'Averia Sans Libre', ui-sans-serif, system-ui, sans-serif; }
 /* KaTeX: long display equations scroll rather than blow out the column */
 .katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
 .mermaid { display: flex; justify-content: center; margin: 1.5rem 0; }
+
+/* v2 — Voronoi field sits behind everything, costs no layout */
+#voronoi-bg {
+  position: fixed; inset: 0; z-index: -1;
+  width: 100vw; height: 100vh; pointer-events: none;
+}
+.main, .header { position: relative; }
