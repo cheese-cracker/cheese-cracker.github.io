@@ -1,0 +1,22 @@
+:root { --ir-accent: #7aa2f7; }
+
+body { font-family: 'Averia Sans Libre', ui-sans-serif, system-ui, sans-serif; }
+.post-content code, .post-content pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* footer identity — the site's only self-portrait; the about page carries the rest */
+.footer-identity {
+  display: flex; align-items: center; gap: 14px;
+  padding: 22px 0 6px; margin-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.footer-avatar { border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
+.footer-identity-text { display: flex; flex-direction: column; gap: 2px; line-height: 1.35; }
+.footer-name { font-weight: 700; color: var(--primary); }
+.footer-tagline { font-size: 14px; color: var(--secondary); }
+.footer-identity .social-icons { padding: 4px 0 0; }
+.footer-identity .social-icons a { margin-right: 10px; }
+.footer-identity .social-icons svg { height: 20px; width: 20px; }
+
+/* KaTeX: long display equations scroll rather than blow out the column */
+.katex-display { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+.mermaid { display: flex; justify-content: center; margin: 1.5rem 0; }

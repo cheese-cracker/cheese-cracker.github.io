@@ -31,6 +31,12 @@ summaryLength = 30
   baseName = "llms"
   isPlainText = true
 
+[markup.goldmark.extensions.passthrough]
+  enable = true
+  [markup.goldmark.extensions.passthrough.delimiters]
+    block  = [['\[', '\]'], ['$$', '$$']]
+    inline = [['\(', '\)'], ['$', '$']]
+
 [markup.goldmark.renderer]
   unsafe = true          # required: 21 raw <div>, 13 <img>, 2 <iframe> in posts
 
@@ -54,6 +60,7 @@ summaryLength = 30
   defaultTheme = "dark"
   disableThemeToggle = false
   mainSections = ["posts"]
+  math = true
 
   ShowReadingTime = true
   ShowShareButtons = false
@@ -75,6 +82,17 @@ summaryLength = 30
     favicon32x32 = "/favicon-32x32.png"
     apple_touch_icon = "/apple-touch-icon.png"
     safari_pinned_tab = "/safari-pinned-tab.svg"
+
+  [params.giscus]
+    repo = "cheese-cracker/cheese-cracker.github.io"
+    repoID = "MDEwOlJlcG9zaXRvcnkxMzkzMjU3NTU="
+    category = "Announcements"
+    categoryID = "DIC_kwDOCE3xO84COSY5"
+
+  [params.profile]
+    name = "Chinmay Hebbar"
+    tagline = "founding engineer · maths · electronics"
+    avatar = "/img/ChinmayPhotoNew.jpg"
 
   [params.schema]
     publisherType = "Person"

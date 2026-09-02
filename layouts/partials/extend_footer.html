@@ -1,0 +1,11 @@
+{{- with site.Params.profile }}
+{{- $name := .name }}
+<div class="footer-identity">
+  {{- with .avatar }}<img class="footer-avatar" src="{{ . | absURL }}" alt="{{ $name }}" loading="lazy" width="56" height="56">{{ end }}
+  <div class="footer-identity-text">
+    <a class="footer-name" href="{{ "about/" | absURL }}">{{ $name }}</a>
+    <span class="footer-tagline">{{ .tagline }}</span>
+    {{ partial "social_icons.html" (dict "align" "left") }}
+  </div>
+</div>
+{{- end }}
