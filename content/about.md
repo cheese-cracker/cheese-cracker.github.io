@@ -46,6 +46,10 @@ Or better yet, hit me up on <b><u>[Telegram](https://t.me/cheese_cracker)</u></b
 
 ### Projects
 
+- [tray](https://github.com/cheese-cracker/tray): A task tracker in two layers — a garage for one-line thoughts, and a tray for the few tasks you actually pick up. Terminal-first, plain files on disk.
+
+<div data-cast="/casts/tray.cast" style="max-width:760px;margin:0 auto 1.5rem;"></div>
+
 - [WebGPLAN](https://webgplan.cheese-cracker.com): A web based Graph to Rectangular Floor Plan research tool built on GPLAN.
 <div align="center">
 <iframe width="640" height="360" src="https://www.loom.com/embed/46df00e34e2c4ee1b4b8ca0bbbf94abf?sid=82d84338-7fbe-4954-8563-5de5a1d056ef" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
@@ -53,9 +57,6 @@ Or better yet, hit me up on <b><u>[Telegram](https://t.me/cheese_cracker)</u></b
 
 - [Logistic Growth based Game of Life](https://github.com/cheese-cracker/logistic-game-of-life): Simulates the logistic growth of cells (according to eqn) by a modified set of instructions on Conway's Game of Life. (Check out the [demo here](https://logistic-game-of-life-yb7sjahr5q-uc.a.run.app)!)
 - [EMRLite](https://github.com/cheese-cracker/EMRLite): A complete Hospital Billing and Management Web Portal currently in use at the Le' Nest Hospital
-- [tray](https://github.com/cheese-cracker/tray): A task tracker in two layers — a garage for one-line thoughts, and a tray for the few tasks you actually pick up. Terminal-first, plain files on disk.
-
-<div data-cast="/casts/tray.cast" style="max-width:760px;margin:0 auto 1.5rem;"></div>
 
 ### Posts
 

@@ -7,7 +7,7 @@ date: "2020-10-01"
 category: note
 created: Oct 2020
 description: Simple Notes for Computational Geometry
-tags: ["cs", "math", "c++", "graphs"]
+tags: ["cs", "math", "cpp", "graphs"]
 categories: ["notes"]
 toc: true
 cover:
