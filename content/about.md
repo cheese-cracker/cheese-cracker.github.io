@@ -17,7 +17,7 @@ asciinema: true
 <!-- Social Icons -->
 | <a href="https://www.linkedin.com/in/chinmay-hebbar/" class="btn btn-sm btn-primary"> LinkedIn </a>
 | <a href="https://github.com/cheese-cracker" class="btn btn-sm btn-primary"> GitHub </a>
-| <a href="https://www.instagram.com/ch.nm.y/" class="btn btn-sm btn-primary"> Instagram </a>
+| <a href="https://www.instagram.com/chinmay.h_/" class="btn btn-sm btn-primary"> Instagram </a>
 | <a href="https://codeforces.com/profile/cheese-cracker" class="btn btn-sm btn-primary"> CodeForces </a>
 | <a href="https://lichess.org/@/cheese-cracker" class="btn btn-sm btn-primary"> LiChess </a>
 | <a href="https://t.me/cheese_cracker" class="btn btn-sm btn-primary"> Telegram </a>
