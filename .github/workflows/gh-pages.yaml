@@ -22,19 +22,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
         with:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
       - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+        uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: 'latest'
-          # extended: true
+          # Pinned on purpose: 'latest' silently adopts each new Hugo release,
+          # which is how deprecations broke this site before.
+          hugo-version: '0.165.0'
+          extended: true
 
       - name: Build
-        run: hugo --minify
+        run: hugo --gc --minify --environment production
+
+      # PaperMod emits noindex + 'Disallow: /' outside production. If that ever
+      # ships, the site vanishes from search with no visible symptom.
+      - name: Assert the build is indexable
+        run: |
+          grep -q 'Disallow: *$' public/robots.txt \
+            || { echo "::error::robots.txt is not indexable"; cat public/robots.txt; exit 1; }
+          ! grep -qi 'name=.robots. content=.noindex' public/index.html \
+            || { echo "::error::home page carries noindex"; exit 1; }
+          test -s public/sitemap.xml && test -s public/llms.txt
+          echo "indexable: robots.txt, sitemap.xml and llms.txt all present"
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
