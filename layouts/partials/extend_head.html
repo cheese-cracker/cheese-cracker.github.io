@@ -1,3 +1,32 @@
+{{- /* asciinema player — opt in per page with `asciinema: true` */}}
+{{- if .Params.asciinema }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/asciinema-player@3.8.0/dist/bundle/asciinema-player.min.css">
+<script src="https://cdn.jsdelivr.net/npm/asciinema-player@3.8.0/dist/bundle/asciinema-player.min.js"></script>
+<script>
+  addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-cast]').forEach(el => {
+      AsciinemaPlayer.create(el.dataset.cast, el, {
+        cols: 100, rows: 28, idleTimeLimit: 2, fit: 'width',
+        theme: 'dracula', preload: true, poster: 'npt:0:03',
+      });
+    });
+  });
+</script>
+{{- end }}
+
+{{- /* About is a profile page, not an article: centre it. */}}
+{{- if eq .Type "about" }}
+<style>
+  .post-single .post-header,
+  .post-single .post-content { text-align: center; }
+  .post-single .post-content ul,
+  .post-single .post-content ol { list-style-position: inside; padding-inline-start: 0; }
+  .post-single .post-content blockquote { text-align: center; border-inline-start: 0; border-top: 2px solid var(--ir-accent); border-radius: var(--radius); }
+  .post-single .post-content img { margin-inline: auto; }
+  .post-single .post-content table { margin-inline: auto; }
+</style>
+{{- end }}
+
 {{- /* KaTeX — goldmark passthrough keeps $…$ / $$…$$ intact for the client renderer */}}
 {{- if or .Params.math site.Params.math }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
@@ -38,6 +67,9 @@
   import { Delaunay } from 'https://cdn.jsdelivr.net/npm/d3-delaunay@6/+esm';
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches && innerWidth > 720) {
     const seedStr = {{ .RelPermalink }};
+    // Full strength everywhere: reading pages sit the prose on an opaque card
+    // (.post-single) rather than dimming the field behind it.
+    const DIM = 1.0;
     let h = 2166136261;
     for (const c of seedStr) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
     const rand = () => (h = Math.imul(h ^ h >>> 15, 2246822507) ^ Math.imul(h ^ h >>> 13, 3266489909), ((h >>>= 0) / 4294967296));
@@ -48,21 +80,32 @@
     const ctx = cv.getContext('2d');
 
     const draw = () => {
-      // The nav seam is the diagram's top boundary: cells are clipped to it,
-      // so edges terminate on the header line instead of running behind it.
-      const top = Math.round(document.querySelector('.header')?.getBoundingClientRect().bottom ?? 0);
-      cv.style.top = top + 'px';
-      const w = cv.width = innerWidth, hh = cv.height = Math.max(1, innerHeight - top);
-      const n = Math.round(w * hh / 26000);
-      const pts = Array.from({ length: n }, () => [rand() * w, rand() * hh]);
-      const d = Delaunay.from(pts).voronoi([0, 0, w, hh]);
+      // Canvas covers the viewport; the nav seam is the *diagram's* top bound,
+      // so cells are built against it and edges terminate on the header line.
+      const top = navBound();
+      const w = cv.width = innerWidth, hh = cv.height = innerHeight;
+      // Every site must lie strictly inside the region: the nav line is the
+      // boundary, so nothing is generated on it.
+      const m = 10;
+      const n = Math.round(w * (hh - top) / 26000);
+      const pts = Array.from({ length: n }, () => [rand() * w, top + m + rand() * (hh - top - m)]);
+      // Pairs sharing a y sit *below* the line; their bisector is vertical and
+      // terminates on the boundary, so edges descend from the nav without any
+      // site touching it.
+      const anchors = 3;
+      for (let i = 0; i < anchors; i++) {
+        const cx = w * (i + 0.5 + (rand() - 0.5) * 0.6) / anchors;
+        const ay = top + m + rand() * 60, g = 34 + rand() * 26;
+        pts.push([cx - g, ay], [cx + g, ay]);
+      }
+      const d = Delaunay.from(pts).voronoi([0, top, w, hh]);
       ctx.clearRect(0, 0, w, hh);
       const dark = document.body.className.includes('dark');
       const cs = getComputedStyle(document.documentElement);
       const accent = cs.getPropertyValue('--ir-voronoi').trim() || '#7aa2f7';
       const dotCol = cs.getPropertyValue('--ir-voronoi-dot').trim() || accent;
       // tune here: [cell edges, seed points]
-      const EDGE = dark ? 0.30 : 0.22, DOT = dark ? 0.60 : 0.45;
+      const EDGE = (dark ? 0.30 : 0.22) * DIM, DOT = (dark ? 0.60 : 0.45) * DIM;
       ctx.lineWidth = 1.1;
       ctx.strokeStyle = accent;
       ctx.fillStyle = dotCol;
@@ -71,9 +114,32 @@
       ctx.globalAlpha = DOT;
       for (const [x, y] of pts) { ctx.beginPath(); ctx.arc(x, y, 1.5, 0, 6.284); ctx.fill(); }
     };
+    // The nav line is the diagram's boundary. The header scrolls away while the
+    // canvas is fixed, so the bound has to follow it or it stops being the nav.
+    const hdr = document.querySelector('.header');
+    const navBound = () => Math.max(0, Math.round(hdr?.getBoundingClientRect().bottom || 0));
+
     const reseed = () => { h = 2166136261; for (const c of seedStr) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } draw(); };
     addEventListener('load', reseed);
     addEventListener('resize', reseed);
+
+    let lastTop = -1, queued = false;
+    addEventListener('scroll', () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        const t = navBound();
+        if (t !== lastTop) { lastTop = t; reseed(); }   // settles at 0 once nav is gone
+      });
+    }, { passive: true });
     document.getElementById('theme-toggle')?.addEventListener('click', () => setTimeout(reseed, 30));
   }
 </script>
+
+{{- /* Fira Sans for reading, Fira Code for code — one family, so prose and
+       code share a skeleton. Averia (self-hosted, extended/fonts.css) stays
+       on the brand. Preconnect so text isn't blocked on DNS. */}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Fira+Code:wght@400;500&display=swap">

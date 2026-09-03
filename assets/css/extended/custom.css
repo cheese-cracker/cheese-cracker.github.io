@@ -2,15 +2,33 @@
   --ir-accent: #7aa2f7;
   --ir-voronoi: #e0af68;      /* cell edges */
   --ir-voronoi-dot: #f7768e;  /* seed points */
+  /* PaperMod reserves this in .main's min-height; the identity block below
+     the <footer> is extra, so the reservation has to grow with it. */
+  --footer-height: 175px;
+  --main-width: 800px;   /* a bit wider than PaperMod's 720 to give the card room */
 }
 
-body { font-family: 'Averia Sans Libre', ui-sans-serif, system-ui, sans-serif; }
-.post-content code, .post-content pre, code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+/* Reading face for prose; Averia kept for the brand so the site still
+   identifies as itself. Fira Code carries code, ligatures on. */
+body {
+  font-family: 'Fira Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+.logo a, #menu, .header { font-family: 'Averia Sans Libre', ui-sans-serif, system-ui, sans-serif; }
+.post-content code, .post-content pre, code, .highlight, kbd {
+  font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-ligatures: contextual;   /* -> => != as single glyphs */
+}
+/* headings a touch tighter than the serif default at display sizes */
+.post-single .post-title, .post-content h1, .post-content h2, .post-content h3 {
+  letter-spacing: -0.01em;
+}
 
 /* footer identity — the site's only self-portrait; the about page carries the rest */
 .footer-identity {
-  display: flex; align-items: center; gap: 14px;
-  padding: 22px 0 6px; margin-top: 8px;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  max-width: calc(var(--main-width) + var(--gap) * 2);
+  margin: 0 auto;
+  padding: 20px var(--gap) 28px;
   border-top: 1px solid var(--border);
 }
 .footer-avatar { border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
@@ -27,21 +45,137 @@ body { font-family: 'Averia Sans Libre', ui-sans-serif, system-ui, sans-serif; }
 
 /* v2 — Voronoi field sits behind everything, costs no layout */
 #voronoi-bg {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: -1;
-  width: 100vw; pointer-events: none;   /* top + height set by script, below the nav */
+  position: fixed; inset: 0; z-index: -1;
+  width: 100%; height: 100%; pointer-events: none;
 }
 .main, .header { position: relative; }
 
-/* ── header: triangulated seam, and an opaque ground so the Voronoi
-      field stops cleanly at the nav instead of running under it ─────── */
+/* ── header: opaque ground so the Voronoi field stops cleanly at the nav,
+      and a straight seam marking the diagram's top boundary ──────────── */
 .header {
   position: relative;
   z-index: 1;
   background: var(--theme);
-  border-bottom: 0;
-  padding-bottom: 9px;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='9' viewBox='0 0 240 9'%3E%3Cpath d='M0 9 L24 1 L48 8 L72 2 L96 7 L120 1 L144 8 L168 3 L192 7 L216 1 L240 8' fill='none' stroke='%23e0af68' stroke-opacity='.55' stroke-width='1.2'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  background-position: bottom left;
+  border-bottom: 1px solid rgba(224, 175, 104, .55);   /* --ir-voronoi @ 55% */
 }
+
+/* ── reading surface ──────────────────────────────────────────────────
+   Prose sits on an opaque card so the Voronoi field can stay at full
+   strength behind it instead of being dimmed per page type. Same visual
+   language as the .post-entry cards on the list. */
+.post-single {
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--gap) calc(var(--gap) * 1.4) calc(var(--gap) * 1.6);
+  margin-bottom: var(--gap);
+}
+.post-single .post-header { margin-top: 8px; }
+/* Cover sits inside the card's padding rather than bleeding to its edges,
+   so the image never reads as the card's full width. */
+.post-single > .entry-cover {
+  margin: 4px 0 calc(var(--gap) * 1.2);
+}
+.post-single > .entry-cover img {
+  border-radius: var(--radius);
+  display: block;
+  width: 100%;
+  max-height: 340px;
+  object-fit: cover;
+}
+
+/* ══ component system ══════════════════════════════════════════════════
+   One accent (blue) carries every *structural* element the reader
+   interacts with: ToC, quotes, links, table heads, code, rules.
+   The warm pair (amber/rose) stays reserved for the Voronoi field alone,
+   so decoration and interface never speak with the same colour. */
+:root {
+  --ir-tint:   color-mix(in srgb, var(--ir-accent) 9%, transparent);
+  --ir-tint-2: color-mix(in srgb, var(--ir-accent) 16%, transparent);
+  --ir-edge:   color-mix(in srgb, var(--ir-accent) 42%, transparent);
+}
+
+/* table of contents — the one persistent piece of navigation in a post */
+.post-single details.toc,
+[data-theme="dark"] .post-single details.toc {
+  background: var(--ir-tint);
+  border: 1px solid var(--ir-edge);
+  border-radius: var(--radius);
+}
+.post-single .toc summary { color: var(--ir-accent); font-weight: 600; }
+.post-single .toc .inner a { color: var(--content); text-decoration: none; }
+.post-single .toc .inner a:hover { color: var(--ir-accent); }
+
+/* blockquotes: an accent rule, not a grey slab */
+.post-content blockquote {
+  border-inline-start: 3px solid var(--ir-accent);
+  background: var(--ir-tint);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 10px 18px;
+  margin: var(--content-gap) 0;
+  font-style: normal;
+  color: var(--content);
+}
+
+/* body links */
+.post-content a {
+  color: var(--ir-accent);
+  text-decoration-color: var(--ir-edge);
+  text-underline-offset: 3px;
+}
+.post-content a:hover { text-decoration-color: var(--ir-accent); }
+
+/* inline code reads as a token, not as prose */
+.post-content code:not(pre code) {
+  background: var(--ir-tint);
+  border: 1px solid var(--ir-edge);
+  color: var(--primary);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: .88em;
+}
+
+/* tables: accent header, quiet body */
+.post-content table th {
+  background: var(--ir-tint-2);
+  border-bottom: 2px solid var(--ir-edge);
+  color: var(--primary);
+}
+.post-content table tr:hover td { background: var(--ir-tint); }
+
+/* section rules and headings */
+.post-content hr {
+  border: 0; height: 1px;
+  background: linear-gradient(90deg, var(--ir-accent), transparent);
+}
+.post-content h2 { border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+.post-content h2 a, .post-content h3 a { color: inherit; }
+
+/* KaTeX display blocks get a quiet gutter so equations read as blocks */
+.post-content .katex-display {
+  border-inline-start: 2px solid var(--ir-edge);
+  padding-inline-start: 14px;
+}
+
+/* ── titles ────────────────────────────────────────────────────────────
+   Headings shift a measured amount toward the accent rather than sitting
+   at full saturation: enough to separate structure from prose, not enough
+   to read as a link. Mixed against --primary so it tracks both themes. */
+:root {
+  --ir-title:    color-mix(in srgb, var(--ir-accent) 42%, var(--primary));
+  --ir-title-sub: color-mix(in srgb, var(--ir-accent) 28%, var(--primary));
+}
+
+.post-single .post-title,
+.post-content h1 { color: var(--ir-title); }
+
+.post-content h2,
+.post-content h3 { color: var(--ir-title-sub); }
+
+.post-content h4,
+.post-content h5,
+.post-content h6 { color: var(--ir-title-sub); }
+
+/* list entries: same treatment so the feed and the article agree */
+.post-entry .entry-header h2 { color: var(--ir-title); }
+.post-entry:hover .entry-header h2 { color: var(--ir-accent); }
