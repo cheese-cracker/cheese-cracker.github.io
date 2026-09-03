@@ -60,6 +60,7 @@ summaryLength = 30
   defaultTheme = "dark"
   disableThemeToggle = false
   mainSections = ["posts"]
+  disableSpecial1stPost = true   # every post gets the same card, incl. the newest
   math = true
 
   ShowReadingTime = true
