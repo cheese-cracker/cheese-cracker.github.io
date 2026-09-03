@@ -6,10 +6,6 @@ tags: [ "math" ]
 categories: [ "notes" ]
 mermaid: true
 layout: page
-cover:
-  image: "/covers/mmodelling.svg"
-  alt: "Math Modelling"
-  relative: false
 ---
 
 ### Important Topics
@@ -24,7 +20,7 @@ cover:
   - Global Stability (Appropriate Lyaponov Function)
     - Test stability by Lyapunov Funcn or any other (V) has derivative negative definate
 
-$$V(x) = x - x^\* - x^\* ln(\frac{x}{x^\*}) \frac{k_1}{2}(T- T^\*)^2 + \frac{k_2}{2}(U-U^\*)^2$$
+$$V(x) = x - x^* - x^* ln(\frac{x}{x^*}) \frac{k_1}{2}(T- T^*)^2 + \frac{k_2}{2}(U-U^*)^2$$
 
 $$\frac{dV}{dt} = \frac{\dot{x}}{x}( x - x^*) + other$$
 
@@ -150,7 +146,7 @@ Steps for Solving,
 5. Matrix of Variation with 'R' cases
 6. Lyapunov Function and one term will not allow sylvester's criteria
 7. Choose C = S* to get,
-   $$ \dot{V} = -\beta I (S - S^*) -\beta S^\* (I-I^\*)( S - S^\* ) < 0 $$
+   $$ \dot{V} = -\beta I (S - S^*) -\beta S^* (I-I^*)( S - S^* ) < 0 $$
 
 #### Other Useful Prerequisites
 

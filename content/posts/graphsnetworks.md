@@ -9,10 +9,6 @@ categories: [ "notes" ]
 mermaid: true
 layout: page
 toc: true
-cover:
-  image: "/covers/graphsnetworks.svg"
-  alt: "Graphs and Networks"
-  relative: false
 ---
 
 ### List of Algorithms

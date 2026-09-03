@@ -6,10 +6,6 @@ tags: [ "math", "numericalmethods",]
 categories: [ "notes" ]
 date: 2020-01-20
 description: Table of Contents Sheet / Course Map for Numerical Analysis
-cover:
-  image: "/covers/numan.svg"
-  alt: "Numerical Analysis"
-  relative: false
 ---
 
 
@@ -82,10 +78,10 @@ Points to note
 
 #### Table for N.D.D-like Interpolation
 
-- NDD : $frac{f_2 - f_1}{ x_2 - x_1 }$ for each el
+- NDD : $\frac{f_2 - f_1}{x_2 - x_1}$ for each el
 - NFD: $f_2 -f_1$ Only
 - NBD: Start Reverse and Take Bottom Row; Same table as NFD $f_2 - f_1$;
-- HERM: Repeat each entry twice; $frac{f_2 - f_1}{x_2 - x_1} if different or differentiation if same
+- HERM: Repeat each entry twice; $\frac{f_2 - f_1}{x_2 - x_1}$ if different or differentiation if same
 - OSC: Repeat based on no. of available vals in x, y, y' ..; $f_2 - f_1$
 
 

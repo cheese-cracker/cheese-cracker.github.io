@@ -25,7 +25,7 @@ Some useful resources.
 ### Elasticity Curves Part
 
 Elasticity : % change quantity / % change price
-$$\epsilon = \frac{ \\% \Delta Q}{\\% \Delta P}$$
+$$\epsilon = \frac{ \% \Delta Q}{\% \Delta P}$$
 
 (Similar to sensitivity)
 
@@ -45,8 +45,8 @@ $$\epsilon = \frac{ \\% \Delta Q}{\\% \Delta P}$$
 
 #### Types of Elasticity
 
-- Cross Price Elasticity **sensitivity of A** has, $\epsilon_{cross\ price} = \frac{ \\% \Delta Q\ of\ B}{ \\% \Delta P\ of\ A}$
-- Income Elasticity $\epsilon_{income} = \frac{ \\% \Delta Q}{ \\% \Delta Income}$
+- Cross Price Elasticity **sensitivity of A** has, $\epsilon_{cross\ price} = \frac{ \% \Delta Q\ of\ B}{ \% \Delta P\ of\ A}$
+- Income Elasticity $\epsilon_{income} = \frac{ \% \Delta Q}{ \% \Delta Income}$
 
 #### Other Terms
 
