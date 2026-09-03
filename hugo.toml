@@ -133,11 +133,6 @@ summaryLength = 30
   url = "/posts/"
   weight = 10
 [[menu.main]]
-  identifier = "tags"
-  name = "tags"
-  url = "/tags/"
-  weight = 20
-[[menu.main]]
   identifier = "archives"
   name = "archives"
   url = "/archives/"
