@@ -1,14 +1,11 @@
 ---
 title: Graphs and Networks
 author: Chinmay H
-created: 2019-03-10
 date: 2019-03-10
 description: graphs and networks quick notes
 tags: [ "cs", "math", "graphs",]
 categories: [ "notes" ]
 mermaid: true
-layout: page
-toc: true
 ---
 
 ### List of Algorithms

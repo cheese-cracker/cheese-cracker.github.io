@@ -1,15 +1,11 @@
 ---
-layout: page
 title: "Computational Geometry"
 author: "Chinmay H"
-excerpt: "Notes for learning Computational Geometry"
+summary: "Notes for learning Computational Geometry"
 date: "2020-10-01"
-category: note
-created: Oct 2020
 description: Simple Notes for Computational Geometry
 tags: ["cs", "math", "cpp", "graphs"]
 categories: ["notes"]
-toc: true
 cover:
   image: "/plots/compgeom/ch3d_as_dt.png"
   alt: "Computational Geometry"

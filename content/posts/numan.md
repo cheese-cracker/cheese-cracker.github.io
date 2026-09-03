@@ -1,5 +1,4 @@
 ---
-layout: page
 title: Numerical Analysis
 author: Chinmay H
 tags: [ "math", "numericalmethods",]

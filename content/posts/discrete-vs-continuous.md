@@ -1,13 +1,11 @@
 ---
 title: "Discrete Vs Continuous"
 author: Cheese-Cracker (Chinmay Hebbar)
-created: Wed Jan 26 23:59:48 IST 2022
-excerpt: 'Dive into the abstract feelings of things being continuous and discrete, with various examples.'
+summary: 'Dive into the abstract feelings of things being continuous and discrete, with various examples.'
 date: 2022-01-26
 description: Continuous Vs Discrete
 tags: [ "signalprocessing", "math", "mentalmodels", "numericalmethods",]
 categories: [ "ideas" ]
-toc: true
 cover:
   image: "/plots/des/DvsC.jpg"
   alt: "Discrete Vs Continuous"

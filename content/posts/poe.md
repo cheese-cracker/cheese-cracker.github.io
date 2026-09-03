@@ -4,8 +4,6 @@ author: Chinmay H
 date: 2019-05-20
 tags: [ "economics", ]
 categories: [ "notes" ]
-layout: page
-toc: true
 cover:
   image: "/plots/costmineq.jpg"
   alt: "Principles of Economics"

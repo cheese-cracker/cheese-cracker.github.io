@@ -5,7 +5,6 @@ date: 2019-05-20
 tags: [ "math" ]
 categories: [ "notes" ]
 mermaid: true
-layout: page
 ---
 
 ### Important Topics

@@ -1,8 +1,6 @@
 ---
 title: 'About'
-layout: 'about'
 type: 'about'
-hidden: true
 giscus: false
 ShowToc: false
 hidemeta: true
