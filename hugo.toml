@@ -31,6 +31,10 @@ summaryLength = 30
   baseName = "llms"
   isPlainText = true
 
+# Carried over from the notepadium theme, where it was hardcoded in head.html.
+[services.googleAnalytics]
+  ID = "G-VK520LPFV1"
+
 [markup.goldmark.extensions.passthrough]
   enable = true
   [markup.goldmark.extensions.passthrough.delimiters]
@@ -52,7 +56,6 @@ summaryLength = 30
   ordered = false
 
 [params]
-  env = "production"
   author = "Chinmay Hebbar"
   description = "A place for interesting ideas, notes and blogposts"
   keywords = ["mathematics", "computational geometry", "numerical analysis", "economics", "engineering"]
