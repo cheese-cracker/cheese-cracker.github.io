@@ -8,6 +8,7 @@ cover:
   image: "/plots/costmineq.jpg"
   alt: "Principles of Economics"
   relative: false
+description: "Notes on the principles of economics: elasticity, household and consumer choice, profit-maximising firm behaviour, and short-run versus long-run costs and output decisions."
 ---
 
 ### Introduction

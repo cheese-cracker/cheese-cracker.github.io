@@ -5,6 +5,7 @@ date: 2019-05-20
 tags: [ "math" ]
 categories: [ "notes" ]
 mermaid: true
+description: "Notes on mathematical modelling: stability of solutions via Jacobians and eigenvalues, the Routh-Hurwitz criterion, Lyapunov functions, and standard population and epidemic models."
 ---
 
 ### Important Topics
