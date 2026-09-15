@@ -27,7 +27,7 @@ asciinema: true
 #### About Me
 
 
-Hi, I'm a ~~Maths and Electonics & Instrumentation student at BITS Pilani~~ Founding Engineer at an AI-enabled B2B Marketing Platform. 
+Hi, I'm a ~~Maths and Electonics student at BITS Pilani~~ Founding Engineer building the next-gen 'vibe' marketing platform. 
 
 
 In the past, I have worked on interesting personal and professional projects.

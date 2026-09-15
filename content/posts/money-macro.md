@@ -1,6 +1,6 @@
 ---
 title: "Reward Systems - Money and More"
-author: Cheese-Cracker (Chinmay Hebbar)
+author: Chinmay H
 summary: 'An analysis of money as an incentive scheme for society. Speculation of future kinds of money and reward incentives.'
 date: 2024-04-11
 description: Analysis of Money

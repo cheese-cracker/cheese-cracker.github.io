@@ -1,6 +1,6 @@
 ---
 title: "Discrete Vs Continuous"
-author: Cheese-Cracker (Chinmay Hebbar)
+author: Chinmay H
 summary: 'Dive into the abstract feelings of things being continuous and discrete, with various examples.'
 date: 2022-01-26
 description: Continuous Vs Discrete
