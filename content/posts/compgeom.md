@@ -7,8 +7,9 @@ description: Simple Notes for Computational Geometry
 tags: ["cs", "math", "cpp", "graphs"]
 categories: ["notes"]
 cover:
-  image: "/plots/compgeom/ch3d_as_dt.png"
-  alt: "Computational Geometry"
+  image: "/plots/compgeom/delaunay-voronoi-cover.png"
+  alt: "Delaunay triangulation and its Voronoi dual"
+  caption: "Delaunay triangulation (ink) and its Voronoi dual (orange) — public-domain figure from Wikimedia Commons, recoloured"
   relative: false
 ---
 

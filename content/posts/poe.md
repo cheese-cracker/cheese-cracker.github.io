@@ -5,8 +5,9 @@ date: 2019-05-20
 tags: [ "economics", ]
 categories: [ "notes" ]
 cover:
-  image: "/plots/costmineq.jpg"
-  alt: "Principles of Economics"
+  image: "/plots/poe-isoquant-isocost-cover.png"
+  alt: "Cost minimisation: isoquant tangent to an isocost line"
+  caption: "Cost minimisation — the isoquant Q touches the lowest reachable isocost line at E"
   relative: false
 description: "Notes on the principles of economics: elasticity, household and consumer choice, profit-maximising firm behaviour, and short-run versus long-run costs and output decisions."
 ---

@@ -1,16 +1,17 @@
-/* One scheme, light. Values are base16 gruvbox-light-medium
-   (tinted-theming/schemes): base00 ground, base07/06/04 ink, base02 border,
-   base0D accent, base09 hot, base08 crit, base0B good; card = bg0_hard, code = bg0_soft. */
+/* One scheme, light: "paper". Warm-white reading card on a faint warm-grey
+   ground, near-black ink, gruvbox accents (base16 gruvbox-light-medium:
+   base0D accent, base09 hot, base08 crit, base0B good). Code blocks are
+   PaperMod's default dark blocks, coloured by Chroma "gruvbox". */
 :root {
-  --theme: #fbf1c7;           /* ground: page, header, home list */
-  --entry: #f9f5d7;           /* reading card, post cards */
-  --primary: #282828;         /* headings, strong */
-  --content: #3c3836;         /* body text */
-  --secondary: #7c6f64;       /* meta */
-  --tertiary: #ebdbb2;        /* hover fills */
-  --border: #d5c4a1;
-  --code-bg: #fbf1c7;
-  --code-block-bg: #f2e5bc;
+  --theme: #f4f0e6;           /* ground: page, header, home list */
+  --entry: #fffdf8;           /* reading card, post cards */
+  --primary: #1c1b19;         /* headings, strong */
+  --content: #2a2925;         /* body text */
+  --secondary: #5c5850;       /* meta */
+  --tertiary: #ece7db;        /* tag chips, hover fills */
+  --border: #d6cfc0;
+  --code-bg: #f4f0e6;         /* also the home-list ground in PaperMod */
+  --code-block-bg: #282828;   /* gruvbox dark bg0, matches Chroma "gruvbox" */
   --ir-accent: #076678;       /* links, ToC, table heads, rules */
   --ir-hot: #af3a03;          /* attention; also the Voronoi cell edges */
   --ir-crit: #9d0006;         /* contrast / wrong; also the seed points */
@@ -136,10 +137,6 @@ body {
   text-underline-offset: 3px;
 }
 .post-content a:hover { text-decoration-color: var(--ir-accent); }
-
-/* code blocks: PaperMod assumes dark blocks in light mode (light-grey text,
-   !important). Chroma gruvbox-light bakes the cream ground per block. */
-.md-content pre code { color: var(--content); }
 
 /* inline code reads as a token, not as prose */
 .post-content code:not(pre code) {
