@@ -52,7 +52,7 @@
 </script>
 {{- end }}
 
-{{- /* v2 — live Voronoi field, seeded per page so each URL gets its own cells */}}
+{{- /* v3 — live Voronoi field, seeded per page, slow parallax under the content */}}
 <script type="module">
   import { Delaunay } from 'https://cdn.jsdelivr.net/npm/d3-delaunay@6/+esm';
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches && innerWidth > 720) {
@@ -69,58 +69,51 @@
     document.body.prepend(cv);
     const ctx = cv.getContext('2d');
 
+    // v3 — the field lives in *document* space and slides at PARALLAX of the
+    // scroll speed. Built once per layout; scrolling only translates it, so the
+    // points are never re-rolled. (v2 re-rolled them whenever the header edge
+    // crossed the top of the viewport, which read as a bounce near the top.)
+    const PARALLAX = 0.35;
+    let pts = [], vor = null, fieldH = 0;
+    const need = () => Math.ceil(innerHeight + Math.max(0, document.documentElement.scrollHeight - innerHeight) * PARALLAX);
     const draw = () => {
-      // Canvas covers the viewport; the nav seam is the *diagram's* top bound,
-      // so cells are built against it and edges terminate on the header line.
-      const top = navBound();
-      const w = cv.width = innerWidth, hh = cv.height = innerHeight;
-      // Every site must lie strictly inside the region: the nav line is the
-      // boundary, so nothing is generated on it.
-      const m = 10;
-      const n = Math.round(w * (hh - top) / 26000);
-      const pts = Array.from({ length: n }, () => [rand() * w, top + m + rand() * (hh - top - m)]);
-      // Pairs sharing a y sit *below* the line; their bisector is vertical and
-      // terminates on the boundary, so edges descend from the nav without any
-      // site touching it.
-      const anchors = 3;
-      for (let i = 0; i < anchors; i++) {
-        const cx = w * (i + 0.5 + (rand() - 0.5) * 0.6) / anchors;
-        const ay = top + m + rand() * 60, g = 34 + rand() * 26;
-        pts.push([cx - g, ay], [cx + g, ay]);
-      }
-      const d = Delaunay.from(pts).voronoi([0, top, w, hh]);
-      ctx.clearRect(0, 0, w, hh);
+      if (!vor) return;
+      const w = cv.width, vh = cv.height, s = scrollY * PARALLAX;
       const cs = getComputedStyle(document.documentElement);
-      const accent = cs.getPropertyValue('--ir-hot').trim() || '#af3a03';
-      const dotCol = cs.getPropertyValue('--ir-crit').trim() || accent;
+      const edgeCol = cs.getPropertyValue('--ir-hot').trim() || '#af3a03';
+      const dotCol = cs.getPropertyValue('--ir-crit').trim() || edgeCol;
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, w, vh);
+      ctx.translate(0, -s);
       // tune here: [cell edges, seed points]
-      const EDGE = 0.26 * DIM, DOT = 0.50 * DIM;
-      ctx.lineWidth = 1.1;
-      ctx.strokeStyle = accent;
-      ctx.fillStyle = dotCol;
-      ctx.globalAlpha = EDGE;
-      ctx.beginPath(); d.render(ctx); ctx.stroke();
-      ctx.globalAlpha = DOT;
-      for (const [x, y] of pts) { ctx.beginPath(); ctx.arc(x, y, 1.5, 0, 6.284); ctx.fill(); }
+      ctx.lineWidth = 1.1; ctx.strokeStyle = edgeCol; ctx.fillStyle = dotCol;
+      ctx.globalAlpha = 0.26 * DIM; ctx.beginPath(); vor.render(ctx); ctx.stroke();
+      ctx.globalAlpha = 0.50 * DIM;
+      for (const [x, y] of pts) { if (y < s - 4 || y > s + vh + 4) continue; ctx.beginPath(); ctx.arc(x, y, 1.5, 0, 6.284); ctx.fill(); }
     };
-    // The nav line is the diagram's boundary. The header scrolls away while the
-    // canvas is fixed, so the bound has to follow it or it stops being the nav.
-    const hdr = document.querySelector('.header');
-    const navBound = () => Math.max(0, Math.round(hdr?.getBoundingClientRect().bottom || 0));
-
-    const reseed = () => { h = 2166136261; for (const c of seedStr) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } draw(); };
-    addEventListener('load', reseed);
-    addEventListener('resize', reseed);
-
-    let lastTop = -1, queued = false;
+    const build = () => {
+      const w = cv.width = innerWidth; cv.height = innerHeight;
+      fieldH = need();
+      h = 2166136261; for (const c of seedStr) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+      pts = Array.from({ length: Math.round(w * fieldH / 26000) }, () => [rand() * w, rand() * fieldH]);
+      vor = Delaunay.from(pts).voronoi([0, 0, w, fieldH]);
+      draw();
+    };
+    // Page grew after load (images, comments): add a band below, keep the rest.
+    const extend = () => {
+      if (!vor) return;
+      const H = need(); if (H <= fieldH) return;
+      const w = cv.width;
+      for (let i = Math.round(w * (H - fieldH) / 26000); i > 0; i--) pts.push([rand() * w, fieldH + rand() * (H - fieldH)]);
+      fieldH = H; vor = Delaunay.from(pts).voronoi([0, 0, w, fieldH]); draw();
+    };
+    addEventListener('load', build);
+    addEventListener('resize', build);
+    new ResizeObserver(extend).observe(document.body);
+    let queued = false;
     addEventListener('scroll', () => {
       if (queued) return;
       queued = true;
-      requestAnimationFrame(() => {
-        queued = false;
-        const t = navBound();
-        if (t !== lastTop) { lastTop = t; reseed(); }   // settles at 0 once nav is gone
-      });
+      requestAnimationFrame(() => { queued = false; draw(); });
     }, { passive: true });
   }
 </script>

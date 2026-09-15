@@ -64,8 +64,8 @@ body {
 }
 .main, .header { position: relative; }
 
-/* ── header: opaque ground so the Voronoi field stops cleanly at the nav,
-      and a straight seam marking the diagram's top boundary ──────────── */
+/* ── header: opaque, so the parallax field slides beneath it; the seam is
+      the field's visible top edge while the header is on screen ─────── */
 .header {
   position: relative;
   z-index: 1;
