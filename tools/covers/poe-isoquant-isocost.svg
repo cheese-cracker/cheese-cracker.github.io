@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Fira Sans, system-ui, sans-serif">
+<rect width="1600" height="900" fill="#fbf1c7"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3c3836"/></marker></defs>
+<line x1="300" y1="760" x2="300" y2="110" stroke="#3c3836" stroke-width="4" marker-end="url(#a)"/>
+<line x1="300" y1="760" x2="1380" y2="760" stroke="#3c3836" stroke-width="4" marker-end="url(#a)"/>
+<text x="150" y="435" font-size="34" fill="#3c3836" transform="rotate(-90 150 435)" text-anchor="middle">Capital (K)</text>
+<text x="1380" y="815" font-size="34" fill="#3c3836" text-anchor="end">Labour (L)</text>
+<g stroke="#af3a03" stroke-width="5"><line x1="300" y1="470" x2="703" y2="760"/><line x1="300" y1="330" x2="897" y2="760"/><line x1="300" y1="190" x2="1092" y2="760"/></g>
+<path d="M 395.0 84.2 L 410.2 177.7 L 425.5 248.4 L 440.8 303.9 L 456.0 348.5 L 471.2 385.1 L 486.5 415.8 L 501.8 441.8 L 517.0 464.1 L 532.2 483.6 L 547.5 500.6 L 562.8 515.7 L 578.0 529.1 L 593.2 541.1 L 608.5 551.9 L 623.8 561.7 L 639.0 570.6 L 654.2 578.8 L 669.5 586.2 L 684.8 593.1 L 700.0 599.5 L 715.2 605.4 L 730.5 610.9 L 745.8 616.0 L 761.0 620.7 L 776.2 625.2 L 791.5 629.4 L 806.8 633.3 L 822.0 637.0 L 837.2 640.5 L 852.5 643.8 L 867.8 646.9 L 883.0 649.9 L 898.2 652.7 L 913.5 655.4 L 928.8 657.9 L 944.0 660.3 L 959.2 662.6 L 974.5 664.8 L 989.8 666.9 L 1005.0 668.9 L 1020.2 670.9 L 1035.5 672.7 L 1050.8 674.5 L 1066.0 676.2 L 1081.2 677.8 L 1096.5 679.4 L 1111.8 680.9 L 1127.0 682.4 L 1142.2 683.8 L 1157.5 685.1 L 1172.8 686.4 L 1188.0 687.7 L 1203.2 688.9 L 1218.5 690.1 L 1233.8 691.2 L 1249.0 692.3 L 1264.2 693.4 L 1279.5 694.5 L 1294.8 695.5 L 1310.0 696.4" stroke="#076678" stroke-width="6" fill="none" stroke-linejoin="round"/>
+<g stroke="#3c3836" stroke-width="3" stroke-dasharray="12 12"><line x1="598.6" y1="545.0" x2="598.6" y2="760"/><line x1="598.6" y1="545.0" x2="300" y2="545.0"/></g>
+<circle cx="598.6" cy="545.0" r="12" fill="#9d0006"/>
+<g font-size="32" fill="#3c3836"><text x="262" y="480" text-anchor="end">K₁</text><text x="262" y="340" text-anchor="end">K₂</text><text x="262" y="200" text-anchor="end">K₃</text><text x="703" y="805" text-anchor="middle">L₁</text><text x="897" y="805" text-anchor="middle">L₂</text><text x="1092" y="805" text-anchor="middle">L₃</text>
+<text x="262" y="555" text-anchor="end">B</text><text x="599" y="805" text-anchor="middle">A</text>
+<text x="625" y="529" font-weight="600" fill="#9d0006">E</text>
+<text x="1328" y="708" fill="#076678" font-weight="600">Q</text></g>
+<text x="1380" y="150" font-size="30" fill="#665c54" text-anchor="end">slope of Q at E = slope of isocost:  MP<tspan font-size="20" dy="8">L</tspan><tspan dy="-8">/MP</tspan><tspan font-size="20" dy="8">K</tspan><tspan dy="-8"> = P</tspan><tspan font-size="20" dy="8">L</tspan><tspan dy="-8">/P</tspan><tspan font-size="20" dy="8">K</tspan></text>
+</svg>

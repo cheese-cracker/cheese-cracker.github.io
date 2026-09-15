@@ -7,9 +7,9 @@ description: Simple Notes for Computational Geometry
 tags: ["cs", "math", "cpp", "graphs"]
 categories: ["notes"]
 cover:
-  image: "/plots/compgeom/delaunay-voronoi-cover.png"
-  alt: "Delaunay triangulation and its Voronoi dual"
-  caption: "Delaunay triangulation (ink) and its Voronoi dual (orange) — public-domain figure from Wikimedia Commons, recoloured"
+  image: "/plots/compgeom/ch3d-lift-cover.png"
+  alt: "Points lifted onto a paraboloid: the lower convex hull projects to the Delaunay triangulation"
+  caption: "Lift the points to z = x² + y²: the lower faces of their 3D convex hull project down to the Delaunay triangulation — after DesignMentor (MTU)"
   relative: false
 ---
 
