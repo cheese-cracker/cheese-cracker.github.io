@@ -48,7 +48,7 @@ summaryLength = 30
   codeFences = true
   guessSyntax = false
   noClasses = true
-  style = "dracula"
+  style = "gruvbox-light"
 
 [markup.tableOfContents]
   startLevel = 2
@@ -60,8 +60,8 @@ summaryLength = 30
   description = "A place for interesting ideas, notes and blogposts"
   keywords = ["mathematics", "computational geometry", "numerical analysis", "economics", "engineering"]
   DateFormat = "January 2, 2006"
-  defaultTheme = "dark"
-  disableThemeToggle = false
+  defaultTheme = "light"
+  disableThemeToggle = true   # one scheme: gruvbox light (base16 gruvbox-light-medium)
   mainSections = ["posts"]
   disableSpecial1stPost = true   # every post gets the same card, incl. the newest
   math = true
@@ -80,7 +80,8 @@ summaryLength = 30
   showtoc = true
 
   [params.assets]
-    disableHLJS = true   # chroma handles highlighting (dracula, noClasses)
+    disableHLJS = true   # chroma handles highlighting (gruvbox-light, noClasses)
+    theme_color = "#fbf1c7"
     favicon = "/favicon.ico"
     favicon16x16 = "/favicon-16x16.png"
     favicon32x32 = "/favicon-32x32.png"

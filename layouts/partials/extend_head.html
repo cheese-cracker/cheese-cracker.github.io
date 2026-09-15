@@ -48,17 +48,7 @@
 {{- if .Params.mermaid }}
 <script type="module">
   import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-  const pmTheme = () => document.body.className.includes('dark') ? 'dark' : 'default';
-  mermaid.initialize({ startOnLoad: true, theme: pmTheme(), securityLevel: 'loose' });
-  // PaperMod's toggle swaps body.dark without a reload — re-render or diagrams desync.
-  document.getElementById('theme-toggle')?.addEventListener('click', () => {
-    document.querySelectorAll('.mermaid').forEach(el => {
-      if (el.dataset.src) { el.removeAttribute('data-processed'); el.innerHTML = el.dataset.src; }
-    });
-    mermaid.initialize({ startOnLoad: false, theme: pmTheme(), securityLevel: 'loose' });
-    mermaid.run({ querySelector: '.mermaid' });
-  });
-  document.querySelectorAll('.mermaid').forEach(el => el.dataset.src = el.innerHTML);
+  mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
 </script>
 {{- end }}
 
@@ -100,12 +90,11 @@
       }
       const d = Delaunay.from(pts).voronoi([0, top, w, hh]);
       ctx.clearRect(0, 0, w, hh);
-      const dark = document.body.className.includes('dark');
       const cs = getComputedStyle(document.documentElement);
-      const accent = cs.getPropertyValue('--ir-voronoi').trim() || '#7aa2f7';
-      const dotCol = cs.getPropertyValue('--ir-voronoi-dot').trim() || accent;
+      const accent = cs.getPropertyValue('--ir-hot').trim() || '#af3a03';
+      const dotCol = cs.getPropertyValue('--ir-crit').trim() || accent;
       // tune here: [cell edges, seed points]
-      const EDGE = (dark ? 0.30 : 0.22) * DIM, DOT = (dark ? 0.60 : 0.45) * DIM;
+      const EDGE = 0.26 * DIM, DOT = 0.50 * DIM;
       ctx.lineWidth = 1.1;
       ctx.strokeStyle = accent;
       ctx.fillStyle = dotCol;
@@ -133,7 +122,6 @@
         if (t !== lastTop) { lastTop = t; reseed(); }   // settles at 0 once nav is gone
       });
     }, { passive: true });
-    document.getElementById('theme-toggle')?.addEventListener('click', () => setTimeout(reseed, 30));
   }
 </script>
 
