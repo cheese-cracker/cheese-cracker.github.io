@@ -1,16 +1,16 @@
 /* One scheme, light. Values are base16 gruvbox-light-medium
    (tinted-theming/schemes): base00 ground, base07/06/04 ink, base02 border,
-   base0D accent, base09 hot, base08 crit, base0B good. The white card is ours. */
+   base0D accent, base09 hot, base08 crit, base0B good; card = bg0_hard, code = bg0_soft. */
 :root {
   --theme: #fbf1c7;           /* ground: page, header, home list */
-  --entry: #ffffff;           /* reading card, post cards */
+  --entry: #f9f5d7;           /* reading card, post cards */
   --primary: #282828;         /* headings, strong */
   --content: #3c3836;         /* body text */
   --secondary: #7c6f64;       /* meta */
   --tertiary: #ebdbb2;        /* hover fills */
   --border: #d5c4a1;
   --code-bg: #fbf1c7;
-  --code-block-bg: #fbf1c7;
+  --code-block-bg: #f2e5bc;
   --ir-accent: #076678;       /* links, ToC, table heads, rules */
   --ir-hot: #af3a03;          /* attention; also the Voronoi cell edges */
   --ir-crit: #9d0006;         /* contrast / wrong; also the seed points */
