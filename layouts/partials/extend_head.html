@@ -27,6 +27,12 @@
 </style>
 {{- end }}
 
+{{- /* Individual posts get the wide card (room for two-panel interactive pieces); home, lists,
+       archives, search and the about page keep the base --main-width from custom.css. */}}
+{{- if and .IsPage (eq .Type "posts") }}
+<style>:root { --main-width: 1180px; }</style>
+{{- end }}
+
 {{- /* KaTeX — goldmark passthrough keeps $…$ / $$…$$ intact for the client renderer */}}
 {{- if or .Params.math site.Params.math }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
