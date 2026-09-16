@@ -101,7 +101,8 @@ So, as we make the partition intervals smaller ($\lim_{n \rightarrow \infty} \fr
 <small> Wikipedia: Quantization of Signal with 4 Levels</small>
 </div>
 
-Instead of partitioning the continuous function into __rectangles__, we could take the function values at two points and break it into __trapezoids__. (Trapezoidal Rule)
+Instead of partitioning the continuous function into __rectangles__, we could take the function values at two points and break it into __trapezoids__.
+(Trapezoidal Rule)
 
 <div align="center">
 <img height="300" src="/plots/des/TrapRiemann2.png"> </img>
@@ -204,13 +205,17 @@ Another [stackexchange thread](https://math.stackexchange.com/questions/3169159/
 Consider two alien species in two different planets with no natural predators
 and sufficient resources to grow.
 1. The first alien species breeds naturally with its growth twice its current population (population growth rate 200%).
-2. The second alien species reproduces using binary fission. So, one alien essentially splits into two new alien creatures. And all the alien species undergoes this binary fission every new years' eve.
+2. The second alien species reproduces using binary fission.
+   So, one alien essentially splits into two new alien creatures.
+   And all the alien species undergoes this binary fission every new years' eve.
 
 Both these cases could be modelled as,
 1. $y' = 2y$ where $y$ is the population, and $y'$ is it's derivative (the population growth rate).
 2. $a_n = 2 a_{n-1}$ where $a_n$ is the population in year $n$
 
-Notice that in case of __alien species no. 1__ we are modelling it as a __continuous differential equation__ whereas in the case of __alien species no. 2__ we are modelling it as a __discrete recurrence relation__.
+Notice that in case of __alien species no.
+1__ we are modelling it as a __continuous differential equation__ whereas in the case of __alien species no.
+2__ we are modelling it as a __discrete recurrence relation__.
 
 
 In case of alien species no. 1,
@@ -287,4 +292,5 @@ $$ y = C_1 r_1^n + C_2 n r_2^n = C_1 e^{ln(r_1) n} + C_2 n e^{ln(r_2) n}$$
 - [Baby Steps of Statistics](https://medium.com/greyatom/baby-steps-of-statistics-part-1-c76bafb30288)
 - [Fourier Transforms 101](https://medium.com/sho-jp/fourier-transform-101-part-4-discrete-fourier-transform-8fc3fbb763f3)
 - For mental models in other domains, refer [Farnam Street Blog](https://fs.blog/mental-models/) or [Super Thinking Book](https://www.goodreads.com/book/show/41181911-super-thinking)
-- Try to find an anology for discrete vs continuous, with separable and non-separable spaces. Good Resources: [Separable Spaces](https://en.wikipedia.org/wiki/Separable_space), [Discrete-like non-separable subspaces in separable spaces](https://math.stackexchange.com/questions/3946786/example-of-non-separable-subspace-of-a-separable-hausdorff-space), [Database of Topological Counterexamples](https://topology.jdabbs.com/properties)
+- Try to find an anology for discrete vs continuous, with separable and non-separable spaces.
+  Good Resources: [Separable Spaces](https://en.wikipedia.org/wiki/Separable_space), [Discrete-like non-separable subspaces in separable spaces](https://math.stackexchange.com/questions/3946786/example-of-non-separable-subspace-of-a-separable-hausdorff-space), [Database of Topological Counterexamples](https://topology.jdabbs.com/properties)

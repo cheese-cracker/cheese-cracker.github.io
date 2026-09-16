@@ -27,7 +27,8 @@ cover:
 - [ObservableHQ - Infinity and Back Again](https://observablehq.com/@mbostock/to-infinity-and-back-again?collection=@observablehq/algorithms): Voronoi Diagrams for Infinite Polygons
 - Book: Foundations of Multidimensional and Metric Data Structures - Hanen Samet (2006)
 - [Josh Hug's Lectures on Multidimensional Data](https://www.youtube.com/playlist?list=PL8FaHk7qbOD4F7nPFfgD0dGdLos1uhUPg): Good intuition on k-d trees and quad trees.
-- [TestGen](https://www.wias-berlin.de/software/tetgen/features.html): Voronoi Diagrams and Delaunay Tetrahedralizations for 3D Points. Software
+- [TestGen](https://www.wias-berlin.de/software/tetgen/features.html): Voronoi Diagrams and Delaunay Tetrahedralizations for 3D Points.
+  Software
 - [Generalization of Voronoi Diagrams](https://flylib.com/books/en/2.587.1.38/1/): Originally from a book on (Geometric Data Structures for Computer Graphics, 2005)
 
 ## Overview
@@ -35,9 +36,11 @@ cover:
 To learn computational geometry, these are the steps/resources I used,
 
 1. Week 1 - Week 5: Coursera - Computational Geometry
-   - For theory, read from book and/or random resources off the internet. Philipp's lectures are also available for this.
+   - For theory, read from book and/or random resources off the internet.
+     Philipp's lectures are also available for this.
    - Focus on the problemset for the course.
-   - Recommended Prerequisite: Good understanding and practice of DSA. Some of the problems have tons of edge cases!
+   - Recommended Prerequisite: Good understanding and practice of DSA.
+     Some of the problems have tons of edge cases!
 2. Week 6 - Week 10: Philipp Kindermann's Lecture Series
    - This part is more theory oriented and covers Voronoi Diagrams, Delaunay Triangulations too.
    - Again some parts can be followed up from the book as well.
@@ -70,7 +73,9 @@ const double EPS = 1e-16;
 
 1\. Point and Vector (Triangle Sign Check)
 
-This will be used in most future problems as well. The most generalized template is below. Note that `area` is actually twice the actual area.
+This will be used in most future problems as well.
+The most generalized template is below.
+Note that `area` is actually twice the actual area.
 
 ```cpp
 int trisign(ppoint a, ppoint b, ppoint pt){
@@ -200,7 +205,8 @@ bool convex_check(vector<pair<ll,ll>>& points, int invsign){
 - For each vertex, we check `while(hull_size + 1 >= 3)`
 - If `trisign(hull[hull_size - 2], points[i], hull[hull_size -1])` matches our `invsign` then pop the 2nd last vertex, Or else break out of the `while` loop to check the next vertex.
 - Function Header: `void construct_convex_hull(vector<pair<ll,ll>>& points, vector<pair<ll,ll>>& hull, int invsign);`
-- After `construct_convex_hull` for both partitions, we zip the upper and lower Hulls. Thus forming the CCW convex hull.
+- After `construct_convex_hull` for both partitions, we zip the upper and lower Hulls.
+  Thus forming the CCW convex hull.
 
 3\. Tangents to Polygon
 
@@ -223,7 +229,9 @@ where `sign` is given by whether we want left or right tangent.
 
 4\. Union of Convex Hulls
 
-Take any point Z inside Convex Polygon A. If Z is also inside B, sort the points by angle and apply graham scan. If Z is not inside B, remove inner chain and apply Graham's Scan on outer chain.
+Take any point Z inside Convex Polygon A.
+If Z is also inside B, sort the points by angle and apply graham scan.
+If Z is not inside B, remove inner chain and apply Graham's Scan on outer chain.
 OR
 Just apply Graham's Scan to all the points since both algorithms have worst case, NlogN.
 This may however be slightly less optimal. (But it works :-))
@@ -234,11 +242,14 @@ This may however be slightly less optimal. (But it works :-))
 
 See [CP Algorithms](https://cp-algorithms.com/geometry/check-segments-intersection.html) for technique.
 Helper functions for this include, `trisign`, `inbetween`, `determinant` are used.
-Remember to check for 'No Common Points' for both determinant = 0 and not. Watch out for corner cases. (Tons of them!)
+Remember to check for 'No Common Points' for both determinant = 0 and not.
+Watch out for corner cases.
+(Tons of them!)
 
 2\. Polygon Intersection
 
-Either Clipping (Sutherland Hodgman) or Line Sweep (Shamos-Hoey) could be used. For clipping, see [G4G](https://www.geeksforgeeks.org/polygon-clipping-sutherland-hodgman-algorithm-please-change-bmp-images-jpeg-png/).
+Either Clipping (Sutherland Hodgman) or Line Sweep (Shamos-Hoey) could be used.
+For clipping, see [G4G](https://www.geeksforgeeks.org/polygon-clipping-sutherland-hodgman-algorithm-please-change-bmp-images-jpeg-png/).
 The Algorithms are as follows,
 
 - Sutherland-Hodgman
@@ -325,7 +336,8 @@ intersects += hi - lo;
   - Status Set containing elements important for current event point
   - Line sweeps across some direction (Obvious!)
 
-Unfortunately, I wasn't able to code this one up. However, [geom algorithms](https://geomalgorithms.com/a09-_intersect-3.html) explains with code the approach to doing this.
+Unfortunately, I wasn't able to code this one up.
+However, [geom algorithms](https://geomalgorithms.com/a09-_intersect-3.html) explains with code the approach to doing this.
 
 ## Week 4
 
@@ -361,9 +373,11 @@ intersect diagonal_check(vector<vertex>& poly, ll i, ll j){
 
 Steps -
 
-1. Preprocess: If for every vertex, adjacent vertices form inner diagonal. Mark as Ear. ~O($N^2$ for diagonal_check)
+1. Preprocess: If for every vertex, adjacent vertices form inner diagonal.
+   Mark as Ear. ~O($N^2$ for diagonal_check)
 2. Start processing ears in-order from a starting vertex (Try to maintain order in which they are checked)
-3. Delete Current Ear Vertex from the polygon (& is_ear) vector. Insert (diagonal with adjacent verts and the pt) as a triangle.
+3. Delete Current Ear Vertex from the polygon (& is_ear) vector.
+   Insert (diagonal with adjacent verts and the pt) as a triangle.
 4. Check if vleft, vright is a ear (~O(N))
 5. Stop when ear-list is empty or polygon has less than 3 vertices (all vertices are done!)
 
@@ -408,8 +422,10 @@ It also helps to plot testcases like this,
 
 3\. Monotone Polygon Triangulation
 
-Triangulation of strictly y-monotone polygons. See [MCS481 Slides](http://homepages.math.uic.edu/~jan/mcs481/triangulating.pdf) for a pretty good psuedocode or the Book is also great.
-For Diagonal check part, time complexity would be high therefore it is better to use Concavity Check with `trisign` instead. Remember to add diagonals from last (lowermost) vertex also. `sidemap` is used to store Left/Right and `vertex` is the merged sorted vertex list.
+Triangulation of strictly y-monotone polygons.
+See [MCS481 Slides](http://homepages.math.uic.edu/~jan/mcs481/triangulating.pdf) for a pretty good psuedocode or the Book is also great.
+For Diagonal check part, time complexity would be high therefore it is better to use Concavity Check with `trisign` instead.
+Remember to add diagonals from last (lowermost) vertex also. `sidemap` is used to store Left/Right and `vertex` is the merged sorted vertex list.
 
 ```cpp
 void triangulate_monotone(vector<point>& verts, map<point, bool> sidemap, vector<polygon>& diags){
@@ -453,7 +469,8 @@ void triangulate_monotone(vector<point>& verts, map<point, bool> sidemap, vector
 
 - From the [wikipedia page](https://en.wikipedia.org/wiki/Catalan_number), A convex polygon with n + 2 sides can be triangulated to n triangles by non-crossing lines.
 - Number of different ways of triangulation is Catalan Nos.
-- For any triangulation, there would be exactly 2 vertices that don't need to be joined by a diagonal.(or whose degrees stay the same!) So, catalan nos. is on the $n-2$ vertices connected by diagonals.
+- For any triangulation, there would be exactly 2 vertices that don't need to be joined by a diagonal.(or whose degrees stay the same!)
+  So, catalan nos. is on the $n-2$ vertices connected by diagonals.
 - The $\sum c_i c_{n-i}$ Form: Recurrence relation is the breaking of the polygons by one of the diagonals.
 
 ## Week 5
@@ -470,9 +487,12 @@ void triangulate_monotone(vector<point>& verts, map<point, bool> sidemap, vector
   - See [differences between some well-known trees](https://stackoverflow.com/questions/17466218/what-are-the-differences-between-segment-trees-interval-trees-binary-indexed-t).
   - 2D Layered Range tree stores points in its associated array, and optimized for "which points fall within a given interval" queries.
   - The assoc array of point `v` is the two-pointer zip (merge-sort) of `2v` and `2v+1` vertices.
-  - It can be represented similar to 2D segment tree, but value contains "the points themselves". (segtree consists of sum of no. of points)
+  - It can be represented similar to 2D segment tree, but value contains "the points themselves".
+    (segtree consists of sum of no. of points)
   - Both 2D layering range tree and segment trees can be used interchangeably.
-  - Fractional Cascading is technique to store binary_searched index of the element as pointer. So $O(logN)$ extra factor isn't needed. Each element of assoc array of point `v` also contains pointers to `2v` and `2v+1` nodes arrays' binary_searched(lower_bound) index.
+  - Fractional Cascading is technique to store binary_searched index of the element as pointer.
+    So $O(logN)$ extra factor isn't needed.
+    Each element of assoc array of point `v` also contains pointers to `2v` and `2v+1` nodes arrays' binary_searched(lower_bound) index.
 
 - 2D Priority Search Tree
   - Base Structure: Binary Heap or Priority Queue (Scaled up to 2D).
@@ -487,7 +507,8 @@ Simple binary-search implementation as points have only 1 parameter.
 The easiest implementation in via a Cartesian Tree. (similar to Kdtree)
 My code is a 2D Segment Tree however I **recommend** using an OOP approach with **Cartesian Tree** instead!
 
-This is was approximate workflow while designing 2D Segment Tree. See [CP Algorithms](https://cp-algorithms.com/data_structures/segment_tree.html)'s
+This is was approximate workflow while designing 2D Segment Tree.
+See [CP Algorithms](https://cp-algorithms.com/data_structures/segment_tree.html)'s
 compression of 2D segment tree for ideas. Fractional Cascading for speeding up!
 
 Below are the design notes for the code.
@@ -579,7 +600,8 @@ Building: `buildx` -> `construct_order_y` -> `buildy` -> (either fill value 1 or
 Query: Format input to lower/upper endpoints -> `queryx` -> `queryy`
 At both `queryx` and `queryy`(similar but with `lxy rxy`),
 `ll lxc = order_x[lx], rxc = order_x[rx];`
-line is used. The `lxc rxc` (coordinates of query points) are used for all comparisons except for calculation of midpoint where `lx rx` (positions) are used.
+line is used.
+The `lxc rxc` (coordinates of query points) are used for all comparisons except for calculation of midpoint where `lx rx` (positions) are used.
 
 ---
 
@@ -609,12 +631,15 @@ Lec 1 - "Where the hell am I?"
 
 Lec 2 - Decreasing Space Complexity
 
-- Refinement: The Partition of Planar Subdivision S into Slabs induced by vertices. These Partitions would be trapezoids (or degenerate ones).
-- Trapezoidal Map: Splits the trapezoids of a refinement. Very useful technique for space partitioning or mapping regions in general.
+- Refinement: The Partition of Planar Subdivision S into Slabs induced by vertices.
+  These Partitions would be trapezoids (or degenerate ones).
+- Trapezoidal Map: Splits the trapezoids of a refinement.
+  Very useful technique for space partitioning or mapping regions in general.
 - Unlike the previous partition by vertical lines, this partition only has lines that end at another edge or outer rectangle.
 - Side: Segment of max length contained in boundary of face of trapezoid
 - Trapezoidal partition with $n$ segments have, $T(S) \leq 2n + 2*2n + 4$(segment endpoints, vertical lines, boundary rectangle) vertices and trapezois $\leq 3n + 1$
-- Constructing Trapezoid - Find each up, down left, right endpoints for each trapezoid. Time: 3N + 1 = O(N)
+- Constructing Trapezoid - Find each up, down left, right endpoints for each trapezoid.
+  Time: 3N + 1 = O(N)
 
 Below is an image of a trapezoidal map of 'line segments' from this [GAS](https://github.com/marinimau/GAS-Trapezoidal-maps-final-prject), the same can be done for polygons as well.
 
@@ -644,7 +669,8 @@ Lec 5 - Query Time for Trapezoid Cartesian DAG
 Lec 1 - Post Office Problem
 
 - Post Office Problem: Which is the closest Post Office to place P?
-- Answer: Voronoi Diagram with Euclidean Distance Metric. (Map of region closest to that point)
+- Answer: Voronoi Diagram with Euclidean Distance Metric.
+  (Map of region closest to that point)
 
 Lec 2 - Definitions in Voronoi Diagrams
 
@@ -674,10 +700,12 @@ Lec 4 - Computing Voronoi Diagram
   - Directrix is the Line Sweep at point P, and focus is the visited vertices
   - Beachline($\beta$): The lowerbound of each of the parabolas (from the visited vertices so far) merged together.
   - The intersection points of the parabolas as the line is swept form the edges of the voronoi diagram.
-  - See [this](http://www.raymondhill.net/voronoi/rhill-voronoi.html) for demo. Also, [this post](https://jacquesheunis.com/post/fortunes-algorithm/) for explaination.
+  - See [this](http://www.raymondhill.net/voronoi/rhill-voronoi.html) for demo.
+    Also, [this post](https://jacquesheunis.com/post/fortunes-algorithm/) for explaination.
 - Beachline Event Points
   - Site(Face) Event: New Sitepoint is found => New Arc is created
-  - Circle Event: Sweep Line reaches lowest point of circle containing 3 Site Points => Arc of the inner site point is deleted. Voronoi Points are the centre of the circle formed.
+  - Circle Event: Sweep Line reaches lowest point of circle containing 3 Site Points => Arc of the inner site point is deleted.
+    Voronoi Points are the centre of the circle formed.
 
 Lec 5 - Fortune's Line Sweep Algorithm
 
@@ -695,7 +723,8 @@ Lec 5 - Fortune's Line Sweep Algorithm
 Lec 1 - Height Interpolation
 
 - Triangulation: Planar subdivision with all inner faces triangles and outer face is Convex Hull
-- Since Maximal Planar Graph => (3n - 6) edges. But outer face is CH and needs triangulation (3 - h) edges => 3n - 3 + h edges in total
+- Since Maximal Planar Graph => (3n - 6) edges.
+  But outer face is CH and needs triangulation (3 - h) edges => 3n - 3 + h edges in total
 
 Lec 2 - Angle-Optimal Triangulation
 
@@ -734,7 +763,8 @@ Lec 5 - Correctness and Computation
 - If pointset P is general position(i.e. No 4 points lie on an empty circle) then D.T. is unique and angle-optimal.
 - If pointset P is not general position, then all D.T. have same minimum angle but may not be angle-optimal.
 - D.T. can be constructed in $O(NlogN)$
-- Angle-Optimal Triangulation in non-general position P, can be constructed in $O(N^2)$ time. Holes (4+ points on empty circle) can be filled by trying out each flip.
+- Angle-Optimal Triangulation in non-general position P, can be constructed in $O(N^2)$ time.
+  Holes (4+ points on empty circle) can be filled by trying out each flip.
 
 Below is an image also showing weighted voronoi diagrams and their corresponding delaunay triangulations,
 ![Weighted and non-Weighted VD and DT](/plots/compgeom/weighted_dt.png)
@@ -744,13 +774,15 @@ Below is an image also showing weighted voronoi diagrams and their corresponding
 Lec 1 - Complexity and Visibility of CH
 
 - (Upper Bound Theorem) General Time Complexity of Convex Hull in d dimensions: $O(N^{\lfloor d/2 \rfloor})$
-- In 3D, Surface of the Polyhedra forms a Planar Dual Graph => atmost (3n-6) edges and hence linear complexity. Similar for higher dimensions.
+- In 3D, Surface of the Polyhedra forms a Planar Dual Graph => atmost (3n-6) edges and hence linear complexity.
+  Similar for higher dimensions.
 - Construction by Random-Incremental Algorithm
 - Visibility:
   - If we project rays from point P to Convex Polytope.
   - The project rays that are 3D Tangent to the polytope form a ring/shadow, the point that form this is called Horizon.(Last visible edges)
   - Region facing towards P bounded by Horizon is the Visible region.
-- Define Conflict Graph and create bipartite relation of points with facets. And mark out which facets are visible.
+- Define Conflict Graph and create bipartite relation of points with facets.
+  And mark out which facets are visible.
 
 Lec 2 - Randomized Incremental Algorithm
 
@@ -771,20 +803,24 @@ Lec 4- Convex Hull & Half-Plane Intersections
   - Line in P1 -> point in P2 (P1 is Dual of P2)
   - Line in P2 -> line in P1 (P2 is Dual of P1)
 - Convex Hull of a point set in P1 => Set of Lines in P2
-  - Traversing the lines corresponding to Lower Hull of P1 alongside intersections, give the Upper Envelope. Similarly for Upper CH.
-  - Incidence Preserving: Every point in P1 gives Line in P2. So CH region gives area bounded by upper and lower envelope.
+  - Traversing the lines corresponding to Lower Hull of P1 alongside intersections, give the Upper Envelope.
+    Similarly for Upper CH.
+  - Incidence Preserving: Every point in P1 gives Line in P2.
+    So CH region gives area bounded by upper and lower envelope.
   - Order Preserving: Maintains an ordering through the mapping.
 - Scaling to 3D: CH3 of points gives 3D Wrapping/Envelope of 3D Lines
 
 Lec 5- Voronoi Diagrams Revisited
 
 - Distance to Unit Parabola (From Projection of point q to tangent at p') = intercepts $(pq)^2$
-- Take: A (set of planes/halfplanes) have an Upper Envelope (or Supremum or Least Upper Bound 3D Parabola). The planes are thus 3D Tangents to the 3D Parabola or Envelope.
+- Take: A (set of planes/halfplanes) have an Upper Envelope (or Supremum or Least Upper Bound 3D Parabola).
+  The planes are thus 3D Tangents to the 3D Parabola or Envelope.
 - When this is projected to the plane,
   - Voronoi Centres/Faces/Sites = (Intersection points of Planes and 3D Parabola)
   - Voronoi Edges = (Line Segments that for the Intersection of Planes)
   - Voronoi Vertices = (Intersection of 3 or more Planes)
-- Take: 3D Convex Hull of (Intersection of Planes and 3D Parabola). The 3D Parabola is now the Lower Envelope (or Infimum or Greatest Lower Bound) of the (3D Convex Hull).
+- Take: 3D Convex Hull of (Intersection of Planes and 3D Parabola).
+  The 3D Parabola is now the Lower Envelope (or Infimum or Greatest Lower Bound) of the (3D Convex Hull).
 - When this projected to the plane,
   - Delaunay Vertices = (Intersection of Planes and 3D Parabola) or (Points of 3D Convex Hull)
   - Delaunay Edges = (Edges of 3D Convex Hull)
@@ -798,19 +834,22 @@ Below image is from [DesignMentor](https://pages.mtu.edu/~shene/NSF-2/DM2-BETA/i
 
 Lec 1 - Point Shaped Robots
 
-- Trapezoidal Map for Path with Obstacles. Finding Path: O(NlogN) Construction and O(N) query
+- Trapezoidal Map for Path with Obstacles.
+  Finding Path: O(NlogN) Construction and O(N) query
 
 Lec 2 - Configuration Space
 
 - Degrees of Freedom: 2D(2 translation x, y + 1 rotation \theta) = 3, 3D(3 translation x,y,z + 2 rotation $\theta, \phi$) = 5
-- Configuration Polygon: Polygon s.t. foreach point in ConfPol, Robot at point (x, y) (R(x, y)) intersects with obstacle polygon(Pi). (If point robot, then this is just the obstacle polygons.)
+- Configuration Polygon: Polygon s.t. foreach point in ConfPol, Robot at point (x, y) (R(x, y)) intersects with obstacle polygon(Pi).
+  (If point robot, then this is just the obstacle polygons.)
 
 $$ CP*i = \{(x, y): R(x, y) \cap P*{i}\} $$
 
 Lec 3 - Characterizing Configuration Spaces
 
 - Minkowski's Sum (For Polygon!): $S_1+S_2=\{p + q :  \forall p \in P, q \in Q\}$ where p, q are point vectors
-- Geometric Representation: Replace Copy of S1 in every point of S2 to form the new shape. (or Vice versa; commutative)
+- Geometric Representation: Replace Copy of S1 in every point of S2 to form the new shape.
+  (or Vice versa; commutative)
 - Inversion in Polygon Algebra: Rotate polygon by 180 around origin. $S2 =-S1=\{-p : \forall p \in P\}$
 - Configuration Polygon: $CP = P + (- R(0, 0))$ (where '+' is minkowski sum)
 
@@ -821,7 +860,8 @@ Lec 4 - Complexity and Computation
 - Atmost n+m edges in minkowski sum(S) of P (n edges) and Q (m edges)
 - We can define a map of each edge of S to a pair (i, j) of the edges in P, Q.
 - Quadratic Algorithm: Convex Hull of points where at each corner of P, Try every rotation of Q
-- Linear Algorithm: (Two-Pointers-like) Choose Bottom-Right most point for both. And move p_ptr or q_ptr based on which has a smaller angle.
+- Linear Algorithm: (Two-Pointers-like) Choose Bottom-Right most point for both.
+  And move p_ptr or q_ptr based on which has a smaller angle.
 
 Lec 5 - Pseudodisks
 
@@ -830,13 +870,18 @@ Lec 5 - Pseudodisks
   - $bound(O2) \cap int(O1)$ is connected
 - Consider 2 convex polygons with disjoint interiors.
   - Let d1 -> direcion where P1 more extreme, similarly d2.
-  - Then P1 is more extreme in [d1, d2] or [d2, d1]. Or in a circle, one boundary part has P1 more extreme and other with P2.
-- For P1, P2, take CP1 = P1 + R, CP2 = P2 + R. Then proof by contradiction. So (CP1, CP2) have to be pseudodisks.
+  - Then P1 is more extreme in [d1, d2] or [d2, d1].
+    Or in a circle, one boundary part has P1 more extreme and other with P2.
+- For P1, P2, take CP1 = P1 + R, CP2 = P2 + R.
+  Then proof by contradiction.
+  So (CP1, CP2) have to be pseudodisks.
 
 Lec 6 - Union Complexity
 
-- For Convex Polygons P, Q, R,.., the total union has atmost 2\*(n+m+l+..) vertices. (since every (two or less) crossings can be mapped to a vertex)
-- For constant complexity convex robot R, translating among S disjoint objects with N edges. We can preprocess in $O(N (logN)^2)$ and compute collision-free path in O(N)
+- For Convex Polygons P, Q, R,.., the total union has atmost 2\*(n+m+l+..) vertices.
+  (since every (two or less) crossings can be mapped to a vertex)
+- For constant complexity convex robot R, translating among S disjoint objects with N edges.
+  We can preprocess in $O(N (logN)^2)$ and compute collision-free path in O(N)
 - Approach
   - Triangulate Polygons if Not-Convex to make it convex (NlogN)
   - Compute ConfPol for each Obstacle Polygon (N)

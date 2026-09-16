@@ -14,7 +14,8 @@ description: "Notes on the principles of economics: elasticity, household and co
 
 ### Introduction
 
-These are my notes for POE. The notes were written using markdown and vim (see iamcco/markdown.nvim plugin) and Pandoc (with eisvogel template).
+These are my notes for POE.
+The notes were written using markdown and vim (see iamcco/markdown.nvim plugin) and Pandoc (with eisvogel template).
 Feel free to collaborate to the **[Online Version of POE Notes](https://hackmd.io/PtXbIdS-R52MuXXW6gc9uA?both)**.
 These are only supplementary notes and NOT Lecture Notes.
 Some useful resources.
@@ -289,7 +290,8 @@ LRIS Calculation
 
 ##### Land Market
 
-- Demand Determinant: Price determined exclusively by its demand. Supply is Fixed (perfectly inelastic). e.g - Land
+- Demand Determinant: Price determined exclusively by its demand.
+  Supply is Fixed (perfectly inelastic). e.g - Land
 - Pure Rent: Return to factor of production with fixed supply
 
 ### 11 - Capital Market and Investment Decisions
@@ -343,7 +345,8 @@ LRIS Calculation
 - Measures for Oligopoly
 
   - HHI = Sum of Squared-Market-Shares (>1,800 for High)
-  - CR (Conc. Ratio) = % Share of top n companies (>80% for High)
+  - CR (Conc.
+    Ratio) = % Share of top n companies (>80% for High)
 
 - Types of Oligopoly
 
@@ -379,7 +382,8 @@ LRIS Calculation
 
 ![Prisoner's Dilemma](/plots/prisonersdilemma.png)
 
-- Prisoner's Dilemma (see above) - Dominant-Dominant is not Nash Eq. (or best strategies)
+- Prisoner's Dilemma (see above) - Dominant-Dominant is not Nash Eq.
+  (or best strategies)
 
 ### 20 - Intro to Macro
 
