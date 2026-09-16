@@ -1,0 +1,23 @@
+/* visuals — one scheme, light: Modus Operandi Tinted (Emacs modus-themes, WCAG AAA on warm paper).
+   Same values as cheese-cracker.github.io custom.css: bg-main reading surface, bg-dim panels,
+   fg-main ink, blue / yellow / red / green accents, magenta + yellow-warmer as extra hues. */
+:root{
+  color-scheme:light;
+  --paper:#fbf7f0; --card:#efe9dd; --line:#cfc8bb; --code-bg:#e7e1d4;
+  --ink-1:#1a1a1a; --ink-2:#595959; --ink-3:#6b6b6b;
+  --accent:#0031a9; --accent-soft:#e2e3e9;
+  --hot:#6f5500; --hot-soft:#eae4d3;
+  --good:#006800; --crit:#a60000;
+  --f1:#c9cfe4; --f2:#9aa6d0; --f3:#6b7dbc; --f4:#3c56b0; --f5:#0031a9;   /* five-step ramp, light → accent */
+  --plum:#721045; --gold:#884900;   /* modus magenta / yellow-warmer: extra categorical hues for diagrams with >4 kinds */
+}
+
+/* Type: Fira Sans for prose and UI, Fira Code for code — same as cheese-cracker.github.io.
+   Self-hosted (no CDN rule): latin subsets from Google Fonts, ~190 KB total, in ./fonts/. */
+@font-face{font-family:'Fira Code';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/FiraCode-400.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Fira Code';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/FiraCode-500.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Fira Sans';font-style:italic;font-weight:400;font-display:swap;src:url(fonts/FiraSans-400i.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/FiraSans-400.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:500;font-display:swap;src:url(fonts/FiraSans-500.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/FiraSans-600.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}
+@font-face{font-family:'Fira Sans';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/FiraSans-700.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;}

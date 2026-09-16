@@ -152,6 +152,9 @@ summaryLength = 30
   url = "/search/"
   weight = 50
 
+[security]
+  allowContent = ['! ^text/org$']   # allow hand-written HTML content files (the ResNet post); org stays off
+
 [minify]
   disableXML = true
   minifyOutput = true

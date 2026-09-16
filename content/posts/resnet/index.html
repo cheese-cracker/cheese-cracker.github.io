@@ -1,0 +1,1258 @@
+---
+title: "Feeling the ResNet"
+author: Chinmay H
+summary: 'Walkthrough of building a ResNet for a simple binary classifier.'
+date: 2026-09-16
+description: "Walkthrough of building a ResNet for a simple binary classifier."
+tags: [ "deeplearning", "mentalmodels", "math" ]
+categories: [ "ideas" ]
+ShowToc: false
+ShowReadingTime: false
+ShowWordCount: false
+cover:
+  image: "/plots/resnet/training-loop-cover.gif"
+  alt: "One training step through a four-block ResNet: forward pass, compare with the label, backward pass along the skip path, update"
+  relative: false
+---
+<link rel="stylesheet" href="_parts/theme.css">
+<style>
+:where(.post-content) *{box-sizing:border-box}
+.post-content{background:var(--paper);color:var(--ink-1);margin:0;
+  font-family:'Fira Sans',system-ui,sans-serif;font-size:18px;line-height:1.62;}
+:where(.post-content) .wrap{max-width:1180px;margin:0 auto;padding:44px 24px 90px;}
+:where(.post-content) h1, :where(.post-content) h2{font-family:'Fira Sans',system-ui,sans-serif;line-height:1.15;text-wrap:balance;}
+:where(.post-content) h1{font-size:2.2rem;font-weight:800;letter-spacing:-.02em;margin:.2em 0 .15em;}
+:where(.post-content) h2{font-size:1.4rem;font-weight:750;margin:0 0 .4em;}
+:where(.post-content) p{max-width:108ch;}
+:where(.post-content) section{margin-top:56px;border-top:1px solid var(--line);padding-top:24px;}
+:where(.post-content) blockquote{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;padding:10px 18px;margin:16px 0;}
+:where(.post-content) section:first-of-type{margin-top:0;border-top:0;padding-top:0;}
+:where(.post-content) code{font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:.86em;background:var(--code-bg);padding:.08em .35em;border-radius:4px;}
+:where(.post-content) a{color:var(--accent);}
+:where(.post-content) .note{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 8px 8px 0;padding:11px 16px;margin:14px 0;font-size:.93rem;}
+:where(.post-content) .note.hot{border-left-color:var(--hot);background:var(--hot-soft);}
+:where(.post-content) .viz{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin:18px 0;}
+:where(.post-content) #pMat{overflow-x:auto;}
+:where(.post-content) #pMat svg{min-width:880px;}
+:where(.post-content) /* the matrix walkthrough keeps its numbers legible on a narrow card and scrolls sideways instead */
+.viz .cap{font-family:'Fira Sans',system-ui,sans-serif;font-size:.78rem;color:var(--ink-3);text-transform:uppercase;letter-spacing:.09em;margin-bottom:12px;font-weight:600;}
+:where(.post-content) .controls{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:end;font-family:'Fira Sans',system-ui,sans-serif;font-size:.85rem;margin:18px 0 6px;}
+:where(.post-content) .controls label{display:flex;flex-direction:column;gap:5px;color:var(--ink-2);white-space:nowrap;}
+:where(.post-content) .controls label b{color:var(--ink-1);font-weight:600;}
+:where(.post-content) .controls label.row{flex-direction:row;align-items:center;gap:6px;padding-bottom:4px;}
+:where(.post-content) .controls select, :where(.post-content) .local select, :where(.post-content) .cap select{font:inherit;font-family:'Fira Sans',system-ui,sans-serif;font-size:.85rem;padding:5px 30px 5px 10px;border:1.5px solid var(--accent);border-radius:999px;background:var(--accent-soft);color:var(--ink-1);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%232456A6'/></svg>");background-repeat:no-repeat;background-position:right 11px center;}
+:where(.post-content) .local label.row{gap:8px;}
+:where(.post-content) .controls input[type=range]{accent-color:var(--accent);width:150px;}
+:where(.post-content) .controls input[type=checkbox]{accent-color:var(--accent);}
+:where(.post-content) button{font:inherit;font-family:'Fira Sans',system-ui,sans-serif;font-size:.85rem;padding:6px 14px;border-radius:999px;border:1.5px solid var(--accent);background:var(--accent-soft);color:var(--ink-1);cursor:pointer;}
+:where(.post-content) button.primary{background:var(--accent);color:#fff;}
+:where(.post-content) button:disabled{opacity:.45;cursor:default;}
+:where(.post-content) .panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;}
+:where(.post-content) .panel svg{width:100%;height:auto;display:block;background:var(--paper);border-radius:6px;}
+:where(.post-content) .stat{display:flex;gap:18px;font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:.78rem;color:var(--ink-2);margin-top:10px;}
+:where(.post-content) .stat b{color:var(--ink-1);}
+:where(.post-content) .legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:'Fira Sans',system-ui,sans-serif;font-size:.78rem;color:var(--ink-2);margin:4px 0 0;}
+:where(.post-content) .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+:where(.post-content) .sw.diamond{border-radius:0;transform:rotate(45deg);background:transparent;border:2px solid var(--hot);width:8px;height:8px;}
+:where(.post-content) .axis text{fill:var(--ink-3);font-family:'Fira Sans',system-ui,sans-serif;font-size:11px;}
+:where(.post-content) .axis line, :where(.post-content) .axis path{stroke:var(--line);}
+:where(.post-content) :focus-visible{outline:2px solid var(--hot);outline-offset:2px;}
+:where(.post-content) .controls .radio{flex-direction:row;gap:12px;align-items:center;padding-bottom:4px;}
+:where(.post-content) .controls .radio span{display:inline-flex;align-items:center;gap:4px;}
+:where(.post-content) .controls input[type=radio]{accent-color:var(--accent);}
+:where(.post-content) .viz.single{max-width:560px;}
+:where(.post-content) .viz .caption{font-family:'Fira Sans',system-ui,sans-serif;font-size:.85rem;color:var(--ink-2);margin-top:10px;max-width:70ch;}
+:where(.post-content) .viz .local{display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;font-family:'Fira Sans',system-ui,sans-serif;font-size:.85rem;color:var(--ink-2);margin:0 0 10px;}
+:where(.post-content) .viz .local b{color:var(--ink-1);font-weight:600;}
+:where(.post-content) .viz .local input[type=range]{accent-color:var(--accent);width:180px;vertical-align:middle;}
+:where(.post-content) .viz .local input[type=checkbox]{accent-color:var(--accent);}
+:where(.post-content) .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;align-items:start;}
+:where(.post-content) .two .viz{margin:0;}
+:where(.post-content) .eqn{font-family:'Fira Sans',system-ui,sans-serif;font-size:1.05rem;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:10px 16px;margin:12px 0;max-width:760px;}
+:where(.post-content) .eqn small{display:block;font-family:'Fira Sans',system-ui,sans-serif;font-size:.78rem;color:var(--ink-3);margin-top:4px;}
+:where(.post-content) .readout{font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:.8rem;color:var(--ink-2);margin-top:8px;}
+:where(.post-content) .readout b{color:var(--ink-1);}
+:where(.post-content) .netsvg{width:100%;height:auto;display:block;}
+:where(.post-content) .netlbl{font-family:'Fira Sans',system-ui,sans-serif;font-size:11px;fill:var(--ink-3);}
+:where(.post-content) .stack svg{width:100%;height:auto;display:block;}
+:where(.post-content) .trainbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-family:'Fira Sans',system-ui,sans-serif;font-size:.85rem;color:var(--ink-2);margin:12px 0 0;}
+:where(.post-content) .trainbar b{color:var(--ink-1);font-family:'Fira Code',ui-monospace,Menlo,monospace;}
+:where(.post-content) .trainbar .hint{color:var(--ink-3);font-size:.78rem;}
+:where(.post-content) .viz .controls{margin:6px 0 0;}
+:where(.post-content) details.dive{border:1.5px solid var(--hot);border-radius:10px;margin:20px 0;background:var(--card);overflow:hidden;max-width:108ch;}
+:where(.post-content) details.dive>summary{cursor:pointer;list-style:none;padding:13px 18px;background:var(--hot-soft);font-family:'Fira Sans',system-ui,sans-serif;font-weight:700;font-size:.95rem;color:var(--ink-1);display:flex;align-items:center;gap:10px;}
+:where(.post-content) details.dive>summary::-webkit-details-marker{display:none;}
+:where(.post-content) details.dive>summary::before{content:"▸";color:var(--hot);font-size:.9rem;transition:transform .15s;}
+:where(.post-content) details.dive[open]>summary::before{transform:rotate(90deg);}
+:where(.post-content) details.dive>summary .tag{font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:.68rem;letter-spacing:.09em;color:var(--hot);font-weight:600;text-transform:uppercase;margin-left:auto;}
+:where(.post-content) details.dive .divebody{padding:6px 20px 18px;}
+:where(.post-content) details.dive .divebody p{font-size:.95rem;}
+:where(.post-content) .eq{font-family:'Fira Sans',system-ui,sans-serif;font-size:1rem;text-align:center;padding:10px 16px;margin:12px auto;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;max-width:560px;overflow-x:auto;}
+:where(.post-content) table{border-collapse:collapse;width:100%;font-size:.88rem;font-family:'Fira Sans',system-ui,sans-serif;}
+:where(.post-content) th{text-align:left;font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);border-bottom:2px solid var(--line);padding:7px 10px;}
+:where(.post-content) td{border-bottom:1px solid var(--line);padding:8px 10px;vertical-align:top;}
+:where(.post-content) td:first-child{font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:.8rem;white-space:nowrap;}
+:where(.post-content) .tablewrap{overflow-x:auto;margin:16px 0;}
+:where(.post-content) .mm{list-style:none;padding:0;margin:10px 0 18px;max-width:108ch;}
+:where(.post-content) .mm li{border-left:3px solid var(--line);padding:6px 14px;margin:8px 0;font-size:.98rem;color:var(--ink-2);font-style:italic;}
+:where(.post-content) .mm li b{color:var(--ink-1);font-style:normal;}
+:where(.post-content) .mm li .who{display:block;font-style:normal;font-family:'Fira Sans',system-ui,sans-serif;font-size:.74rem;color:var(--ink-3);margin-top:2px;}
+:where(.post-content) pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:.76rem;line-height:1.55;overflow-x:auto;margin:.4em 0 .8em;color:var(--ink-1);white-space:pre;}
+:where(.post-content) pre em{font-style:normal;background:var(--hot-soft);border-bottom:2px solid var(--hot);border-radius:3px;padding:0 2px;}
+:where(.post-content) .insp-hint{font-family:'Fira Sans',system-ui,sans-serif;font-size:.85rem;color:var(--ink-3);margin-top:8px;}
+:where(.post-content) .modebtn{display:inline-flex;flex-direction:column;align-items:stretch;gap:5px;padding:7px 14px 8px;min-width:160px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--ink-2);text-align:left;}
+:where(.post-content) .modebtn.on{border-color:var(--accent);color:var(--ink-1);background:var(--accent-soft);}
+:where(.post-content) .modebtn .mlabel{font-weight:600;}
+:where(.post-content) .modebtn .mstrip{display:flex;gap:3px;height:5px;}
+:where(.post-content) .modebtn .mstrip i{flex:1;background:var(--code-bg);border-radius:3px;overflow:hidden;display:block;}
+:where(.post-content) .modebtn .mstrip i b{display:block;height:100%;width:0;background:var(--accent);}
+:where(.post-content) .modebtn.on .mstrip i{background:var(--card);}
+:where(.post-content) .jstrip{display:inline-flex;gap:3px;height:6px;width:220px;vertical-align:middle;}
+:where(.post-content) .jstrip i{flex:1;background:var(--code-bg);border-radius:3px;overflow:hidden;display:block;}
+:where(.post-content) .jstrip i b{display:block;height:100%;width:0;background:var(--accent);}
+:where(.post-content) .walkwrap{position:relative;}
+:where(.post-content) .walkwrap.locked>.viz{filter:blur(3px);opacity:.5;pointer-events:none;user-select:none;}
+:where(.post-content) .walkwrap .lock{display:none;position:absolute;inset:0;place-items:center;font-family:'Fira Sans',system-ui,sans-serif;font-size:.95rem;color:var(--ink-2);}
+:where(.post-content) .walkwrap.locked .lock{display:grid;}
+:where(.post-content) .walkwrap .lock button{font-size:1rem;padding:10px 20px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+:where(.post-content) .tb-play, :where(.post-content) .lockrun, :where(.post-content) .play1{background-image:linear-gradient(90deg,rgba(0,0,0,.28) var(--p,0%),transparent var(--p,0%));}
+:where(.post-content) .mat text{font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:9.5px;fill:var(--ink-1);}
+:where(.post-content) .mat .op{font-family:'Fira Sans',system-ui,sans-serif;font-size:16px;fill:var(--ink-2);}
+:where(.post-content) .mat .lab{font-family:'Fira Sans',system-ui,sans-serif;font-size:11px;fill:var(--ink-3);}
+:where(.post-content) .mateq{max-width:none;margin:6px 0 10px;}
+:where(.post-content) .mateq .mgen{font-size:1.02rem;color:var(--ink-1);}
+:where(.post-content) .mateq .mwork{font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:.82rem;color:var(--ink-2);margin-top:6px;white-space:pre-wrap;}
+:where(.post-content) .mateq em{font-style:normal;background:var(--accent-soft);border-bottom:2px solid var(--accent);padding:0 4px;border-radius:3px;}
+:where(.post-content) .mateq.back{border-left-color:var(--hot);}
+:where(.post-content) .mateq.back em{background:var(--hot-soft);border-bottom-color:var(--hot);}
+:where(.post-content) .mateq.upd{border-left-color:var(--good);}
+:where(.post-content) .mateq.alt{border-left-color:var(--crit);background:var(--card);}
+:where(.post-content) .mateq.alt em{background:rgba(208,59,59,.12);border-bottom-color:var(--crit);}
+:where(.post-content) .mateq .maintag{font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:.7rem;letter-spacing:.1em;color:var(--accent);font-weight:700;margin-bottom:4px;}
+:where(.post-content) .mateq.alt .alttag{font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:.7rem;letter-spacing:.1em;color:var(--crit);font-weight:700;margin-bottom:4px;}
+:where(.post-content) .mateq.upd em{background:rgba(46,125,79,.12);border-bottom-color:var(--good);}
+:where(.post-content) table.csv td, :where(.post-content) table.csv th{padding:5px 10px;font-size:.84rem;}
+:where(.post-content) table.csv td.find{color:var(--accent);font-size:1.05rem;text-align:center;width:2.2em;}
+:where(.post-content) table.csv td:nth-child(2){color:var(--ink-3);}
+:where(.post-content) table.mini{max-width:520px;}
+:where(.post-content) table.mini td, :where(.post-content) table.mini th{padding:3px 10px;font-size:.8rem;color:var(--ink-3);}
+:where(.post-content) table.csv tr.hl td{background:var(--accent-soft);color:var(--ink-1);font-weight:600;}
+:where(.post-content) table.csv tr.sel td{box-shadow:inset 0 2px 0 var(--hot),inset 0 -2px 0 var(--hot);}
+:where(.post-content) table.csv tr.sel td:first-child{box-shadow:inset 2px 2px 0 var(--hot),inset 0 -2px 0 var(--hot),inset 2px 0 0 var(--hot);}
+:where(.post-content) table.csv tr.sel td:last-child{box-shadow:inset -2px 2px 0 var(--hot),inset 0 -2px 0 var(--hot),inset -2px 0 0 var(--hot);}
+:where(.post-content) table.csv tbody tr{transition:background .15s;}
+:where(.post-content) table.csv tbody tr:hover td{background:var(--code-bg);}
+:where(.post-content) #pCsv{transition:box-shadow .3s;}
+:where(.post-content) table.stm td:first-child{white-space:normal;font-size:.84rem;width:46%;}
+</style>
+<!-- cover: blank for now; later a gif of the plane view training on two_spirals.csv -->
+
+
+
+<section id="task">
+<h2>Points on a plane</h2>
+<p>Here, we walk through the steps of building a ResNet for a simple binary classifier for points on a plane.</p>
+<p>We train a classifier to tell two kinds of points apart, and watch the map it draws. Pick a dataset: points (x, y) on a
+plane, each labelled either <span class="sw" style="background:var(--accent)"></span>blue dot or <span class="sw diamond"></span>gold diamond.
+Play around with the buttons!</p>
+<div class="two">
+<div class="viz" id="pCsv"><div class="cap" style="display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center">file <select id="ds"><option value="moons">two_moons.csv</option><option value="rings">two_rings.csv</option><option value="blobs">two_blobs.csv</option><option value="spirals">two_spirals.csv</option></select><span>· one row per point · <b class="nrows">200</b> rows · click a row to find its point</span></div>
+<div class="legend" style="margin-bottom:8px"><span><span class="sw" style="background:var(--accent)"></span>label A · drawn as a blue dot</span><span><span class="sw diamond"></span>label B · drawn as a gold diamond</span></div>
+<div class="tablewrap"><table class="csv"><thead><tr><th>find</th><th>row</th><th>x</th><th>y</th><th>label</th></tr></thead><tbody></tbody></table></div>
+<div class="caption">x and y are all the network gets to see; the label is what it has to learn to predict.</div>
+<div class="note hot" style="max-width:none;margin:12px 0 0"><b>Try it:</b> click any row, or its ⌖, to find that point on the plane.</div></div>
+<div>
+<div class="viz single" id="pTask"><div class="cap">the plane · the same 200 rows · shaded by the map of the <span class="whichName">ResNet</span></div>
+<svg viewBox="0 0 360 360" role="img" aria-label="learned decision boundary on the input plane"></svg>
+<div class="stat">loss <b class="loss">–</b> accuracy <b class="acc">–</b></div>
+<div class="caption">The points of the csv, plotted on a plane. The shading is the network's answer for every other point.</div></div>
+</div>
+</div>
+<div class="viz" id="pConfig">
+<div class="controls">
+<label><span>depth · <b id="Lv">10</b> blocks</span><input id="L" type="range" min="1" max="16" value="10"></label>
+<label>look at
+<select id="net"><option value="res">ResNet (residual)</option><option value="plain">basic neural network (before ResNet)</option></select></label>
+</div>
+<div class="trainbar"><button class="tb-play primary">▶ train</button><button class="tb-reset">reset</button><span>step <b class="tb-steps">0</b> / 500</span><span class="hint">the plane nets, shared with the side-by-side stacks at the end</span></div></div>
+</section>
+
+<section id="paths">
+<h2>Training vs inference</h2>
+<p>Below is an overview of a simple, full neural network architecture.</p>
+<div class="viz" id="pPaths"><div class="cap">one data row through the stack · blue = forward · gold = backward</div>
+<div class="local"><label class="row">stack <select id="arch"><option value="res">ResNet (residual)</option><option value="plain">basic neural network (before ResNet)</option></select></label>
+<button class="modebtn on" data-mode="train"><span class="mlabel">▶ training</span><span class="mstrip"></span></button>
+<button class="modebtn" data-mode="infer"><span class="mlabel">▶ inference</span><span class="mstrip"></span></button>
+<b class="phlabel"></b></div>
+<svg viewBox="0 0 790 310" role="img" aria-label="paths through a residual stack in training and in inference"></svg>
+<div class="caption phcap"></div></div>
+<div class="note">Pre-training and post-training (fine-tuning) take the <em>same</em> route: forward, compare, backward,
+update. They differ in the data and the loss, not in the path. Inference is the only mode with a different route, and
+it is simply the first phase alone with the weights locked.</div>
+
+<h3>The only difference between ResNet and a basic neural network</h3>
+<div class="eqn">ResNet: &nbsp; x<sub>out</sub> = x₀ + f₁(x₀) + f₂(x₁) + f₃(x₂) + f₄(x₃)
+<small>the input rides along, and every block adds its edit to it</small></div>
+<div class="eqn">basic network: &nbsp; x<sub>out</sub> = f₄(f₃(f₂(f₁(x₀))))
+<small>nested, not summed: every block stands between the input and the answer</small></div>
+<div class="viz stack" id="pStack"><div class="cap">the two architectures at the current depth · click any block to open it</div>
+<svg viewBox="0 0 760 150" role="img" aria-label="stacks before and after ResNet"></svg>
+<div id="pInsp" style="display:none">
+<div class="two">
+<div><div class="cap">block <b class="il"></b> of the <b class="irow"></b> stack · live weights</div>
+<svg class="netsvg" role="img" aria-label="selected block weights"></svg>
+<div class="local"><span>data point <b class="isv">0</b></span><input class="is" type="range" min="0" max="199" value="0"><span class="icls"></span></div>
+<div class="readout">edit size |f| / |x<sub>in</sub>| = <b class="ratioF">–</b> &nbsp;·&nbsp; gradient through the block |dx<sub>in</sub>| / |dx<sub>out</sub>| = <b class="ratioG">–</b></div></div>
+<div><div class="cap">forward, for that point</div><pre class="fwd"></pre><div class="cap">backward, for that point</div><pre class="bwd"></pre></div>
+</div>
+<div class="note">The gradient ratio is the whole argument in one number. Through a <b>residual</b> block it stays near 1
+because of the <em>+ dx<sub>out</sub></em> term: the correction arrives at the block below almost unchanged, whatever the
+weights are doing. Through a block of a <b>basic neural network</b> it is whatever the weights make it, and the product of ten such
+numbers is what dies or explodes. As training runs, the ratio for the basic neural network depends on where the point is, and the residual one barely does.</div>
+</div></div>
+<p><button class="primary goto" type="button">see the one step where they differ, inside a block ▸</button></p>
+</section>
+
+<section id="matrices">
+<h2>Inside a ResNet block</h2>
+<p>One block, opened up: the forward pass along the top row, the backward pass along the bottom row, then the update. A red box marks the two steps where a basic neural network differs.</p>
+
+<div class="viz" id="pMat"><div class="local"><button class="mprev">◂ prev</button><button class="mnext primary">next ▸</button><span class="jstrip mstrip2" style="width:300px"></span><b class="mlabel2"></b></div>
+<div class="eqn mateq"><div class="maintag">RESIDUAL BLOCK · RESNET · x_out = x + f(x)</div><div class="mgen"></div><div class="mwork"></div></div>
+<div class="eqn mateq alt" style="display:none"><div class="alttag">BASIC NEURAL NETWORK (BEFORE RESNET) · what it would do here instead</div><div class="mgen"></div><div class="mwork"></div></div>
+<svg viewBox="0 0 1000 745" role="img" aria-label="one block of the network opened up: forward and backward passes as matrices"></svg>
+<div class="caption mcap"></div>
+</div>
+<p>Three kinds of thing live on that canvas:</p>
+<ul>
+<li><b>weights</b> W₁, b₁, W₂, b₂: the only things that ever change, and only in the last stage.</li>
+<li><b>activations</b> x, h, f, x<sub>out</sub>: recomputed on every forward pass.</li>
+<li><b>messages</b> dx<sub>out</sub>, dh, dpre, dW₁, dW₂, dx<sub>in</sub>: computed on every backward pass, then consumed, the dW’s by the update and dx<sub>in</sub> by the block below.</li>
+</ul>
+<p>The equations are the same at every stage and in every block; only the numbers change.</p>
+<div class="eqn">forward: &nbsp; h = tanh(W₁·x + b₁), &nbsp; f = W₂·h + b₂, &nbsp; x<sub>out</sub> = <span class="mres">x + </span>f<br>
+backward: &nbsp; dh = W₂ᵀ·dx<sub>out</sub>, &nbsp; dpre = dh ⊙ (1 − h²), &nbsp; dW₂ = dx<sub>out</sub>·hᵀ, &nbsp; dW₁ = dpre·xᵀ, &nbsp; dx<sub>in</sub> = W₁ᵀ·dpre<span class="mres"> + dx<sub>out</sub></span>
+<small>W₁ is 8 × 2, W₂ is 2 × 8; the biases' slopes are dpre and dx<sub>out</sub> themselves. Going forward the residual block adds x back;
+going backward it passes dx<sub>out</sub> straight through. A basic block does neither.</small></div>
+</section>
+
+<section id="knobs">
+<h2>Gradient descent</h2>
+<p>The update step that closed the block walkthrough above, <em>W ← W − lr·dW</em>, is one move: keep the guess, add a correction. Here it is
+with a single knob, so the whole thing fits in one picture.</p>
+<p>Training uses the slope of the <em>error</em> to find where the error is smallest. One knob, <em>w</em>, and a bowl: the error of the line <em>y = w·x</em> against data
+that actually lies on <em>y = 1.5·x</em>. Start the knob in the wrong place and step against the slope.</p>
+<div class="two">
+<div class="viz" id="pGD"><div class="cap">error as a function of one weight · the ball steps against the slope</div>
+<svg viewBox="0 0 360 260" role="img" aria-label="gradient descent on a one-parameter loss"></svg>
+<div class="local"><span>step <b id="gdnv">0</b></span><input id="gdn" type="range" min="0" max="8" value="0">
+<span>learning rate <select id="lr"><option value="0.1">0.1 · steady</option><option value="0.4">0.4 · overshoots</option><option value="0.55">0.55 · diverges</option></select></span></div>
+<div class="readout">w <b class="w">–</b> · slope <b class="sl">–</b> · Δ = −lr × slope <b class="dw">–</b> · next w <b class="w1">–</b></div></div>
+<div>
+<div class="eqn">w<sub>n+1</sub> = w<sub>n</sub> + Δ<sub>n</sub>, &nbsp; Δ<sub>n</sub> = − lr · (slope of the error at w<sub>n</sub>)
+<small>Keep the guess, add a correction: the slope says which way, the learning rate says how far.</small></div>
+<div class="note">Everything a network learns, it learns with this move, applied to thousands of knobs at once. Each
+knob only ever sees its own slope. The step size is the one thing you set by hand: too small and the ball crawls, a bit
+too big and it overshoots the bottom and rattles, bigger still and every step makes things worse.</div>
+</div>
+</div>
+<details class="dive"><summary>Other iterative methods: Fixed-Point Iteration, Secant, Newton–Raphson<span class="tag">optional</span></summary>
+<div class="divebody">
+<p>Descent belongs to an old family: keep the guess, add a correction sized by a slope. Three root-finders do the same
+thing to solve <em>cos x = x</em> (the equation you can solve by typing any number into a calculator and pressing cos until
+the display stops changing) and differ only in where the slope comes from: a fixed number (like a fixed learning rate),
+the last two guesses, or the true derivative.</p>
+<div class="local"><label class="row">method <select id="rootm"><option value="fixed">Fixed-Point Iteration</option><option value="secant">Secant</option><option value="newton" selected>Newton–Raphson</option></select></label></div>
+<div class="two">
+<div class="viz" id="pNewton"><div class="cap rootcap">solving cos x = x · guess, tangent, next guess</div>
+<svg viewBox="0 0 360 260" role="img" aria-label="Newton's method on cos x minus x"></svg>
+<div class="local"><span>iteration <b id="nv">0</b></span><input id="n" type="range" min="0" max="7" value="0"></div>
+<div class="readout ro">–</div></div>
+<div>
+<div class="eqn eq-root"></div>
+<div class="note">Hold on to the <em>shape</em> of this move, not the formula: the new value is the old value plus a
+small fix. Every training loop on this page is this move applied to the network's knobs, with the slope of the
+<em>error</em> standing in for f′. And a residual block, it turns out, is this move applied to the data itself.</div>
+</div>
+</div>
+<div class="tablewrap"><table>
+<tr><th>method</th><th>guess ← guess + correction</th><th>the correction comes from</th></tr>
+<tr><td>Gradient descent</td><td>w ← w − lr · slope</td><td>the slope of the error; the move that trains every net on this page</td></tr>
+<tr><td>Adam (used here)</td><td>the same, with momentum and a step size per knob</td><td>running averages of each slope and of its square, so noisy knobs take smaller steps</td></tr>
+<tr><td>Secant</td><td>Newton, with f′ estimated from the last two guesses</td><td>no derivative needed</td></tr>
+<tr><td>Fixed-Point Iteration</td><td>x ← g(x)</td><td>rewrite the equation as x = g(x) and keep applying g</td></tr>
+<tr><td>Newton–Raphson</td><td>x ← x − f / f′</td><td>the slope of f itself, to land where f = 0</td></tr>
+<tr><td>Residual block</td><td>x ← x + f(x)</td><td>a learned correction, applied to the data instead of to the knobs</td></tr>
+</table></div>
+</div></details>
+</section>
+
+<section id="one-d">
+<h2>Non-linearity: choosing the activation function</h2>
+<p><b>Which one to use: whichever keeps its derivative close to 1 where the data lands.</b> By the chain rule, the gradient that reaches the first layer is a product with one factor per layer, and each factor contains the activation's derivative σ′ at that layer. Through 50 layers that is 50 such factors multiplied together. Sigmoid's derivative never exceeds 0.25, so the product is at most 0.25<sup>50</sup> ≈ 10<sup>−30</sup> and the early layers stop learning: the vanishing gradient. Factors above 1 compound the other way and the gradient explodes. tanh has derivative 1 at the origin; ReLU has derivative exactly 1 for positive inputs and 0 otherwise; GELU rounds off that corner. That is the order the field moved in. ReLU is the extreme case: the identity where it is on, nothing where it is off, as close to linear as a non-linearity gets, which is the residual block's instinct too.</p>
+<div class="two">
+<div class="viz" id="pNet1"><div class="cap">the network · edge width = size of the weight · blue positive, gold negative</div>
+<svg class="netsvg" role="img" aria-label="one-input network diagram"></svg>
+<div class="local"><span>hidden units <b id="H1v">4</b></span><input id="H1" type="range" min="1" max="8" value="4">
+<span>bend <select id="act"><option value="tanh">tanh (smooth kink)</option><option value="relu">ReLU · max(0, x)</option><option value="sigmoid">sigmoid</option><option value="sin">sin</option><option value="quad">x² (a parabola)</option><option value="cubic">x³</option><option value="linear">none · linear</option></select></span></div>
+<div class="trainbar"><button class="play1 primary">▶ train</button><button class="reset1">reset</button><span>step <b class="st1">0</b> / 500</span><span class="hint">trains this one-input net only</span></div></div>
+<div class="viz" id="pFit"><div class="cap">the function it computes</div>
+<svg viewBox="0 0 360 260" role="img" aria-label="fitted function and hidden unit contributions"></svg>
+<div class="legend" style="flex-direction:column;gap:4px;margin-top:8px"><span><span class="sw" style="background:var(--ink-3)"></span>grey dots: the examples, one (input x, target y) each</span><span><span class="sw" style="width:16px;height:0;border-top:2px dashed var(--ink-3);border-radius:0"></span>dashed: the curve the examples were sampled from</span><span><span class="sw" style="width:16px;height:2px;border-radius:0;background:#8f3f71"></span>thin colours: the hidden units, one bendable line each</span><span><span class="sw" style="width:16px;height:3px;border-radius:0;background:var(--ink-1)"></span>bold: their sum (+ b₂), the network’s answer</span></div>
+<div class="readout">error (mean squared) <b class="loss">–</b></div>
+<div class="readout">what this bend can build, however many units: <b class="ceil">–</b></div></div>
+</div>
+<details class="dive"><summary>The maths: which bends can build any curve, and why<span class="tag">optional</span></summary>
+<div class="divebody">
+<p>Six statements carry the whole argument. Each one is followed by what it means in words.</p>
+<div class="tablewrap"><table class="stm">
+<tr><th>statement</th><th>in words</th></tr>
+<tr><td>layer(x) = Σⱼ w₂ⱼ · σ(w₁ⱼ·x + b₁ⱼ)</td><td>A hidden layer is a weighted sum of shifted, scaled copies of one bend σ. That is all it can ever be.</td></tr>
+<tr><td>∂ᵏ/∂wᵏ σ(w·x + b) at w = 0 &nbsp;=&nbsp; xᵏ · σ⁽ᵏ⁾(b)</td><td>Differentiate one copy k times with respect to its scale and the power xᵏ falls out, weighted by the bend’s k-th derivative. A derivative is a limit of differences of copies, so whenever σ⁽ᵏ⁾(b) ≠ 0 for some b, the layer can build xᵏ.</td></tr>
+<tr><td>σ a polynomial of degree d &nbsp;⇒&nbsp; σ⁽ᵏ⁾ ≡ 0 for every k &gt; d</td><td>A polynomial bend can build the powers up to xᵈ and nothing beyond: a ceiling, however wide the layer.</td></tr>
+<tr><td>σ not a polynomial &nbsp;⇒&nbsp; for every k there is a b with σ⁽ᵏ⁾(b) ≠ 0</td><td>Its Taylor series never terminates, so every power xᵏ is within reach. exp, tanh, sigmoid and sin all qualify.</td></tr>
+<tr><td>Weierstrass: every continuous f on [a, b] is a uniform limit of polynomials</td><td>Reaching every power means reaching every polynomial, and therefore every continuous curve, as closely as you like.</td></tr>
+<tr><td>one hidden layer is universal &nbsp;⇔&nbsp; σ is not a polynomial</td><td>The theorem the lines above prove (Leshno, Lin, Pinkus, Schocken, 1993). ReLU is not smooth, so the derivative step does not apply to it directly; it qualifies anyway, because sums of shifted kinks make every piecewise-linear curve, and those approximate anything.</td></tr>
+</table></div>
+<p><b>In one breath.</b> A bend works when its derivatives never all die out, that is, when its Taylor series goes on forever;
+then copies of it can manufacture every power of x, and every power of x is enough to draw any curve. A polynomial’s
+series stops, so a polynomial bend caps out at its own degree no matter how many units you add. None of this says how many
+units are needed, or whether gradient descent will find them; that is what the line above this box is about.</p>
+</div></details>
+</section>
+
+<section id="journey">
+<h2>A final look at training</h2>
+<p>Both networks are trained on the same points, from the same random start, with the same optimiser. Here is what
+each has made of the plane by its last block, the loss as training runs, and the plane after any number of blocks.</p>
+<h3>Training: the final feature space</h3>
+<p>Both nets after all <b class="Lall">10</b> blocks: the points as the final straight cut sees them, and the training loss. It
+is the same training as the plane at the top.</p>
+<div class="trainbar"><button class="tb-play primary">▶ train</button><button class="tb-reset">reset</button><span>step <b class="tb-steps">0</b> / 500</span><span><input id="sheet" type="checkbox" checked> sheet</span><span><input id="trails" type="checkbox" checked> trails</span><span class="hint">the plane nets, shared with the plane at the top</span></div>
+<div class="viz"><div class="panels">
+<div class="panel" id="pPlain"><div class="cap">basic network · x = f(x) · after all <b class="Lall">10</b> blocks</div>
+<svg viewBox="0 0 360 360" role="img" aria-label="pPlain"></svg>
+<div class="stat" style="flex-wrap:wrap"><span>loss <b class="loss">–</b></span><span>accuracy <b class="acc">–</b></span></div></div>
+<div class="panel" id="pRes"><div class="cap">ResNet · x = x + f(x) · after all <b class="Lall">10</b> blocks</div>
+<svg viewBox="0 0 360 360" role="img" aria-label="pRes"></svg>
+<div class="stat" style="flex-wrap:wrap"><span>loss <b class="loss">–</b></span><span>accuracy <b class="acc">–</b></span></div></div>
+</div>
+<div class="legend"><span><span class="sw" style="background:var(--accent)"></span>class A (dots)</span><span><span class="sw diamond"></span>class B (diamonds)</span><span>dashed line = the readout’s one straight cut</span><span>frame ± = how far the plane has been stretched</span></div></div>
+<div class="viz"><div class="cap">training loss · lower is better · capped at 500 steps · bold = the net selected in the shared setup</div>
+<svg id="lossSvg" viewBox="0 0 760 160" role="img" aria-label="training loss curves"></svg></div>
+<h3>Feature space after k blocks</h3>
+<p>The same journey one block at a time: the sheet folds a little more with every block. A grey mesh shows a square sheet
+of paper pushed through the same blocks.</p>
+<div class="walkwrap" id="walkwrap">
+<div class="viz"><div class="local"><button class="jwalk primary">▶ walk</button><span class="jstrip" style="width:160px"><i><b></b></i></span><span>show the plane after block <b id="kv">10</b></span><input id="k" type="range" min="0" max="10" value="10"></div>
+<div class="panels">
+<div class="panel" id="pPlainK"><div class="cap">basic network · after block <b class="kcap">10</b></div>
+<svg viewBox="0 0 360 360" role="img" aria-label="pPlainK"></svg>
+<div class="stat" style="flex-wrap:wrap"><span>sheet <b class="area">–</b></span><span>200 points on <b class="spots">–</b> spots</span></div></div>
+<div class="panel" id="pResK"><div class="cap">ResNet · after block <b class="kcap">10</b></div>
+<svg viewBox="0 0 360 360" role="img" aria-label="pResK"></svg>
+<div class="stat" style="flex-wrap:wrap"><span>sheet <b class="area">–</b></span><span>200 points on <b class="spots">–</b> spots</span></div></div>
+</div>
+<div class="legend">
+<span><span class="sw" style="background:var(--accent)"></span>class A (dots)</span>
+<span><span class="sw diamond"></span>class B (diamonds)</span>
+<span>grey mesh = the sheet after k blocks · the basic network's sheet is drawn too: it gets crushed to a line or flung off-frame, see its numbers</span>
+<span>dashed line = the readout's one straight cut</span>
+<span>frame ± = how far the plane has been stretched</span>
+</div></div>
+<div class="lock"><button class="primary lockrun" type="button">▶ run the training</button></div></div>
+<div class="note"><b>What you are looking at.</b> The actual x<sub>out</sub> of every point after k blocks, plotted on a plane.<br>Follow the trace lines: the basic neural network re-maps the whole plane at every block (x ← f(x)), so points jump and pile up; the ResNet only nudges each point a little from where it was (x ← x + f(x)), so the sheet stays a sheet.</div>
+</section>
+
+<section id="conclusion">
+<h2>Summary</h2>
+<ul>
+<li>A network is a stack of small blocks: matrices that stretch and shear the input, a bend that folds it, and one straight cut at the end that reads off the answer.</li>
+<li>Training is one move, repeated: guess, measure the error, nudge every weight a little against its slope.</li>
+<li>The residual connection adds the input back at every block. A block that has learned nothing does no harm, and the correction travels back along a path with no weights on it to scramble the message. That is why deep stacks can be trained at all.</li>
+<li>That boundary on the plane is the whole result: a map from any point to a class, drawn by the data.</li>
+</ul>
+<h3>Go further</h3>
+<ul>
+<li>Welch Labs, <em>How Models Learn</em>, a three-part series: <a href="https://www.youtube.com/watch?v=NrO20Jb-hy0">Part 1, gradient descent</a> · <a href="https://www.youtube.com/watch?v=VkHfRKewkWw">Part 2, backpropagation</a> · <a href="https://www.youtube.com/watch?v=qx7hirqgfuU">Part 3, why depth works</a>.</li>
+<li>Welch Labs, <a href="https://www.youtube.com/watch?v=QgH9sr7G13Q">The most cited paper of the century is a brilliant hack</a>: the ResNet story in twenty minutes.</li>
+<li>Anthropic, <a href="https://transformer-circuits.pub/2025/attribution-graphs/biology.html">On the Biology of a Large Language Model</a>.</li>
+</ul>
+</section>
+
+
+
+<script src="_parts/d3.v7.min.js"></script>
+<script>
+(function(){
+const N=200, H=8, DOM=3, LR=0.01, STEPS_PER_FRAME=1, MAX_STEPS=500;
+let L=10, lam=0, dataset='moons', k=10, X=[], Y=[], nets, steps=0, playing=false, lossHist=[];
+let showSheet=true, showTrails=true;
+
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function gauss(r){let u=0,v=0;while(!u)u=r();v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+function makeData(){
+  const r=rng(7); X=[]; Y=[];
+  for(let i=0;i<N;i++){
+    const c=i%2; let x,y;
+    if(dataset==='moons'){
+      const t=r()*Math.PI;
+      if(c===0){x=Math.cos(t);y=Math.sin(t);}else{x=1-Math.cos(t);y=0.5-Math.sin(t);}
+      x=(x-0.5)*1.6; y=(y-0.25)*1.6;
+    }else if(dataset==='rings'){
+      const t=r()*2*Math.PI, rad=c===0?0.7:1.8; x=rad*Math.cos(t); y=rad*Math.sin(t);
+    }else if(dataset==='blobs'){
+      x=(c===0?-1.1:1.1)+0.45*gauss(r); y=(c===0?0.8:-0.8)+0.45*gauss(r);
+    }else{
+      const u=r(), rad=0.35+2.0*u, th=3*Math.PI*u+(c===0?0:Math.PI); x=rad*Math.cos(th); y=rad*Math.sin(th);
+    }
+    X.push([x+0.12*gauss(r), y+0.12*gauss(r)]); Y.push(c);
+  }
+}
+
+function makeNet(residual, seed){
+  const r=rng(seed), blocks=[];
+  for(let l=0;l<L;l++){
+    blocks.push({
+      W1:Array.from({length:H},()=>[gauss(r)*Math.SQRT1_2, gauss(r)*Math.SQRT1_2]), b1:new Array(H).fill(0),
+      W2:[Array.from({length:H},()=>gauss(r)/Math.sqrt(H)), Array.from({length:H},()=>gauss(r)/Math.sqrt(H))], b2:[0,0]
+    });
+  }
+  const P=L*(5*H+2)+3;
+  return {residual, blocks, w:[gauss(r)*0.5,gauss(r)*0.5], c:0, m:new Float64Array(P), v:new Float64Array(P), t:0, last:null};
+}
+
+function forward(net, x0, upto){
+  const xs=[x0], hs=[]; let x=x0;
+  for(let l=0;l<upto;l++){
+    const B=net.blocks[l], h=new Array(H);
+    for(let j=0;j<H;j++) h[j]=Math.tanh(B.W1[j][0]*x[0]+B.W1[j][1]*x[1]+B.b1[j]);
+    let f0=B.b2[0], f1=B.b2[1];
+    for(let j=0;j<H;j++){f0+=B.W2[0][j]*h[j]; f1+=B.W2[1][j]*h[j];}
+    x=net.residual?[x[0]+f0,x[1]+f1]:[f0,f1];
+    xs.push(x); hs.push(h);
+  }
+  return {xs,hs};
+}
+
+function zeros(){
+  return {blocks:Array.from({length:L},()=>({W1:Array.from({length:H},()=>[0,0]),b1:new Array(H).fill(0),W2:[new Array(H).fill(0),new Array(H).fill(0)],b2:[0,0]})), w:[0,0], c:0};
+}
+
+function forEachParam(net, g, fn){
+  for(let l=0;l<L;l++){
+    const B=net.blocks[l], G=g.blocks[l];
+    for(let j=0;j<H;j++){fn(B.W1[j],G.W1[j],0,true);fn(B.W1[j],G.W1[j],1,true);fn(B.b1,G.b1,j,false);fn(B.W2[0],G.W2[0],j,true);fn(B.W2[1],G.W2[1],j,true);}
+    fn(B.b2,G.b2,0,false); fn(B.b2,G.b2,1,false);
+  }
+  fn(net.w,g.w,0,false); fn(net.w,g.w,1,false); fn(net,g,'c',false);
+}
+
+function adam(net, g){
+  net.t++; const b1=0.9,b2=0.999,eps=1e-8, c1=1-Math.pow(b1,net.t), c2=1-Math.pow(b2,net.t); let i=0;
+  forEachParam(net,g,(p,gp,idx,isW)=>{
+    const gi=gp[idx]+(isW?lam*p[idx]:0);
+    net.m[i]=b1*net.m[i]+(1-b1)*gi; net.v[i]=b2*net.v[i]+(1-b2)*gi*gi;
+    p[idx]-=LR*(net.m[i]/c1)/(Math.sqrt(net.v[i]/c2)+eps); i++;
+  });
+}
+
+function trainStep(net){
+  const g=zeros(); let loss=0, correct=0;
+  for(let i=0;i<N;i++){
+    const {xs,hs}=forward(net,X[i],L), xL=xs[L], y=Y[i];
+    const z=net.w[0]*xL[0]+net.w[1]*xL[1]+net.c, p=1/(1+Math.exp(-z));
+    loss+=-(y*Math.log(p+1e-9)+(1-y)*Math.log(1-p+1e-9)); if((p>0.5)===(y===1))correct++;
+    const dz=(p-y)/N; g.w[0]+=dz*xL[0]; g.w[1]+=dz*xL[1]; g.c+=dz;
+    let dx=[dz*net.w[0],dz*net.w[1]];
+    for(let l=L-1;l>=0;l--){
+      const B=net.blocks[l], G=g.blocks[l], h=hs[l], xin=xs[l];
+      G.b2[0]+=dx[0]; G.b2[1]+=dx[1];
+      const dxin=net.residual?[dx[0],dx[1]]:[0,0];
+      for(let j=0;j<H;j++){
+        G.W2[0][j]+=dx[0]*h[j]; G.W2[1][j]+=dx[1]*h[j];
+        const dpre=(B.W2[0][j]*dx[0]+B.W2[1][j]*dx[1])*(1-h[j]*h[j]);
+        G.W1[j][0]+=dpre*xin[0]; G.W1[j][1]+=dpre*xin[1]; G.b1[j]+=dpre;
+        dxin[0]+=B.W1[j][0]*dpre; dxin[1]+=B.W1[j][1]*dpre;
+      }
+      dx=dxin;
+    }
+  }
+  adam(net,g);
+  return {loss:loss/N, acc:correct/N};
+}
+
+function evaluate(net){
+  let loss=0, correct=0;
+  for(let i=0;i<N;i++){ const p=predictAt(net,X[i]), y=Y[i]; loss+=-(y*Math.log(p+1e-9)+(1-y)*Math.log(1-p+1e-9)); if((p>0.5)===(y===1))correct++; }
+  return {loss:loss/N, acc:correct/N};
+}
+function predictAt(net,x){ const xL=forward(net,x,L).xs[L]; return 1/(1+Math.exp(-(net.w[0]*xL[0]+net.w[1]*xL[1]+net.c))); }
+
+function step(){
+  if(steps>=MAX_STEPS) return;
+  trainStep(nets.plain); trainStep(nets.res); nets.plain.last=evaluate(nets.plain); nets.res.last=evaluate(nets.res); steps++;
+  if(steps%2===0||steps===1) lossHist.push({s:steps,p:nets.plain.last.loss,r:nets.res.last.loss});
+}
+
+// ---- drawing ----
+const ACC='#0031a9', HOT='#884900';
+const symA=d3.symbol().type(d3.symbolCircle).size(26)(), symB=d3.symbol().type(d3.symbolDiamond).size(40)();
+const lattice=[]; const ticks=d3.range(-2.5,2.51,0.5), fine=d3.range(-2.5,2.51,0.125);
+ticks.forEach(u=>{lattice.push(fine.map(t=>[t,u])); lattice.push(fine.map(t=>[u,t]));});
+const trailIdx=d3.range(0,N,7);
+let which='res';
+
+function scales(ext){ return {sx:d3.scaleLinear().domain([-ext,ext]).range([0,360]), sy:d3.scaleLinear().domain([-ext,ext]).range([360,0])}; }
+function extentOf(pts){ let e=DOM; pts.forEach(q=>{e=Math.max(e,Math.abs(q[0]),Math.abs(q[1]));}); return e*1.12; }
+function predict(net,x){ const xL=forward(net,x,L).xs[L]; return 1/(1+Math.exp(-(net.w[0]*xL[0]+net.w[1]*xL[1]+net.c))); }
+function drawPoints(sel, pts, sx, sy){
+  sel.selectAll('path').data(pts).join('path')
+    .attr('transform',d=>`translate(${sx(d[0])},${sy(d[1])})`).attr('d',(d,i)=>Y[i]?symB:symA)
+    .style('fill',(d,i)=>Y[i]?'var(--hot)':'var(--accent)').style('fill-opacity',(d,i)=>Y[i]?0.28:0.7).style('stroke',(d,i)=>Y[i]?'var(--hot)':'none').style('stroke-opacity',0.75).style('stroke-width',1.6);
+}
+function stats(sel, net){
+  sel.select('.loss').text(net.last?net.last.loss.toFixed(3):'–');
+  sel.select('.acc').text(net.last?(net.last.acc*100).toFixed(1).replace(/\.0$/,'')+'%':'–').attr('title',net.last?Math.round(net.last.acc*N)+' of '+N+' points':null);
+}
+function axisStyle(g){ g.selectAll('text').style('fill','var(--ink-3)').style('font-family','system-ui,sans-serif').style('font-size','10px'); g.selectAll('line,path').style('stroke','var(--line)'); }
+
+// network diagram: layers e.g. [2,8,2], weights [W1 (hidden x in), W2 (out x hidden)]
+function drawNet(svg, layers, weights, skip, labels){
+  const W=360, Hh=220; svg.attr('viewBox',`0 0 ${W} ${Hh}`);
+  const cols=layers.length, xOf=c=>50+c*(W-100)/(cols-1);
+  const yOf=(c,i)=>{const n=layers[c]; return 118+(i-(n-1)/2)*Math.min(24,150/Math.max(n,1));};
+  const edges=[];
+  for(let c=0;c<cols-1;c++){ const Wm=weights[c]; for(let i=0;i<layers[c];i++) for(let j=0;j<layers[c+1];j++) edges.push({x1:xOf(c),y1:yOf(c,i),x2:xOf(c+1),y2:yOf(c+1,j),w:Wm[j][i]}); }
+  const maxw=d3.max(edges,e=>Math.abs(e.w))||1;
+  svg.selectAll('line.e').data(edges).join('line').attr('class','e')
+    .attr('x1',e=>e.x1).attr('y1',e=>e.y1).attr('x2',e=>e.x2).attr('y2',e=>e.y2)
+    .style('stroke',e=>e.w>=0?'var(--accent)':'var(--hot)').style('stroke-width',e=>0.5+3*Math.abs(e.w)/maxw).style('stroke-opacity',.8);
+  const nodes=[]; layers.forEach((n,c)=>{for(let i=0;i<n;i++) nodes.push({x:xOf(c),y:yOf(c,i),c});});
+  svg.selectAll('circle.n').data(nodes).join('circle').attr('class','n').attr('cx',d=>d.x).attr('cy',d=>d.y).attr('r',7)
+    .style('fill',d=>d.c===1?'var(--accent-soft)':'var(--card)').style('stroke','var(--ink-1)').style('stroke-width',1.3);
+  svg.selectAll('text.collbl').data(labels).join('text').attr('class','netlbl collbl').attr('x',(d,i)=>xOf(i)).attr('y',Hh-8).attr('text-anchor','middle').text(d=>d);
+  const sk=svg.selectAll('g.skip').data(skip?[1]:[]).join(enter=>{
+    const g=enter.append('g').attr('class','skip');
+    g.append('path').style('fill','none').style('stroke','var(--accent)').style('stroke-width',2).style('stroke-dasharray','5 4');
+    g.append('circle').attr('r',9).style('fill','var(--card)').style('stroke','var(--accent)').style('stroke-width',2);
+    g.append('text').attr('class','plus').attr('text-anchor','middle').attr('dy',4).style('fill','var(--accent)').style('font-weight','700').style('font-size','13px').text('+');
+    g.append('text').attr('class','netlbl skiplbl').attr('text-anchor','middle').text('skip: carry x across untouched');
+    return g;
+  });
+  const x0=xOf(0), x2=xOf(cols-1), yt=20;
+  sk.select('path').attr('d',`M${x0},${yOf(0,0)-10} C${x0},${yt} ${x2},${yt} ${x2},${yt+10}`);
+  sk.select('circle').attr('cx',x2).attr('cy',yt+12); sk.select('text.plus').attr('x',x2).attr('y',yt+12);
+  sk.select('text.skiplbl').attr('x',(x0+x2)/2).attr('y',yt-6);
+}
+
+// root finders on f(x) = cos x − x, the calculator fixed point
+const fN=x=>Math.cos(x)-x, dfN=x=>-Math.sin(x)-1, ROOTX=0.7390851332;
+const ROOT={
+ secant:{eq:'x<sub>n+1</sub> = x<sub>n</sub> − f(x<sub>n</sub>) · (x<sub>n</sub> − x<sub>n−1</sub>) / (f(x<sub>n</sub>) − f(x<sub>n−1</sub>))', small:'Newton without the derivative: the slope between the last two guesses stands in for f′. Started at 3 and 2.5, its first line lands near 0.1, the next near 0.6, and only then does it close in. No bracket is kept, so it is fast but can wander.',
+   cap:'the last two guesses, the line through them, where it crosses zero',
+   seq:()=>{let p=3,x=2.5;const q=[];for(let i=0;i<8;i++){const c=x-fN(x)*(x-p)/(fN(x)-fN(p));q.push({a:x,b:p,c});p=x;x=c;}return q;}},
+ fixed:{eq:'x<sub>n+1</sub> = g(x<sub>n</sub>), &nbsp; g(x) = cos x', small:'Rewrite cos x = x as x = g(x) with g = cos, and keep pressing cos. This is the fixed-slope member of the family: g(x) = x + f(x), a step of fixed size along f. From 3 the first press lands at −0.99; from there it zig-zags in. It converges because |g′(x)| = |sin x| < 1 near the root, but slowly, each step keeping about two thirds of the error.',
+   cap:'guess, a line of fixed slope −1, where it crosses zero',
+   seq:()=>{let x=3;const q=[];for(let i=0;i<8;i++){const c=Math.cos(x);q.push({a:x,c});x=c;}return q;}},
+ newton:{eq:'x<sub>n+1</sub> = x<sub>n</sub> + Δ<sub>n</sub>, &nbsp; Δ<sub>n</sub> = − f(x<sub>n</sub>) / f′(x<sub>n</sub>)', small:'Here f(x) = cos x − x, so f′(x) = −sin x − 1 and the correction is −(cos x − x) / (−sin x − 1). From 3 the first tangent overshoots to −0.5 and the second to 2.1; Newton is fast only once it is close. Keep the guess. Add a correction. Repeat.',
+   cap:'guess, tangent, next guess',
+   seq:()=>{let x=3;const q=[];for(let i=0;i<8;i++){const c=x-fN(x)/dfN(x);q.push({a:x,c});x=c;}return q;}}
+};
+Object.values(ROOT).forEach(m=>m.data=m.seq());
+let nIter=0, rootMethod='newton';
+const nSvg=d3.select('#pNewton svg'), nx=d3.scaleLinear().domain([-1.2,3.3]).range([34,350]), ny=d3.scaleLinear().domain([-4.4,1.8]).range([230,12]);
+nSvg.append('g').attr('class','axis').attr('transform',`translate(0,${ny(0)})`).call(d3.axisBottom(nx).ticks(6).tickSizeOuter(0)).call(axisStyle);
+nSvg.append('g').attr('class','axis').attr('transform',`translate(${nx(0)},0)`).call(d3.axisLeft(ny).ticks(5).tickSizeOuter(0)).call(axisStyle);
+nSvg.append('path').attr('d',d3.line().x(d=>nx(d)).y(d=>ny(fN(d)))(d3.range(-1.2,3.31,0.02))).style('fill','none').style('stroke','var(--ink-2)').style('stroke-width',2);
+nSvg.append('circle').attr('cx',nx(ROOTX)).attr('cy',ny(0)).attr('r',4).style('fill','var(--good)');
+nSvg.append('text').attr('class','netlbl').attr('x',nx(ROOTX)).attr('y',ny(0)+34).attr('text-anchor','middle').style('fill','var(--good)').text('root 0.739');
+nSvg.append('line').attr('class','brk').style('stroke','var(--accent)').style('stroke-width',5).style('stroke-opacity',.3).style('display','none');
+nSvg.append('line').attr('class','drop').style('stroke','var(--ink-3)').style('stroke-dasharray','3 3');
+nSvg.append('line').attr('class','tan').style('stroke','var(--hot)').style('stroke-width',2);
+nSvg.append('circle').attr('class','cur').attr('r',5).style('fill','var(--accent)');
+nSvg.append('circle').attr('class','nxt').attr('r',5).style('fill','var(--card)').style('stroke','var(--hot)').style('stroke-width',2);
+nSvg.append('text').attr('class','netlbl curl').attr('text-anchor','middle').text('guess');
+nSvg.append('text').attr('class','netlbl nxtl').attr('text-anchor','middle').text('next');
+nSvg.append('circle').attr('class','bpt').attr('r',5).style('fill','var(--card)').style('stroke','var(--accent)').style('stroke-width',2).style('display','none');
+nSvg.append('text').attr('class','netlbl bptl').attr('text-anchor','middle').text('b').style('display','none');
+function renderNewton(){
+  const m=ROOT[rootMethod], d=m.data[nIter], p=d3.select('#pNewton'), f4=v=>v.toFixed(4), hasB=d.b!==undefined, fa=fN(d.a), fc=fN(d.c), sec=rootMethod==='secant';
+  d3.select('#nv').text(nIter);
+  d3.select('.eq-root').html(m.eq+'<small>'+m.small+'</small>'); p.select('.rootcap').text('solving cos x = x · '+m.cap);
+  nSvg.select('.cur').attr('cx',nx(d.a)).attr('cy',ny(0)); nSvg.select('.curl').attr('x',nx(d.a)).attr('y',ny(0)-10).text(hasB&&!sec?'a':sec?'xₙ':'guess');
+  nSvg.select('.nxt').attr('cx',nx(d.c)).attr('cy',ny(0)); nSvg.select('.nxtl').attr('x',nx(d.c)).attr('y',ny(0)-10).text(hasB&&!sec?'c':'next').style('display',Math.abs(d.c-d.a)<0.12?'none':null);
+  nSvg.select('.bpt').style('display',hasB?null:'none').attr('cx',nx(hasB?d.b:0)).attr('cy',ny(0)); nSvg.select('.bptl').style('display',hasB?null:'none').attr('x',nx(hasB?d.b:0)).attr('y',ny(0)-10).text(sec?'xₙ₋₁':'b');
+  nSvg.select('.brk').style('display',rootMethod==='bisection'?null:'none').attr('x1',nx(d.a)).attr('x2',nx(hasB?d.b:d.a)).attr('y1',ny(0)).attr('y2',ny(0));
+  const tan=nSvg.select('.tan'), drop=nSvg.select('.drop');
+  if(rootMethod==='bisection'){ tan.style('display','none'); drop.attr('x1',nx(d.c)).attr('y1',ny(0)).attr('x2',nx(d.c)).attr('y2',ny(fc)); }
+  else if(hasB){ tan.style('display',null).attr('x1',nx(d.a)).attr('y1',ny(fa)).attr('x2',nx(d.b)).attr('y2',ny(fN(d.b))); drop.attr('x1',nx(d.c)).attr('y1',ny(0)).attr('x2',nx(d.c)).attr('y2',ny(fc)); }
+  else { tan.style('display',null).attr('x1',nx(d.a)).attr('y1',ny(fa)).attr('x2',nx(d.c)).attr('y2',ny(0)); drop.attr('x1',nx(d.a)).attr('y1',ny(0)).attr('x2',nx(d.a)).attr('y2',ny(fa)); }
+  let ro='';
+  if(rootMethod==='newton') ro=`guess xₙ <b>${f4(d.a)}</b> · f(xₙ) = cos xₙ − xₙ <b>${f4(fa)}</b> · slope f′(xₙ) = −sin xₙ − 1 <b>${f4(dfN(d.a))}</b> · Δ = −f/f′ <b>${f4(d.c-d.a)}</b> · next <b>${f4(d.c)}</b>`;
+  else if(rootMethod==='fixed') ro=`guess xₙ <b>${f4(d.a)}</b> · f(xₙ) <b>${f4(fa)}</b> · fixed slope <b>−1</b> · Δ = f(xₙ) <b>${f4(d.c-d.a)}</b> · next cos xₙ <b>${f4(d.c)}</b>`;
+  else if(sec) ro=`xₙ₋₁ <b>${f4(d.b)}</b> · xₙ <b>${f4(d.a)}</b> · slope between them <b>${f4((fa-fN(d.b))/(d.a-d.b))}</b> · Δ <b>${f4(d.c-d.a)}</b> · next <b>${f4(d.c)}</b>`;
+  else if(rootMethod==='rf') ro=`bracket [a, b] <b>[${f4(d.a)}, ${f4(d.b)}]</b> · chord slope <b>${f4((fN(d.b)-fa)/(d.b-d.a))}</b> · c <b>${f4(d.c)}</b> · f(c) <b>${f4(fc)}</b> → <b>${fc*fa<0?'b ← c':'a ← c'}</b>`;
+  else ro=`bracket [a, b] <b>[${f4(d.a)}, ${f4(d.b)}]</b> · midpoint c <b>${f4(d.c)}</b> · f(c) <b>${f4(fc)}</b> → <b>${fc*fa<0?'b ← c':'a ← c'}</b> · width becomes <b>${f4((d.b-d.a)/2)}</b>`;
+  p.select('.ro').html(ro);
+}
+
+// 01 gradient descent on one knob
+const MX2=2, lossW=w=>(w-1.5)*(w-1.5)*MX2, slopeW=w=>2*(w-1.5)*MX2;
+let gdLr=0.1, gdN=0;
+function gdPath(){ const ws=[-1]; for(let i=0;i<9;i++) ws.push(ws[i]-gdLr*slopeW(ws[i])); return ws; }
+const gdSvg=d3.select('#pGD svg');
+gdSvg.append('g').attr('class','axis x'); gdSvg.append('g').attr('class','axis y');
+gdSvg.append('path').attr('class','bowl').style('fill','none').style('stroke','var(--ink-2)').style('stroke-width',2);
+gdSvg.append('path').attr('class','trail').style('fill','none').style('stroke','var(--accent)').style('stroke-opacity',.5).style('stroke-dasharray','3 3');
+gdSvg.append('g').attr('class','balls');
+gdSvg.append('line').attr('class','slope').style('stroke','var(--hot)').style('stroke-width',2);
+gdSvg.append('circle').attr('class','min').attr('r',4).style('fill','var(--good)');
+gdSvg.append('text').attr('class','netlbl minl').attr('text-anchor','middle').text('best w = 1.5');
+function renderGD(){
+  const ws=gdPath(), shown=ws.slice(0,gdN+1), w=ws[gdN], w1=ws[gdN+1], sl=slopeW(w);
+  const xr=Math.max(4.5,d3.max(shown,Math.abs)+0.5), yr=Math.max(20,d3.max(shown,lossW)*1.1);
+  const gx=d3.scaleLinear().domain([-xr,xr]).range([34,350]), gy=d3.scaleLinear().domain([0,yr]).range([232,12]);
+  gdSvg.select('.axis.x').attr('transform',`translate(0,${gy(0)})`).call(d3.axisBottom(gx).ticks(6).tickSizeOuter(0)).call(axisStyle);
+  gdSvg.select('.axis.y').attr('transform',`translate(${gx(-xr)},0)`).call(d3.axisLeft(gy).ticks(4).tickSizeOuter(0)).call(axisStyle);
+  const xs=d3.range(-xr,xr+0.001,xr/80);
+  gdSvg.select('.bowl').attr('d',d3.line().x(d=>gx(d)).y(d=>gy(lossW(d)))(xs));
+  gdSvg.select('.trail').attr('d',d3.line().x(d=>gx(d)).y(d=>gy(lossW(d)))(shown));
+  gdSvg.select('.balls').selectAll('circle').data(shown).join('circle').attr('cx',d=>gx(d)).attr('cy',d=>gy(lossW(d))).attr('r',(d,i)=>i===gdN?6:3.5)
+    .style('fill','var(--accent)').style('fill-opacity',(d,i)=>i===gdN?1:0.35);
+  const h=0.6; gdSvg.select('.slope').attr('x1',gx(w-h)).attr('y1',gy(lossW(w)-sl*h)).attr('x2',gx(w+h)).attr('y2',gy(lossW(w)+sl*h));
+  gdSvg.select('.min').attr('cx',gx(1.5)).attr('cy',gy(0)); gdSvg.select('.minl').attr('x',gx(1.5)).attr('y',gy(0)+22);
+  const p=d3.select('#pGD'); p.select('.w').text(w.toFixed(3)); p.select('.sl').text(sl.toFixed(2)); p.select('.dw').text((-gdLr*sl>=0?'+':'')+(-gdLr*sl).toFixed(3)); p.select('.w1').text(w1.toFixed(3));
+  d3.select('#gdnv').text(gdN);
+}
+
+// 02 one-input net
+let H1=4, net1, steps1=0, actName='tanh';
+const ACTS={tanh:[Math.tanh,x=>1-Math.tanh(x)**2], relu:[x=>Math.max(0,x),x=>x>0?1:0], sigmoid:[x=>1/(1+Math.exp(-x)),x=>{const t=1/(1+Math.exp(-x)); return t*(1-t);}], sin:[Math.sin,Math.cos], quad:[x=>x*x,x=>2*x], cubic:[x=>x*x*x,x=>3*x*x], linear:[x=>x,()=>1]};
+const ACT_LABEL={tanh:'tanh units',relu:'ReLU units',sigmoid:'sigmoid units',sin:'sin units',quad:'x² units',cubic:'x³ units',linear:'linear units'};
+const ACT_CEIL={tanh:'any curve · not a polynomial, no ceiling',relu:'any curve · a chain of straight segments, one kink per unit',sigmoid:'any curve · not a polynomial, no ceiling',sin:'any curve · not a polynomial, no ceiling',quad:'only parabolas · 3 knobs of shape in total',cubic:'only cubics · 4 knobs of shape in total',linear:'only straight lines · 2 knobs of shape in total'};
+const X1=d3.range(-3,3.01,0.1), Y1=X1.map(x=>Math.sin(1.5*x)+0.2*x);
+function make1(){
+  const r=rng(3);
+  net1={w1:Array.from({length:H1},()=>gauss(r)), b1:Array.from({length:H1},()=>gauss(r)*0.5), w2:Array.from({length:H1},()=>gauss(r)/Math.sqrt(H1)), b2:0,
+        m:new Float64Array(3*H1+1), v:new Float64Array(3*H1+1), t:0, loss:null};
+  steps1=0;
+}
+function unit1(x,j){ return net1.w2[j]*ACTS[actName][0](net1.w1[j]*x+net1.b1[j]); }
+function f1(x){ let s=net1.b2; for(let j=0;j<H1;j++) s+=unit1(x,j); return s; }
+function step1(){
+  if(steps1>=MAX_STEPS) return;
+  const g={w1:new Array(H1).fill(0),b1:new Array(H1).fill(0),w2:new Array(H1).fill(0),b2:0}, n=X1.length; let loss=0;
+  for(let i=0;i<n;i++){
+    const x=X1[i], pre=net1.w1.map((w,j)=>w*x+net1.b1[j]), h=pre.map(ACTS[actName][0]); let y=net1.b2; for(let j=0;j<H1;j++) y+=net1.w2[j]*h[j];
+    const d=y-Y1[i]; loss+=d*d/n; const dy=2*d/n; g.b2+=dy;
+    for(let j=0;j<H1;j++){ g.w2[j]+=dy*h[j]; const dp=dy*net1.w2[j]*ACTS[actName][1](pre[j]); g.w1[j]+=dp*x; g.b1[j]+=dp; }
+  }
+  net1.t++; const b1=0.9,b2=0.999,c1=1-Math.pow(b1,net1.t),c2=1-Math.pow(b2,net1.t); let i=0;
+  const upd=(arr,garr,idx)=>{const gi=garr[idx]; net1.m[i]=b1*net1.m[i]+(1-b1)*gi; net1.v[i]=b2*net1.v[i]+(1-b2)*gi*gi; arr[idx]-=0.02*(net1.m[i]/c1)/(Math.sqrt(net1.v[i]/c2)+1e-8); i++;};
+  for(let j=0;j<H1;j++){upd(net1.w1,g.w1,j); upd(net1.b1,g.b1,j); upd(net1.w2,g.w2,j);} upd(net1,g,'b2');
+  net1.loss=loss; steps1++;
+}
+const fitSvg=d3.select('#pFit svg'), fx1=d3.scaleLinear().domain([-3,3]).range([30,350]), fy1=d3.scaleLinear().domain([-2.2,2.2]).range([240,10]);
+fitSvg.append('g').attr('class','axis').attr('transform',`translate(0,${fy1(0)})`).call(d3.axisBottom(fx1).ticks(6).tickSizeOuter(0)).call(axisStyle);
+fitSvg.append('g').attr('class','axis').attr('transform',`translate(${fx1(0)},0)`).call(d3.axisLeft(fy1).ticks(4).tickSizeOuter(0)).call(axisStyle);
+fitSvg.append('path').attr('class','target').attr('d',d3.line().x(d=>fx1(d)).y(d=>fy1(Math.sin(1.5*d)+0.2*d))(d3.range(-3,3.001,0.05))).style('fill','none').style('stroke','var(--ink-3)').style('stroke-dasharray','3 3').style('stroke-opacity',.6);
+fitSvg.append('text').attr('class','netlbl').attr('x',348).attr('y',fy1(0)-6).attr('text-anchor','end').text('input x →');
+fitSvg.append('text').attr('class','netlbl').attr('x',fx1(0)+6).attr('y',16).text('↑ output y');
+fitSvg.append('g').attr('class','units'); fitSvg.append('path').attr('class','sum').style('fill','none').style('stroke','var(--ink-1)').style('stroke-width',2.4);
+fitSvg.append('g').attr('class','data').selectAll('circle').data(X1).join('circle').attr('cx',d=>fx1(d)).attr('cy',(d,i)=>fy1(Y1[i])).attr('r',2.6).style('fill','var(--ink-3)').style('fill-opacity',.7);
+const unitColor=d3.scaleOrdinal(['#0031a9','#884900','#006800','#721045','#a60000','#005e8b','#6f5500','#972500']);
+function render1(){
+  const xs=d3.range(-3,3.001,0.05), l=d3.line().x(d=>fx1(d[0])).y(d=>fy1(Math.max(-2.6,Math.min(2.6,d[1]))));
+  fitSvg.select('.units').selectAll('path').data(d3.range(H1)).join('path').attr('d',j=>l(xs.map(x=>[x,unit1(x,j)])))
+    .style('fill','none').style('stroke',j=>unitColor(j)).style('stroke-opacity',.5).style('stroke-width',1.3);
+  fitSvg.select('.sum').attr('d',l(xs.map(x=>[x,f1(x)])));
+  d3.select('#pFit .loss').text(net1.loss!=null?net1.loss.toFixed(3):'–'); d3.selectAll('.st1').text(steps1); d3.selectAll('.play1').style('--p',(100*steps1/MAX_STEPS)+'%');
+  const done1=steps1>=MAX_STEPS; d3.selectAll('.play1').property('disabled',done1); d3.selectAll('.step1').property('disabled',done1);
+  drawNet(d3.select('#pNet1 svg'), [1,H1,1], [net1.w1.map(w=>[w]), [net1.w2]], false, ['x',ACT_LABEL[actName],'y']);
+  d3.select('#pFit .ceil').text(ACT_CEIL[actName]);
+  d3.select('#H1v').text(H1);
+}
+
+// 02 task view
+const G=72, CELL=360/G;   // 0.083 wide cells: thin spiral arms no longer alias away
+const taskSvg=d3.select('#pTask svg');
+taskSvg.append('g').attr('class','bg'); taskSvg.append('g').attr('class','boundary'); taskSvg.append('g').attr('class','pts');
+taskSvg.append('circle').attr('class','selring').attr('r',9).style('fill','none').style('stroke','var(--accent)').style('stroke-width',2.5).style('display','none');
+const FNAME=()=>({moons:'two_moons.csv',rings:'two_rings.csv',blobs:'two_blobs.csv',spirals:'two_spirals.csv'})[dataset];
+function pulsePoint(i){
+  const {sx,sy}=scales(DOM), col=Y[i]?'var(--hot)':'var(--accent)';
+  taskSvg.append('circle').attr('cx',sx(X[i][0])).attr('cy',sy(X[i][1])).attr('r',4).style('fill','none').style('stroke',col).style('stroke-width',3)
+    .transition().duration(900).ease(d3.easeCubicOut).attr('r',26).style('opacity',0).remove();
+  taskSvg.select('.selring').style('display',null).attr('cx',sx(X[i][0])).attr('cy',sy(X[i][1])).style('stroke',col);
+  d3.selectAll('#pCsv tbody tr').classed('sel',(d,j)=>j===i);
+}
+function renderTable(){
+  const tb=d3.select('#pCsv tbody'); tb.selectAll('tr').remove();
+  d3.range(8).forEach(i=>{ const tr=tb.append('tr').style('cursor','pointer').attr('title','click to find this point on the plane').on('click',()=>pulsePoint(i)); tr.append('td').text('⌖').attr('class','find'); [i+1, X[i][0].toFixed(2), X[i][1].toFixed(2), Y[i]?'B':'A'].forEach((v,c)=>tr.append('td').text(v).style('font-family','ui-monospace,Menlo,monospace').style('color',c===3?(Y[i]?'var(--hot)':'var(--accent)'):null)); });
+  const tr=tb.append('tr'); ['','…','…','…','… '+(N-8)+' more rows'].forEach(v=>tr.append('td').text(v).style('color','var(--ink-3)'));
+  d3.select('#pCsv .nrows').text(N); d3.selectAll('.fname2').text(FNAME());
+}
+function renderTask(){
+  const net=nets[which], {sx,sy}=scales(DOM), vals=new Float64Array(G*G), cells=[];
+  for(let j=0;j<G;j++) for(let i=0;i<G;i++){
+    const p=predict(net,[-DOM+(i+0.5)*2*DOM/G, DOM-(j+0.5)*2*DOM/G]); vals[j*G+i]=p; cells.push({i,j,p});
+  }
+  taskSvg.select('.bg').selectAll('rect').data(cells).join(enter=>enter.append('rect')
+      .attr('x',d=>d.i*CELL).attr('y',d=>d.j*CELL).attr('width',CELL+0.6).attr('height',CELL+0.6))
+    .attr('fill',d=>d.p>0.5?HOT:ACC).attr('fill-opacity',d=>0.04+0.5*Math.abs(d.p-0.5));
+  const cont=d3.contours().size([G,G]).thresholds([0.5])(vals);
+  taskSvg.select('.boundary').selectAll('path').data(cont).join('path').attr('d',d3.geoPath())
+    .attr('transform',`scale(${CELL})`).style('fill','none').style('stroke','var(--ink-1)').style('stroke-width',2).style('vector-effect','non-scaling-stroke');
+  drawPoints(taskSvg.select('.pts'), X, sx, sy);
+  stats(d3.select('#pTask'), net);
+}
+
+// 05 paths: training vs inference, residual or plain
+let mode='train', ph=1, arch='res';
+const PH={train:['forward','compare','backward','update'],infer:['forward']};
+const PHCAP={
+ res:{train:[
+  'x₀ is one row of the table, a point on the plane. Each block computes x_{l+1} = x_l + f_l(x_l): the point rides the skip unchanged and f_l’s output is added at the ⊕. The readout turns the final point x₄ into a logit z = w·x₄ + c and a probability p = σ(z): class B, 60%. Wrong.',
+  'The label is class A, so y = 0. The loss is the cross-entropy L = −[y log p + (1 − y) log(1 − p)], large here. Its derivative with respect to the logit is ∂L/∂z = p − y: a size and a sign. Nothing has moved yet.',
+  'The chain rule runs the stack in reverse. ∂L/∂x₄ = (p − y)·w, and each block passes it down as ∂L/∂x_l = ∂L/∂x_{l+1} · (I + ∂f_l/∂x_l). The I is the skip path: it carries the gradient back unchanged, and the ∂f_l/∂x_l term is the block’s own addition. The copy that drops into each block gives its weights their gradients, ∂L/∂W = ∂L/∂f_l · ∂f_l/∂W. Nothing is updated yet.',
+  'Every weight inside f₁…f₄ moves against its gradient, W ← W − lr·∂L/∂W, with Adam scaling the step per weight. x₀ is data and the skips carry no weights, so nothing else moves. Next row, same route.'],
+  infer:['Same forward pass, weights frozen: x₀ → blocks → z = w·x₄ + c → p = σ(z) → class A, 88%. No label, so no loss and no gradient.']},
+ plain:{train:[
+  'x₀ is one row of the table, a point on the plane. Each block computes x_{l+1} = f_l(x_l): f₁ replaces the point, f₂ replaces that, and so on. Only f₄’s output reaches the readout, z = w·x₄ + c, p = σ(z): class B, 60%. Wrong.',
+  'The label is class A, so y = 0. The loss is the cross-entropy L = −[y log p + (1 − y) log(1 − p)], large here. Its derivative with respect to the logit is ∂L/∂z = p − y. Nothing has moved yet.',
+  'The chain rule has a single path: ∂L/∂x_l = ∂L/∂x_{l+1} · ∂f_l/∂x_l, block after block. Each ∂f_l/∂x_l is the block’s weights times its tanh slopes, so what reaches f₁ is a product of four Jacobians. Four is survivable; fifty in a row vanishes or explodes. Nothing is updated yet.',
+  'Every weight moves against its gradient, W ← W − lr·∂L/∂W; x₀ is untouched. But each block’s input is whatever the block below now outputs, so when f₂ moves, the function that f₃ sees moves with it.'],
+  infer:['Same forward pass, weights frozen: x₀ → f₁ → f₂ → f₃ → f₄ → z → p → class A, 88%. No label, no loss, no gradient.']}
+};
+const pSvg=d3.select('#pPaths svg'), pDefs=pSvg.append('defs');
+[['pfwd','var(--accent)'],['pback','var(--hot)']].forEach(([id,c])=>{
+  pDefs.append('marker').attr('id',id).attr('viewBox','0 0 10 10').attr('refX',9).attr('refY',5).attr('markerWidth',6).attr('markerHeight',6).attr('orient','auto-start-reverse')
+    .append('path').attr('d','M0,0L10,5L0,10z').style('fill',c);
+});
+let gF,gC,gB,gU,gLk, fboxPos=[], dropTimers=[];
+const TY=150, PX=[230,340,450,560], QX=[200,320,440,560];
+function box(g,x,y,w,h,txt,cls){ const b=g.append('g'); b.append('rect').attr('x',x).attr('y',y).attr('width',w).attr('height',h).attr('rx',6).style('fill',cls==='hot'?'var(--hot-soft)':cls==='plain'?'var(--card)':'var(--accent-soft)').style('stroke',cls==='hot'?'var(--hot)':cls==='plain'?'var(--line)':'var(--accent)').style('stroke-width',1.4); b.append('text').attr('x',x+w/2).attr('y',y+h/2+4).attr('text-anchor','middle').attr('class','netlbl').style('fill','var(--ink-1)').style('font-size','12px').text(txt); return b; }
+function fline(g,x1,y1,x2,y2,arrow){ return g.append('line').attr('x1',x1).attr('y1',y1).attr('x2',x2).attr('y2',y2).style('stroke','var(--accent)').style('stroke-width',2).attr('marker-end',arrow?'url(#pfwd)':null); }
+function lbl(g,x,y,txt,color){ return g.append('text').attr('class','netlbl').attr('x',x).attr('y',y).attr('text-anchor','middle').style('fill',color||null).text(txt); }
+function buildPaths(){
+  pSvg.selectAll('g:not(.keep)').remove();
+  gF=pSvg.append('g'); gC=pSvg.append('g'); gB=pSvg.append('g'); gU=pSvg.append('g'); gLk=pSvg.append('g');
+  const x0box=box(gF,10,TY-28,130,56,'','plain'); x0box.style('cursor','pointer').on('click',()=>{ const el=document.getElementById('pCsv'); el.scrollIntoView({behavior:'smooth',block:'center'}); d3.select(el).style('box-shadow','0 0 0 3px var(--hot)').transition().delay(1200).duration(800).style('box-shadow','none'); });
+  gF.append('text').attr('class','netlbl').attr('x',75).attr('y',TY-6).attr('text-anchor','middle').style('fill','var(--ink-1)').style('font-size','13px').style('font-weight','700').text('x₀');
+  gF.append('text').attr('class','netlbl').attr('x',75).attr('y',TY+12).attr('text-anchor','middle').style('fill','var(--ink-2)').style('font-size','11px').text('a row from the csv');
+  const tt=gF.append('g').attr('class','tiny');
+  tt.append('rect').attr('x',10).attr('y',TY+46).attr('width',130).attr('height',11).attr('rx',2).style('fill','var(--accent-soft)');
+  [['row',16],['x',44],['y',82],['label',118]].forEach(([h,x])=>tt.append('text').attr('x',x).attr('y',TY+42).style('font-size','7px').style('fill','var(--ink-3)').style('font-family','ui-monospace,Menlo,monospace').text(h));
+  d3.range(3).forEach(r=>[0,1,2,3].forEach(c=>tt.append('text').attr('class','tt').datum({r,c}).attr('x',[16,44,82,118][c]).attr('y',TY+54+r*10).style('font-size','7.5px').style('font-family','ui-monospace,Menlo,monospace').style('fill',r===0?'var(--ink-1)':'var(--ink-3)').style('font-weight',r===0?'700':'400')));
+  tt.append('text').attr('x',16).attr('y',TY+84).style('font-size','7.5px').style('fill','var(--ink-3)').style('font-family','ui-monospace,Menlo,monospace').text('…  200 rows in all');
+  const fboxes=[];
+  if(arch==='res'){
+    let prev=140;
+    PX.forEach((x,i)=>{
+      fline(gF,prev,TY,x-10,TY,true);
+      gF.append('circle').attr('cx',x).attr('cy',TY).attr('r',10).style('fill','var(--card)').style('stroke','var(--accent)').style('stroke-width',2);
+      gF.append('text').attr('x',x).attr('y',TY+4).attr('text-anchor','middle').style('fill','var(--accent)').style('font-weight','700').style('font-size','13px').text('+');
+      const tx=x-70;
+      gF.append('path').attr('d',`M${tx},${TY} V${TY+60}`).style('fill','none').style('stroke','var(--accent)').style('stroke-width',1.5).attr('marker-end','url(#pfwd)');
+      box(gF,tx-22,TY+62,64,30,'f'+(i+1)); fboxes.push([tx-22,TY+62]);
+      gF.append('path').attr('d',`M${tx+42},${TY+77} H${x} V${TY+12}`).style('fill','none').style('stroke','var(--accent)').style('stroke-width',1.5).attr('marker-end','url(#pfwd)');
+      prev=x+10;
+    });
+    fline(gF,prev,TY,612,TY,true);
+    lbl(gF,400,TY+140,'forward: the point is nudged by each block in turn, then cut');
+    // backward: skip highway + drops
+    gB.append('path').attr('d',`M560,72 V${TY-38} H150`).style('fill','none').style('stroke','var(--hot)').style('stroke-width',2.2).style('stroke-dasharray','6 4').attr('marker-end','url(#pback)');
+    PX.forEach(x=>gB.append('path').attr('d',`M${x-52},${TY-38} V${TY+58}`).style('fill','none').style('stroke','var(--hot)').style('stroke-width',1.6).style('stroke-dasharray','4 3').attr('marker-end','url(#pback)'));
+    lbl(gB,355,TY-46,'backward along the skip path: no weights here, nothing to scramble the message','var(--hot)');
+    lbl(gU,400,TY-30,'unchanged: x₀, every + and every skip. Only the edits moved.');
+  } else {
+    let prev=140;
+    QX.forEach((x,i)=>{
+      fline(gF,prev,TY,x-34,TY,true);
+      box(gF,x-32,TY-15,64,30,'f'+(i+1)); fboxes.push([x-32,TY-15]);
+      prev=x+32;
+    });
+    fline(gF,prev,TY,612,TY,true);
+    lbl(gF,400,TY+60,'forward: each block replaces the point; only the last block’s output reaches the cut');
+    // backward: through every block, thinning
+    gB.append('path').attr('d',`M560,72 V${TY-38} H${QX[3]+40} V${TY+22}`).style('fill','none').style('stroke','var(--hot)').style('stroke-width',2.4).style('stroke-dasharray','6 4');
+    const widths=[2.4,1.7,1.1,0.7,0.45], scale=['','×0.9','×0.4','×0.3','×0.1'];
+    for(let i=3;i>=0;i--){
+      const xr=QX[i]+40, xl=QX[i]-40;
+      gB.append('line').attr('x1',xr).attr('y1',TY+22).attr('x2',xl-4).attr('y2',TY+22).style('stroke','var(--hot)').style('stroke-width',widths[4-i]).style('stroke-dasharray','5 4').attr('marker-end','url(#pback)');
+      lbl(gB,QX[i],TY+38,'message '+scale[4-i],'var(--hot)');
+    }
+    gB.append('line').attr('x1',QX[0]-44).attr('y1',TY+22).attr('x2',150).attr('y2',TY+22).style('stroke','var(--hot)').style('stroke-width',0.45).style('stroke-dasharray','5 4').attr('marker-end','url(#pback)');
+    lbl(gB,400,TY-46,'backward through every block in turn: each one re-scales the message by its own weights; there is no way around','var(--hot)');
+    lbl(gU,400,TY-30,'unchanged: x₀ only. Every block above a block that moved now sees a different input.');
+  }
+  box(gF,614,TY-15,46,30,'cut','plain'); fline(gF,660,TY,672,TY,true);
+  const pred=box(gF,674,TY-15,104,30,'','plain'); pred.select('text').attr('class','netlbl predtxt');
+  // compare (shared)
+  box(gC,674,40,104,30,'label: class A','plain'); box(gC,560,40,90,30,'loss','hot');
+  gC.append('line').attr('x1',726).attr('y1',TY-15).attr('x2',726).attr('y2',72).style('stroke','var(--ink-3)').style('stroke-dasharray','3 3');
+  gC.append('line').attr('x1',674).attr('y1',55).attr('x2',652).attr('y2',55).style('stroke','var(--ink-3)');
+  lbl(gC,605,30,'compare: prediction vs label');
+  lbl(gB,75,TY+100,'x₀ gets no update: it is data');
+  // update + locks on the f boxes
+  fboxes.forEach(([bx,by],i)=>{
+    gU.append('rect').attr('x',bx).attr('y',by).attr('width',64).attr('height',30).attr('rx',6).style('fill','var(--hot-soft)').style('stroke','var(--hot)').style('stroke-width',2.2);
+    gU.append('text').attr('class','netlbl').attr('x',bx+32).attr('y',by+19).attr('text-anchor','middle').style('fill','var(--ink-1)').style('font-size','12px').text('f'+(i+1));
+    lbl(gU,bx+32,by+45,'weights nudged','var(--hot)');
+    gLk.append('text').attr('x',bx+62).attr('y',by-2).attr('text-anchor','middle').style('font-size','13px').text('🔒');
+  });
+  lbl(gLk,400,TY-30,'weights frozen: forward only, no label, no loss, no backward pass');
+  fboxPos=fboxes;
+}
+let playingPaths=true, pathsTimer=null;
+const PHDUR={forward:4500,compare:3400,backward:4500,update:3400};
+function renderPaths(){
+  const phases=PH[mode]; ph=Math.min(ph,phases.length);
+  d3.select('#pPaths .phcap').text(PHCAP[arch][mode][ph-1]);
+  const train=mode==='train';
+  d3.selectAll('#pPaths .modebtn').classed('on',function(){return this.dataset.mode===mode;});
+  d3.selectAll('#pPaths .modebtn').each(function(){
+    const on=this.dataset.mode===mode, segs=on?phases:PH[this.dataset.mode];
+    const strip=d3.select(this).select('.mstrip');
+    const seg=strip.selectAll('i').data(segs).join(enter=>enter.append('i').call(e=>e.append('b')));
+    seg.select('b').interrupt().style('width',(d,i)=>on&&i<ph-1?'100%':'0%');
+    if(on) seg.filter((d,i)=>i===ph-1).select('b').transition().duration(PHDUR[phases[ph-1]]).ease(d3.easeLinear).style('width','100%');
+  });
+  d3.select('#pPaths .phlabel').text(train?(ph+' · '+phases[ph-1]):'forward only · weights frozen');
+  gC.style('display',train&&ph>=2?null:'none'); gB.style('display',train&&ph===3?null:'none'); gU.style('display',train&&ph===4?null:'none'); gLk.style('display',train?'none':null);
+  pSvg.select('.predtxt').text(train?'class B · 60%':'class A · 88%');
+  gF.selectAll('text.tt').text(d=>[d.r+1, X[d.r][0].toFixed(2), X[d.r][1].toFixed(2), Y[d.r]?'B':'A'][d.c]).style('fill',d=>d.c===3?(Y[d.r]?'var(--hot)':'var(--accent)'):(d.r===0?'var(--ink-1)':'var(--ink-3)'));
+  gF.selectAll('path,line').style('opacity',train&&ph>=3?0.35:1);
+  animatePhase();
+}
+function animatePhase(){
+  pSvg.selectAll('g.anim').remove(); if(pathsTimer){clearTimeout(pathsTimer); pathsTimer=null;}
+  dropTimers.forEach(t=>t.stop()); dropTimers=[];
+  const g=pSvg.append('g').attr('class','anim'), phase=PH[mode][ph-1];
+  const advance=()=>{ if(!playingPaths) return; pathsTimer=setTimeout(()=>{ ph = ph<PH[mode].length ? ph+1 : 1; renderPaths(); }, 1600); };
+  const dur=4500;
+  const flash=(box,color,delay)=>g.append('rect').attr('x',box[0]).attr('y',box[1]).attr('width',64).attr('height',30).attr('rx',6).style('fill','none').style('stroke',color).style('stroke-width',3).style('opacity',0)
+      .transition().delay(delay||0).duration(200).style('opacity',1).transition().duration(900).style('opacity',0).remove();
+  const seg=(dd)=>{ const gp=g.append('path').attr('d',dd).style('fill','none').style('stroke','none'), n=gp.node(); return {n,L2:n.getTotalLength()}; };
+  const along=(sg)=>()=>t=>{const p=sg.n.getPointAtLength(t*sg.L2); return `translate(${p.x},${p.y})`;};
+  const mkDot=(x,y,r,color)=>g.append('circle').attr('r',r).style('fill',color).style('stroke','var(--card)').style('stroke-width',2).attr('transform',`translate(${x},${y})`);
+  if(phase==='forward'){
+    const sg=seg(`M140,${TY} H672`), dot=mkDot(140,TY,7,'var(--accent)');
+    dot.transition().duration(dur).ease(d3.easeLinear).attrTween('transform',along(sg)).on('end',advance);
+    if(arch==='res') PX.forEach((x,i)=>{
+      dropTimers.push(d3.timeout(()=>{
+        const tap=seg(`M${x-70},${TY} V${TY+77} H${x} V${TY+12}`), m=mkDot(x-70,TY,4.5,'var(--accent)');
+        m.transition().duration(650).ease(d3.easeLinear).attrTween('transform',along(tap)).transition().duration(250).style('opacity',0).remove();
+        flash(fboxPos[i],'var(--accent)',200);
+      }, (x-70-140)/sg.L2*dur));
+      dropTimers.push(d3.timeout(()=>g.append('circle').attr('cx',x).attr('cy',TY).attr('r',10).style('fill','none').style('stroke','var(--accent)').style('stroke-width',2).transition().duration(600).attr('r',22).style('opacity',0).remove(), (x-140)/sg.L2*dur));
+    });
+    else QX.forEach((x,i)=>dropTimers.push(d3.timeout(()=>flash(fboxPos[i],'var(--accent)'), (x-32-140)/sg.L2*dur)));
+  } else if(phase==='backward'){
+    const color='var(--hot)', dot=mkDot(605,72,7,color); let tr=dot.transition().duration(0), tAcc=0;
+    const go=(dd,ms)=>{ const sg=seg(dd); tr=tr.transition().duration(ms).ease(d3.easeLinear).attrTween('transform',along(sg)); tAcc+=ms; };
+    if(arch==='res'){
+      go(`M605,72 V${TY-38} H${PX[3]-52}`, (40+(605-(PX[3]-52)))*10);
+      for(let i=3;i>=0;i--){
+        const dp=PX[i]-52, tp=PX[i]-70, box=fboxPos[i];
+        dropTimers.push(d3.timeout(()=>{
+          const m=mkDot(dp,TY-38,4.5,color), down=seg(`M${dp},${TY-38} V${TY+66}`), up=seg(`M${dp},${TY+66} H${tp} V${TY-38}`);
+          m.transition().duration(700).ease(d3.easeLinear).attrTween('transform',along(down)).transition().duration(700).ease(d3.easeLinear).attrTween('transform',along(up)).transition().duration(150).style('opacity',0).remove();
+          flash(box,color,450);
+        }, tAcc));
+        go(`M${dp},${TY-38} H${tp}`, 1400);                       // the main copy waits (slides to the tap) while the block's copy visits the weights
+        tr=tr.transition().duration(220).attr('r',10.5).transition().duration(220).attr('r',7); tAcc+=440;   // merge: the block's contribution rejoins
+        go(`M${tp},${TY-38} H${i>0?PX[i-1]-52:150}`, (tp-(i>0?PX[i-1]-52:150))*10);
+      }
+    } else {
+      const radii=[7,5.4,4.1,3,2];
+      go(`M605,72 V${TY-38} H${QX[3]+40} V${TY} H${QX[3]}`, (40+5+38+40)*10);
+      for(let i=3;i>=0;i--){
+        const box=fboxPos[i], t0=tAcc;
+        dropTimers.push(d3.timeout(()=>flash(box,color,0), t0));
+        tr=tr.transition().duration(700).attr('r',radii[4-i]); tAcc+=700;    // inside the block: weights get their slopes, the message is re-scaled
+        go(`M${QX[i]},${TY} H${i>0?QX[i-1]:150}`, (QX[i]-(i>0?QX[i-1]:150))*10);
+      }
+    }
+    tr.on('end',advance);
+  } else {
+    const sel = phase==='compare' ? gC.selectAll('rect') : gU.selectAll('rect');
+    sel.style('stroke-width',1.4).transition().duration(900).style('stroke-width',4.5).transition().duration(900).style('stroke-width',1.4).transition().duration(700).style('stroke-width',4.5).transition().duration(700).style('stroke-width',phase==='compare'?1.4:2.2);
+    pathsTimer=setTimeout(advance,3400);
+  }
+}
+d3.selectAll('#pPaths .modebtn').on('click',function(){ mode=this.dataset.mode; ph=1; renderPaths(); });
+d3.select('#arch').on('change',function(){arch=this.value; buildPaths(); renderPaths();});
+
+// 05 inside one block: forward and backward as matrices
+let mstage=0, matArch='res';
+const MB=2, MP=0;
+const r0=d=>d.r===0, allc=()=>true, fmt=v=>Math.abs(v)<0.005&&v!==0?v.toExponential(1):v.toFixed(2);
+const MSTAGES=[
+ ['x',['x'],'F','the input to this block: a point on the plane, two numbers',{x:allc},
+  '<em>x</em> · shape (2) · the point as this block receives it: the raw input for block 1, the previous block’s x_out otherwise',
+  ()=>'reads: the block below → produces: nothing yet.  x is also kept in memory: the backward pass will need it for dW₁.'],
+ ['× W₁',['x','W1'],'F','multiply by W₁: each of the 8 rows takes a weighted mix of the two inputs',{W1:r0,x:allc},
+  'pre = <em>W₁ · x</em> + b₁ · shapes (8) = (8×2)·(2)',
+  ()=>'a matrix meets a vector: every ROW of W₁ (one is outlined) meets the WHOLE of x, giving 8 different weighted sums of the same two numbers.\nreads: W₁ (weights), x → produces: pre, 8 numbers.  no weight changes in the forward pass.'],
+ ['+ b₁, tanh',['b1','h'],'F','add b₁, then bend every number through tanh',{b1:r0,h:r0},
+  '<em>h</em> = tanh(pre + b₁) · shapes (8) = tanh((8) + (8))',
+  ()=>'element by element: each of the 8 numbers gets its own bias added, then is bent by tanh on its own. no mixing between units here.\nreads: b₁ (weights), pre → produces: h.'],
+ ['h',['h'],'F','h: eight bent numbers, the hidden layer. The block keeps h and x: the backward pass will need them',{h:allc},
+  '<em>h</em> · shape (8) · the hidden layer, stored',
+  ()=>'h is kept in memory alongside x.  backward will need h twice: for dW₂ (what W₂ was multiplying) and for tanh’s slope (1 − h²).'],
+ ['× W₂',['h','W2'],'F','multiply by W₂: two rows mix the eight back down to two',{W2:r0,h:allc},
+  'f = <em>W₂ · h</em> + b₂ · shapes (2) = (2×8)·(8)',
+  ()=>'a matrix meets a vector again: each of W₂’s two ROWS (one outlined) meets the WHOLE of h, mixing 8 numbers down to 1; two rows → 2 numbers.\nreads: W₂ (weights), h → produces: f before its bias.'],
+ ['+ b₂',['b2','f'],'F','add b₂: this is f(x), the block’s edit',{b2:r0,f:r0},
+  '<em>f</em> = W₂·h + b₂ · shapes (2) = (2) + (2)',
+  ()=>'reads: b₂ (weights) → produces: f, the block’s edit: two numbers in the same units as x, ready to be added to it.'],
+ ['⊕ x',['x','f','xout'],'F','add x back: x_out = x + f(x), handed to the next block. The plain block hands on f(x) alone',{x:r0,f:r0,xout:r0},
+  res=>res?'<em>x_out</em> = x + f · shapes (2) = (2) + (2)':'<em>x_out</em> = f · shapes (2) = (2) · basic network: no skip',
+  (B,r,res)=>res?'no weights involved: the skip is a plain addition, so the input survives in x_out unchanged plus the edit.\nreads: x, f → produces: x_out, the next block’s x.':'plain block: x_out = f. the input is gone; only the block’s own output continues.\nreads: f → produces: x_out.',
+  ['basic network: <em>x_out</em> = f · no skip, no addition','THE ONLY FORWARD STEP WHERE THE TWO NETS DIFFER. everything before this point is identical arithmetic. ResNet keeps x and adds the edit; the basic network throws x away and hands on f alone, so the input is gone after the first block. (its backward mirror is step 13.)']],
+ ['dx_out',['dxout'],'B','backward begins: the correction arrives from the blocks above as dx_out, two numbers',{dxout:allc},
+  '<em>dx_out</em> = ∂loss / ∂x_out · shape (2), the same shape as x_out',
+  (B,r,res)=>'how much the loss would change if each of the two output numbers moved.  computed by the blocks above'+(res?', arriving both along their skips and through their f’s':'')+'.\nnothing has been updated yet: every slope below is computed with the weights as they are right now.'],
+ ['dh = W₂ᵀ·dx_out',['W2','dxout','dh'],'B','dh = W₂ᵀ · dx_out: the same matrix W₂, used backwards, spreads the two-number correction over the eight hidden units',{W2:d=>d.c===0,dxout:allc,dh:r0},
+  '<em>dh</em> = W₂ᵀ · dx_out · shapes (8) = (8×2)·(2)',
+  ()=>'the SAME W₂, read the other way: each COLUMN of W₂ (one outlined) meets dx_out, so each hidden unit collects its share of the correction through the weights it fed forward.\nreads: W₂, dx_out → produces: dh, the correction for h.  W₂ is used, not changed.'],
+ ['dW₂',['dxout','h','dW2'],'B','dW₂ = dx_out ⊗ h: the slopes for W₂’s sixteen weights, built from the correction and the h saved on the way forward (db₂ = dx_out)',{dxout:r0,h:r0,dW2:d=>d.r===0&&d.c===0},
+  '<em>dW₂</em> = dx_out ⊗ h · shapes (2×8) = (2) ⊗ (8), an outer product',
+  ()=>'each weight’s slope is (the correction on its output row) × (the hidden value it was multiplying): dW₂[i,j] = dx_out[i] · h[j]; one cell outlined.  b₂’s slope is dx_out itself.\nreads: dx_out, h (saved) → produces: dW₂, db₂.  these move W₂ and b₂ in the update phase:  W₂ ← W₂ − lr · dW₂.'],
+ ['dpre = dh ⊙ (1−h²)',['dh','h','dpre'],'B','dpre = dh ⊙ (1 − h²): back through the bend. Where tanh was flat (|h| near 1) the slope is near 0 and the message dies',{dh:r0,h:r0,dpre:r0},
+  '<em>dpre</em> = dh ⊙ (1 − h²) · shapes (8) = (8) ⊙ (8), element by element',
+  ()=>'back through the bend: each unit’s correction is scaled by tanh’s slope at that unit, which is (1 − h²) from the saved h.  where |h| ≈ 1 the slope ≈ 0 and that unit’s message dies.\nreads: dh, h (saved) → produces: dpre, the correction before the bend.  no weights involved.'],
+ ['dW₁',['dpre','x','dW1'],'B','dW₁ = dpre ⊗ x: the slopes for W₁’s weights, from dpre and the input saved on the way forward (db₁ = dpre)',{dpre:r0,x:r0,dW1:d=>d.r===0&&d.c===0},
+  '<em>dW₁</em> = dpre ⊗ x · shapes (8×2) = (8) ⊗ (2), an outer product',
+  ()=>'same pattern as dW₂: each weight’s slope is (the correction on its row) × (the input it was multiplying): dW₁[j,i] = dpre[j] · x[i].  b₁’s slope is dpre itself.\nreads: dpre, x (saved) → produces: dW₁, db₁.  these move W₁ and b₁ in the update phase:  W₁ ← W₁ − lr · dW₁.'],
+ ['dx_in',['W1','dpre','dxin','dxout'],'B','dx_in = W₁ᵀ · dpre + dx_out: what the block below receives. The + dx_out is the skip: the correction passes straight through, whatever the weights are doing. The plain block sends only W₁ᵀ · dpre',{W1:d=>d.c===0,dpre:allc,dxout:r0,dxin:r0},
+  res=>res?'<em>dx_in</em> = W₁ᵀ · dpre + dx_out · shapes (2) = (2×8)·(8) + (2)':'<em>dx_in</em> = W₁ᵀ · dpre · shapes (2) = (2×8)·(8) · basic network: no skip term',
+  (B,r,res)=>'the SAME W₁, transposed: each COLUMN of W₁ (one outlined) meets dpre, folding the 8 unit corrections back to 2 input coordinates.'+(res?'  then + dx_out: the skip copy, added with no weights in the way.':'  plain block: no + dx_out; only what the weights let through.')+'\nreads: W₁, dpre'+(res?', dx_out':'')+' → produces: dx_in, which becomes dx_out for the block below.  W₁ is used, not changed.  dx_in is NOT an update: nothing in this block changes because of it.',
+  ['basic network: <em>dx_in</em> = W₁ᵀ · dpre · no + dx_out','THE ONLY BACKWARD STEP WHERE THE TWO NETS DIFFER. without the skip, the correction reaches the block below only through W₁ᵀ, re-scaled by the weights and the tanh slopes; ten blocks of that is what dies or explodes. with the skip it also passes straight through, untouched. this line is the whole ResNet argument.']],
+ ['update',['W1','b1','W2','b2'],'U','the update: the only moment anything in the block changes. All four weight arrays move a little against their slopes, for every block at once, and the messages are thrown away',{},
+  '<em>W₁ ← W₁ − lr·dW₁</em>, &nbsp; <em>b₁ ← b₁ − lr·dpre</em>, &nbsp; <em>W₂ ← W₂ − lr·dW₂</em>, &nbsp; <em>b₂ ← b₂ − lr·dx_out</em>',
+  ()=>'WHAT changes: only the weights, W₁ b₁ W₂ b₂ (highlighted). each cell moves against its own slope from the dW / db it collected, scaled by the learning rate.\nWHEN: only now, after the backward pass has reached the first block, and for every block of the stack at the same time. the next forward pass then runs with the new weights.\nNOT updated: x, h, f, x_out (activations: recomputed from the data next pass) · dx_out, dh, dpre, dW₁, dW₂, dx_in (messages: used once, then discarded).']
+];
+const matSvg=d3.select('#pMat svg').attr('class','mat');
+const CW=40, CH=24, FY=300, BY=560, TOPY=42;
+const MX={x:14, W1:88, b1:196, h:268, W2:352, b2:700, f:764, xout:880};
+function cells(g, rows, cols, x0, y0){
+  const data=[]; for(let r=0;r<rows;r++) for(let c=0;c<cols;c++) data.push({r,c});
+  const cell=g.selectAll('g.c').data(data).join(enter=>{ const e=enter.append('g').attr('class','c'); e.append('rect'); e.append('text'); return e; })
+    .attr('transform',d=>`translate(${x0+d.c*CW},${y0+d.r*CH})`);
+  cell.select('rect').attr('width',CW-2).attr('height',CH-2).attr('rx',3);
+  cell.select('text').attr('x',(CW-2)/2).attr('y',CH/2+3).attr('text-anchor','middle');
+  return cell;
+}
+function paint(cell, get){
+  const vals=[]; cell.each(d=>vals.push(Math.abs(get(d)))); const vmax=d3.max(vals)||1;
+  cell.select('rect').style('fill',d=>get(d)>=0?ACC:HOT).style('fill-opacity',d=>0.1+0.75*Math.min(1,Math.abs(get(d))/vmax));
+  cell.select('text').text(d=>{const v=get(d); return Math.abs(v)<0.005&&v!==0?v.toExponential(0):v.toFixed(2);});
+}
+const MG={}; const matStack=matSvg.append('g'), matOps=matSvg.append('g'), matLabs=matSvg.append('g'), matSkipF=matSvg.append('g'), matSkipB=matSvg.append('g');
+['x','W1','b1','h','W2','b2','f','xout','dxin','dW1','dpre','dh','dW2','dxout'].forEach(n=>{ MG[n]=matSvg.append('g').attr('class','blk '+n); });
+// forward operators + labels
+[['×',60,FY+6],['+',176,FY+6],['→',252,FY+6],['×',332,FY+6],['+',686,FY+6],['=',742,FY+6],['⊕',850,FY+7]].forEach(([t,x,y])=>matOps.append('text').attr('class','op').attr('x',x).attr('y',y).attr('text-anchor','middle').text(t));
+[['tanh',252,FY-4*CH-10],['x · 2',MX.x+CW/2,FY+2*CH+22],['W₁ · 8×2',MX.W1+CW,FY-4*CH-10],['b₁',MX.b1+CW/2,FY-4*CH-10],['h · 8',MX.h+CW/2,FY-4*CH-10],['W₂ · 2×8',MX.W2+4*CW,FY-CH-10],['b₂',MX.b2+CW/2,FY-CH-10],['weights',MX.W1+CW,FY+4*CH+14],['weights',MX.b1+CW/2,FY+4*CH+14],['weights',MX.W2+4*CW,FY+CH+22],['weights',MX.b2+CW/2,FY+CH+22],['f(x) · 2',MX.f+CW/2,FY+CH+22],['x_out',MX.xout+CW/2,FY+CH+22]].forEach(([t,x,y])=>matLabs.append('text').attr('class','lab').attr('x',x).attr('y',y).attr('text-anchor','middle').text(t));
+matLabs.append('text').attr('class','lab').attr('x',6).attr('y',FY-4*CH-34).style('font-weight','700').style('fill','var(--accent)').text('FORWARD →');
+// backward operators + labels (read right to left)
+[['←',70,BY+6],['←',252,BY+6],['←',800,BY+6]].forEach(([t,x,y])=>matOps.append('text').attr('class','op').attr('x',x).attr('y',y).attr('text-anchor','middle').style('fill','var(--hot)').text(t));
+[['dx_in · 2',MX.x+CW/2,BY+2*CH+22],['× W₁ᵀ',70,BY+3*CH+14],['dW₁ = dpre ⊗ x',MX.W1+CW,BY-4*CH-10],['dpre · 8',MX.b1+CW/2,BY-4*CH-10],['⊙ (1−h²)',252,BY+4*CH+14],['dh · 8',MX.h+CW/2,BY-4*CH-10],['dW₂ = dx_out ⊗ h',MX.W2+4*CW,BY-CH-10],['× W₂ᵀ',800,BY-CH-10],['dx_out · 2',MX.xout+CW/2,BY+CH+22]].forEach(([t,x,y])=>matLabs.append('text').attr('class','lab').attr('x',x).attr('y',y).attr('text-anchor','middle').text(t));
+matLabs.append('text').attr('class','lab').attr('x',994).attr('y',BY-4*CH-34).attr('text-anchor','end').style('font-weight','700').style('fill','var(--hot)').text('← BACKWARD');
+// skips
+matSkipF.append('path').attr('d',`M${MX.x+CW/2},${FY-CH-6} C${MX.x+CW/2},${FY-4*CH-70} ${MX.xout-30},${FY-4*CH-70} ${MX.xout-30},${FY-CH-6}`).style('fill','none').style('stroke','var(--accent)').style('stroke-width',2).style('stroke-dasharray','6 4');
+matSkipF.append('text').attr('class','lab').attr('x',600).attr('y',FY-4*CH-40).attr('text-anchor','middle').text('skip: x carried across untouched, added back at ⊕');
+matSkipB.append('path').attr('d',`M${MX.xout+CW/2},${BY+CH+6} C${MX.xout+CW/2},${BY+2*CH+118} ${MX.x+CW/2+10},${BY+2*CH+118} ${MX.x+CW/2+10},${BY+CH+6}`).style('fill','none').style('stroke','var(--hot)').style('stroke-width',2).style('stroke-dasharray','6 4');
+matSkipB.append('text').attr('class','lab').attr('x',560).attr('y',BY+2*CH+130).attr('text-anchor','middle').text('skip, backwards: dx_out passes straight through to dx_in, no weights in the way');
+// the stack strip with a magnifier on f2
+function drawMatStack(res){
+  // same drawing as the two-architecture diagram above: dashed arc over each block and a ⊕ where x is added back;
+  // the opened block wears a magnifier, and a translucent cone joins it to the canvas below
+  matStack.selectAll('*').remove();
+  const n=Math.min(L,6), bw=56, gap=22, x0=150;
+  matStack.append('text').attr('class','lab').attr('x',x0-44).attr('y',TOPY+4).attr('text-anchor','end').style('fill','var(--ink-2)').style('font-size','12px').text(res?'ResNet':'basic network');
+  matStack.append('text').attr('class','lab').attr('x',x0-30).attr('y',TOPY+4).attr('text-anchor','end').style('fill','var(--ink-1)').text('x');
+  matStack.append('line').attr('x1',x0-26).attr('x2',x0).attr('y1',TOPY).attr('y2',TOPY).style('stroke','var(--ink-3)');
+  let selx=0;
+  for(let i=0;i<n;i++){
+    const bx=x0+i*(bw+gap), sel=i===MB-1, cx=bx+bw+gap/2;
+    if(i>0) matStack.append('line').attr('x1',bx-gap).attr('x2',bx).attr('y1',TOPY).attr('y2',TOPY).style('stroke','var(--ink-3)');
+    matStack.append('rect').attr('x',bx).attr('y',TOPY-13).attr('width',bw).attr('height',26).attr('rx',5).style('fill',sel?'var(--hot-soft)':'var(--accent-soft)').style('stroke',sel?'var(--hot)':'var(--accent)').style('stroke-width',sel?2.4:1.2);
+    matStack.append('text').attr('class','lab').attr('x',bx+bw/2).attr('y',TOPY+4).attr('text-anchor','middle').style('fill','var(--ink-1)').style('font-size','12px').text('f'+(i+1));
+    if(res){
+      matStack.append('path').attr('d',`M${bx-gap/2},${TOPY-2} C${bx-gap/2},${TOPY-36} ${cx},${TOPY-36} ${cx},${TOPY-5}`).style('fill','none').style('stroke','var(--accent)').style('stroke-width',1.3).style('stroke-dasharray','4 3');
+      matStack.append('circle').attr('cx',cx).attr('cy',TOPY).attr('r',6.5).style('fill','var(--card)').style('stroke','var(--accent)').style('stroke-width',1.5);
+      matStack.append('text').attr('x',cx).attr('y',TOPY+3.6).attr('text-anchor','middle').style('font-size','11px').style('font-weight',700).style('fill','var(--accent)').text('+');
+    }
+    if(sel) selx=bx;
+  }
+  const xe=x0+n*(bw+gap)-gap;
+  matStack.append('line').attr('x1',xe).attr('x2',xe+16).attr('y1',TOPY).attr('y2',TOPY).style('stroke','var(--ink-3)');
+  matStack.append('text').attr('class','lab').attr('x',xe+20).attr('y',TOPY+4).text(L>n?'… → cut':'→ cut');
+  // magnifier over the opened block, and the zoom cone down to the canvas
+  const mx=selx+bw/2, R=30, ty=FY-4*CH-60;
+  matStack.append('path').attr('d',`M${mx-R*0.72},${TOPY+R*0.72} L6,${ty} L994,${ty} L${mx+R*0.72},${TOPY+R*0.72} Z`).style('fill','var(--hot-soft)').style('fill-opacity',.45).style('stroke','var(--hot)').style('stroke-width',1.2).style('stroke-dasharray','5 4');
+  matStack.append('circle').attr('cx',mx).attr('cy',TOPY).attr('r',R).style('fill','none').style('stroke','var(--hot)').style('stroke-width',3);
+  matStack.append('line').attr('x1',mx+R*0.72).attr('y1',TOPY+R*0.72).attr('x2',mx+R*0.72+16).attr('y2',TOPY+R*0.72+16).style('stroke','var(--hot)').style('stroke-width',5).style('stroke-linecap','round');
+  matStack.append('text').attr('class','lab').attr('x',500).attr('y',ty-14).attr('text-anchor','middle').style('fill','var(--hot)').style('font-weight','700').text('🔍 block f'+MB+', opened up below'+(res?' · the ⊕ is where x is added back':''));
+}
+let matLastArch=null;
+function renderMatrix(){
+  const net=nets[matArch], res=net.residual, l=Math.min(MB,L), B=net.blocks[l-1], r=traceSample(net,MP).rec[l-1];
+  if(matLastArch!==res){ drawMatStack(res); matLastArch=res; }
+  d3.selectAll('.mres').style('display',res?null:'none'); matSkipF.style('display',res?null:'none'); matSkipB.style('display',res?null:'none');
+  paint(cells(MG.x,2,1,MX.x,FY-CH), d=>r.xin[d.r]);
+  paint(cells(MG.W1,H,2,MX.W1,FY-4*CH), d=>B.W1[d.r][d.c]);
+  paint(cells(MG.b1,H,1,MX.b1,FY-4*CH), d=>B.b1[d.r]);
+  paint(cells(MG.h,H,1,MX.h,FY-4*CH), d=>r.h[d.r]);
+  paint(cells(MG.W2,2,H,MX.W2,FY-CH), d=>B.W2[d.r][d.c]);
+  paint(cells(MG.b2,2,1,MX.b2,FY-CH), d=>B.b2[d.r]);
+  paint(cells(MG.f,2,1,MX.f,FY-CH), d=>r.f[d.r]);
+  paint(cells(MG.xout,2,1,MX.xout,FY-CH), d=>r.xout[d.r]);
+  paint(cells(MG.dxin,2,1,MX.x,BY-CH), d=>r.dxin[d.r]);
+  paint(cells(MG.dW1,H,2,MX.W1,BY-4*CH), d=>r.dpre[d.r]*r.xin[d.c]);
+  paint(cells(MG.dpre,H,1,MX.b1,BY-4*CH), d=>r.dpre[d.r]);
+  paint(cells(MG.dh,H,1,MX.h,BY-4*CH), d=>r.dh[d.r]);
+  paint(cells(MG.dW2,2,H,MX.W2,BY-CH), d=>r.dxout[d.r]*r.h[d.c]);
+  paint(cells(MG.dxout,2,1,MX.xout,BY-CH), d=>r.dxout[d.r]);
+  const st=MSTAGES[mstage], lit=st[1], kind=st[2], back=kind==='B', upd=kind==='U', focus=st[4]||{}, kcol=upd?'var(--good)':back?'var(--hot)':'var(--accent)';
+  Object.keys(MG).forEach(n=>{ const on=lit.includes(n), fz=focus[n]; MG[n].style('opacity',on?1:0.3);
+    MG[n].selectAll('g.c').select('rect').style('stroke',d=>on&&fz&&fz(d)?'var(--ink-1)':on?kcol:'var(--line)').style('stroke-width',d=>on&&fz&&fz(d)?2.6:on?(upd?2.4:1.4):1); });
+  const main=d3.select('#pMat .mateq:not(.alt)'), alt=d3.select('#pMat .mateq.alt');
+  main.classed('back',back).classed('upd',upd); main.select('.mgen').html(typeof st[5]==='function'?st[5](res):st[5]); main.select('.mwork').text(st[6](B,r,res));
+  alt.style('display',st[7]?null:'none'); if(st[7]){ alt.select('.mgen').html(st[7][0]); alt.select('.mwork').text(st[7][1]); }
+  matSkipF.style('opacity',st[0]==='⊕ x'?1:0.3); matSkipB.style('opacity',st[0]==='dx_in'?1:0.3);
+  const seg=d3.select('#pMat .mstrip2').selectAll('i').data(MSTAGES).join(enter=>enter.append('i').call(e=>e.append('b')));
+  seg.select('b').style('background',d=>d[2]==='U'?'var(--good)':d[2]==='B'?'var(--hot)':'var(--accent)').style('width',(d,i)=>i<=mstage?'100%':'0%');
+  d3.select('#pMat .mlabel2').text((upd?'update · ':back?'backward · ':'forward · ')+st[0]+'  ('+(mstage+1)+' / '+MSTAGES.length+')').style('color',kcol);
+  d3.select('#pMat .mcap').text(st[3]);
+}
+d3.select('#pMat .mnext').on('click',()=>{ mstage=(mstage+1)%MSTAGES.length; renderMatrix(); });
+d3.select('#pMat .mprev').on('click',()=>{ mstage=(mstage+MSTAGES.length-1)%MSTAGES.length; renderMatrix(); });
+// #matrices-7 opens the block at step 7 (the residual add); the button in the section above sets it
+function gotoStage(n){ mstage=Math.max(0,Math.min(MSTAGES.length-1,n-1)); renderMatrix(); document.getElementById('matrices').scrollIntoView({behavior:'smooth',block:'start'}); }
+const matHash=()=>{ const m=location.hash.match(/^#matrices-(\d+)$/); if(m){ gotoStage(+m[1]); return true; } return false; };
+addEventListener('hashchange',matHash);
+d3.select('.lockrun').on('click',()=>{ if(!playing&&steps<MAX_STEPS) setPlaying(true); });
+d3.select('.goto').on('click',()=>{ if(location.hash==='#matrices-7') matHash(); else location.hash='#matrices-7'; });
+
+// 06 stack diagram + journey
+const stackSvg=d3.select('#pStack svg');
+let insp=null, ispt=0;
+const f2=v=>{ if(v===0) return ' 0.00'; if(Math.abs(v)<0.005) return (v>0?' ':'')+v.toExponential(1); return (v>=0?' ':'')+v.toFixed(2); };
+const vec=a=>'['+a.map(f2).join(',')+']', vec8=a=>'\n          '+vec(a);
+function traceSample(net, i){
+  const {xs,hs}=forward(net,X[i],L), xL=xs[L], y=Y[i];
+  const z=net.w[0]*xL[0]+net.w[1]*xL[1]+net.c, p=1/(1+Math.exp(-z)), dz=p-y;
+  const rec=new Array(L); let dx=[dz*net.w[0],dz*net.w[1]];
+  for(let l=L-1;l>=0;l--){
+    const B=net.blocks[l], h=hs[l], xin=xs[l], xout=xs[l+1];
+    const pre=h.map((hv,j)=>B.W1[j][0]*xin[0]+B.W1[j][1]*xin[1]+B.b1[j]);
+    const f=[xout[0]-(net.residual?xin[0]:0), xout[1]-(net.residual?xin[1]:0)];
+    const dh=h.map((hv,j)=>B.W2[0][j]*dx[0]+B.W2[1][j]*dx[1]);
+    const dpre=dh.map((d,j)=>d*(1-h[j]*h[j]));
+    const dxin=[net.residual?dx[0]:0, net.residual?dx[1]:0];
+    for(let j=0;j<H;j++){ dxin[0]+=B.W1[j][0]*dpre[j]; dxin[1]+=B.W1[j][1]*dpre[j]; }
+    let gW1=0,gW2=0; for(let j=0;j<H;j++){ gW2+=(dx[0]*h[j])**2+(dx[1]*h[j])**2; gW1+=(dpre[j]*xin[0])**2+(dpre[j]*xin[1])**2; }
+    rec[l]={xin,pre,h,f,xout,dxout:dx,dh,dpre,dxin,gW1:Math.sqrt(gW1),gW2:Math.sqrt(gW2)};
+    dx=dxin;
+  }
+  return {rec,p,y};
+}
+function renderInspector(){
+  const card=d3.select('#pInsp');
+  if(!insp){ card.style('display','none'); return; }
+  insp.l=Math.min(insp.l,L); card.style('display',null);
+  const net=nets[insp.row], res=net.residual, l=insp.l, B=net.blocks[l-1];
+  const {rec}=traceSample(net, ispt), r=rec[l-1];
+  card.select('.il').text(l+' of '+L); card.select('.irow').text(res?'residual':'plain');
+  card.select('.isv').text(ispt); card.select('.is').property('value',ispt); card.select('.icls').text(Y[ispt]?'class B (diamond)':'class A (dot)');
+  drawNet(card.select('svg.netsvg'), [2,H,2], [B.W1,B.W2], res, ['x_in (2)','8 tanh units', res?'x_in + f':'f']);
+  const nf=Math.hypot(r.f[0],r.f[1]), nx=Math.hypot(r.xin[0],r.xin[1]), ng=Math.hypot(r.dxin[0],r.dxin[1]), ngo=Math.hypot(r.dxout[0],r.dxout[1]);
+  card.select('.ratioF').text((nf/(nx||1e-9)).toFixed(2)); card.select('.ratioG').text((ng/(ngo||1e-9)).toFixed(2));
+  const fwd=[
+    'x_in   = '+vec(r.xin),
+    'pre    = W1·x_in + b1'+vec8(r.pre),
+    'h      = tanh(pre)'+vec8(r.h),
+    'f      = W2·h + b2           = '+vec(r.f),
+    res ? 'x_out  = <em>x_in +</em> f       = '+vec(r.xout)+'\n         keep the input, add the edit'
+        : 'x_out  = f            = '+vec(r.xout)+'\n         replace the input'
+  ].join('\n');
+  const bwd=[
+    'dx_out = from the blocks above = '+vec(r.dxout),
+    'dh     = W2ᵀ·dx_out'+vec8(r.dh),
+    'dpre   = dh ⊙ (1 − h²)'+vec8(r.dpre),
+    res ? 'dx_in  = W1ᵀ·dpre <em>+ dx_out</em> = '+vec(r.dxin)+'\n         the highway: dx_out passes straight through'
+        : 'dx_in  = W1ᵀ·dpre          = '+vec(r.dxin)+'\n         only what the weights let through',
+    'slopes for this block\'s knobs: |dW1| = '+f2(r.gW1).trim()+'  |dW2| = '+f2(r.gW2).trim()
+  ].join('\n');
+  card.select('pre.fwd').html(fwd); card.select('pre.bwd').html(bwd);
+}
+d3.select('#pInsp .is').on('input',function(){ ispt=+this.value; renderInspector(); });
+function renderStack(){
+  const rows=[{y:38,label:'basic network',skip:false},{y:112,label:'ResNet',skip:true}];
+  const x0=140, x1=700, gap=16, bw=Math.min(44,(x1-x0)/L-gap);   // room for the row label and a ⊕ in every gap
+  stackSvg.selectAll('*').remove();
+  rows.forEach(r=>{
+    stackSvg.append('text').attr('class','netlbl').attr('x',x0-42).attr('y',r.y+4).attr('text-anchor','end').style('font-size','12px').style('fill','var(--ink-2)').text(r.label);
+    stackSvg.append('text').attr('class','netlbl').attr('x',x0-30).attr('y',r.y+4).text('x');
+    stackSvg.append('line').attr('x1',x0-22).attr('x2',x0).attr('y1',r.y).attr('y2',r.y).style('stroke','var(--ink-3)');
+    for(let l=0;l<L;l++){
+      const bx=x0+l*(bw+gap);
+      const row=r.skip?'res':'plain', sel=insp&&insp.row===row&&insp.l===l+1;
+      stackSvg.append('rect').attr('x',bx).attr('y',r.y-13).attr('width',bw).attr('height',26).attr('rx',4).style('fill',sel?'var(--hot-soft)':'var(--accent-soft)').style('stroke',sel?'var(--hot)':'var(--accent)').style('stroke-width',sel?2.4:1).style('cursor','pointer')
+        .on('click',()=>{ insp={row,l:l+1}; renderStack(); renderInspector(); });
+      if(bw>=30) stackSvg.append('text').attr('class','netlbl').attr('x',bx+bw/2).attr('y',r.y+4).attr('text-anchor','middle').style('fill','var(--ink-1)').style('pointer-events','none').text('f'+(l+1));
+      if(l<L-1) stackSvg.append('line').attr('x1',bx+bw).attr('x2',bx+bw+gap).attr('y1',r.y).attr('y2',r.y).style('stroke','var(--ink-3)');
+      if(r.skip){
+        stackSvg.append('path').attr('d',`M${bx-gap/2},${r.y-2} C${bx-gap/2},${r.y-34} ${bx+bw+gap/2},${r.y-34} ${bx+bw+gap/2},${r.y-4}`).style('fill','none').style('stroke','var(--accent)').style('stroke-width',1.4).style('stroke-dasharray','4 3');
+        const cx=bx+bw+gap/2;
+        stackSvg.append('circle').attr('cx',cx).attr('cy',r.y).attr('r',6.5).style('fill','var(--card)').style('stroke','var(--accent)').style('stroke-width',1.5);
+        stackSvg.append('text').attr('x',cx).attr('y',r.y+3.6).attr('text-anchor','middle').style('font-size','11px').style('font-weight',700).style('fill','var(--accent)').style('pointer-events','none').text('+');
+      }
+    }
+    const xe=x0+L*(bw+gap)-gap;
+    stackSvg.append('line').attr('x1',xe).attr('x2',xe+22).attr('y1',r.y).attr('y2',r.y).style('stroke','var(--ink-3)');
+    stackSvg.append('text').attr('class','netlbl').attr('x',xe+26).attr('y',r.y+4).text('cut');
+    stackSvg.append('text').attr('class','netlbl').attr('x',x0).attr('y',r.y+30).text(r.skip?'every block: x ← x + f(x)   ·   the dashed arc carries x over each block and ⊕ adds it back':'every block: x ← f(x)   ·   x goes in, only f(x) comes out');
+  });
+}
+function setupPanel(id){
+  const svg=d3.select('#'+id).select('svg');
+  svg.append('clipPath').attr('id','clip'+id).append('rect').attr('width',360).attr('height',360);
+  const g=svg.append('g').attr('clip-path',`url(#clip${id})`);
+  g.append('path').attr('d','M180,0V360M0,180H360').style('stroke','var(--line)').style('stroke-width',1);
+  ['sheet','trails','pts','cut'].forEach(c=>g.append('g').attr('class',c));
+  svg.append('text').attr('class','ext').attr('x',354).attr('y',354).attr('text-anchor','end').style('fill','var(--ink-3)').style('font-family','ui-monospace,Menlo,monospace').style('font-size','10px');
+  svg.append('text').attr('x',6).attr('y',354).style('fill','var(--ink-3)').style('font-family','system-ui,sans-serif').style('font-size','10px').text('stream coordinate 1 →');
+  svg.append('text').attr('transform','translate(12,6) rotate(90)').style('fill','var(--ink-3)').style('font-family','system-ui,sans-serif').style('font-size','10px').text('stream coordinate 2 →');
+  return g;
+}
+const gPlain=setupPanel('pPlain'), gRes=setupPanel('pRes'), gPlainK=setupPanel('pPlainK'), gResK=setupPanel('pResK');
+function cutLine(net,ext){
+  const [w0,w1]=net.w, c=net.c;
+  if(Math.abs(w0)<1e-9&&Math.abs(w1)<1e-9) return [];
+  if(Math.abs(w1)>=Math.abs(w0)) return [[-ext,-(w0*-ext+c)/w1],[ext,-(w0*ext+c)/w1]];
+  return [[-(w1*-ext+c)/w0,-ext],[-(w1*ext+c)/w0,ext]];
+}
+function renderPanel(g, id, net, T, kk){
+  const pts=T.map(t=>t[kk]), ext=extentOf(pts), {sx,sy}=scales(ext), line=d3.line().x(d=>sx(d[0])).y(d=>sy(d[1]));
+  const sheet=lattice.map(pl=>pl.map(p=>forward(net,p,kk).xs[kk]));
+  const flat=sheet.flat(), hull=d3.polygonHull(flat), area=hull?Math.abs(d3.polygonArea(hull)):0, off=flat.filter(q=>Math.abs(q[0])>ext||Math.abs(q[1])>ext).length/flat.length;
+  const spots=new Set(pts.map(q=>Math.round(sx(q[0])/6)+','+Math.round(sy(q[1])/6))).size;
+  const p0=d3.select('#'+id); p0.select('.area').text('area ×'+(area/25).toFixed(2)+(area/25<0.05?' (collapsed)':'')+' · '+Math.round(off*100)+'% off-frame'); p0.select('.spots').text(spots+(spots<10?' (piled up)':''));
+  if(!showSheet) sheet.length=0;
+  g.select('.sheet').selectAll('path').data(sheet).join('path').attr('d',line)
+    .style('fill','none').style('stroke','var(--ink-3)').style('stroke-opacity',.55).style('stroke-width',1);
+  const trails=showTrails&&kk>0?trailIdx.map(i=>T[i].slice(0,kk+1)):[];
+  g.select('.trails').selectAll('path').data(trails).join('path').attr('d',d=>line(d))
+    .style('fill','none').style('stroke',(d,i)=>Y[trailIdx[i]]?'var(--hot)':'var(--accent)').style('stroke-opacity',.45).style('stroke-width',1.2);
+  drawPoints(g.select('.pts'), pts, sx, sy);
+  g.select('.cut').selectAll('path').data(kk===L?[cutLine(net,ext)]:[]).join('path').attr('d',line)
+    .style('fill','none').style('stroke','var(--ink-1)').style('stroke-dasharray','6 4').style('stroke-width',1.6);
+  const p=d3.select('#'+id); p.select('svg .ext').text('frame ±'+ext.toFixed(1)); stats(p, net);
+}
+
+const lossSvg=d3.select('#lossSvg'), LM={l:44,r:14,t:10,b:26}, LW=760, LH=160;
+lossSvg.append('g').attr('class','axis x').attr('transform',`translate(0,${LH-LM.b})`);
+lossSvg.append('g').attr('class','axis y').attr('transform',`translate(${LM.l},0)`);
+lossSvg.append('path').attr('class','lp').style('fill','none').style('stroke','var(--ink-3)').style('stroke-width',2);
+lossSvg.append('path').attr('class','lr').style('fill','none').style('stroke','var(--accent)').style('stroke-width',2);
+const lg=lossSvg.append('g').attr('transform',`translate(${LW-LM.r-230},${LM.t+4})`).style('font-family','system-ui,sans-serif').style('font-size','11px');
+lg.append('line').attr('x2',18).attr('y1',4).attr('y2',4).style('stroke','var(--ink-3)').style('stroke-width',2);
+lg.append('text').attr('class','lgp').attr('x',24).attr('y',8).style('fill','var(--ink-2)').text('basic network');
+lg.append('line').attr('x2',18).attr('y1',20).attr('y2',20).style('stroke','var(--accent)').style('stroke-width',2);
+lg.append('text').attr('class','lgr').attr('x',24).attr('y',24).style('fill','var(--ink-2)').text('ResNet');
+function renderLoss(){
+  const xs=d3.scaleLinear().domain([0,MAX_STEPS]).range([LM.l,LW-LM.r]);
+  const ys=d3.scaleLinear().domain([0,Math.max(0.75,d3.max(lossHist,d=>Math.max(d.p,d.r))||0)]).nice().range([LH-LM.b,LM.t]);
+  lossSvg.select('.axis.x').call(d3.axisBottom(xs).ticks(8).tickSizeOuter(0)).call(axisStyle);
+  lossSvg.select('.axis.y').call(d3.axisLeft(ys).ticks(4).tickSizeOuter(0)).call(axisStyle);
+  lossSvg.select('.lp').attr('d',d3.line().x(d=>xs(d.s)).y(d=>ys(d.p))(lossHist)).style('stroke-width',which==='plain'?3.2:1.4).style('stroke-opacity',which==='plain'?1:0.7);
+  lossSvg.select('.lr').attr('d',d3.line().x(d=>xs(d.s)).y(d=>ys(d.r))(lossHist)).style('stroke-width',which==='res'?3.2:1.4).style('stroke-opacity',which==='res'?1:0.7);
+  const lp=nets.plain.last, lr=nets.res.last;
+  lg.select('.lgp').text('basic network'+(lp?' · '+lp.loss.toFixed(3):'')).style('font-weight',which==='plain'?700:400);
+  lg.select('.lgr').text('ResNet'+(lr?' · '+lr.loss.toFixed(3):'')).style('font-weight',which==='res'?700:400);
+}
+
+function render(){
+  const T={plain:X.map(p=>forward(nets.plain,p,L).xs), res:X.map(p=>forward(nets.res,p,L).xs)};
+  render1(); renderTask();
+  renderPanel(gPlain,'pPlain',nets.plain,T.plain,L); renderPanel(gRes,'pRes',nets.res,T.res,L); renderPanel(gPlainK,'pPlainK',nets.plain,T.plain,k); renderPanel(gResK,'pResK',nets.res,T.res,k); d3.selectAll('.kcap').text(k); d3.selectAll('.Lall').text(L); renderLoss(); renderInspector(); renderWalk(); renderMatrix();
+  d3.selectAll('.tb-steps').text(steps); d3.selectAll('.tb-play,.lockrun').style('--p',(100*steps/MAX_STEPS)+'%');
+  const done=steps>=MAX_STEPS; d3.selectAll('.tb-play').property('disabled',done); d3.selectAll('.tb-step').property('disabled',done);
+  d3.select('#walkwrap').classed('locked',!done);   // the after-k-blocks walk waits for a finished run; its button runs it
+  d3.select('.lockrun').property('disabled',playing).text(playing?'training · '+steps+' / '+MAX_STEPS:steps>0?'▶ run the training · '+steps+' / '+MAX_STEPS+' done':'▶ run the training');
+  if(done&&!walkUnlocked){ walkUnlocked=true; startWalk(); } else if(!done&&walkUnlocked){ walkUnlocked=false; stopWalk(); }
+  d3.selectAll('.whichName').text(which==='res'?'ResNet':'basic neural network');
+}
+
+function reset(){
+  makeData(); nets={plain:makeNet(false,42),res:makeNet(true,42)}; steps=0; lossHist=[]; k=L; renderTable(); taskSvg.select('.selring').style('display','none');
+  d3.select('#k').attr('max',L).property('value',L); d3.select('#kv').text(k); d3.select('#Lv').text(L);
+  stopWalk();
+  renderStack(); render();
+}
+
+// journey walk: sweep k through the blocks, on repeat
+let walking=false, walkTimer=null, walkUnlocked=false;
+function stopWalk(){ if(walkTimer){walkTimer.stop(); walkTimer=null;} walking=false; }
+function startWalk(){ stopWalk(); walking=true; k=0; d3.select('#k').property('value',k); d3.select('#kv').text(k); render();
+  walkTimer=d3.interval(()=>{ k = k<L ? k+1 : 0; d3.select('#k').property('value',k); d3.select('#kv').text(k); render(); }, 1300); }
+function renderWalk(){
+  d3.select('#journey .jstrip i b').style('width',(100*k/L)+'%');
+  d3.select('#journey .jwalk').text(walking?'❚❚ stop':'▶ walk');
+}
+function loop(){ if(!playing) return; for(let i=0;i<STEPS_PER_FRAME;i++) step(); render(); if(steps>=MAX_STEPS){ setPlaying(false); render(); return;} requestAnimationFrame(loop); }
+function setPlaying(p){ playing=p; d3.selectAll('.tb-play').text(p?'❚❚ pause':'▶ train'); if(p) requestAnimationFrame(loop); }
+let playing1=false;
+function loop1(){ if(!playing1) return; for(let i=0;i<STEPS_PER_FRAME;i++) step1(); render1(); if(steps1>=MAX_STEPS){setPlaying1(false); return;} requestAnimationFrame(loop1); }
+function setPlaying1(p){ playing1=p; d3.selectAll('.play1').text(p?'❚❚ pause':'▶ train'); if(p) requestAnimationFrame(loop1); }
+function reset1(){ setPlaying1(false); make1(); render1(); }
+
+d3.selectAll('.tb-play').on('click',()=>setPlaying(!playing));
+d3.selectAll('.tb-step').on('click',()=>{for(let i=0;i<50;i++)step(); render();});
+d3.selectAll('.tb-reset').on('click',()=>{setPlaying(false); reset();});
+d3.select('#journey .jwalk').on('click',()=>{ if(walking) stopWalk(); else startWalk(); render(); });
+d3.selectAll('.play1').on('click',()=>setPlaying1(!playing1));
+d3.selectAll('.step1').on('click',()=>{for(let i=0;i<50;i++)step1(); render1();});
+d3.selectAll('.reset1').on('click',reset1);
+d3.select('#L').on('input',function(){L=+this.value; d3.select('#Lv').text(L);}).on('change',()=>{setPlaying(false); reset();});
+d3.select('#k').on('input',function(){ stopWalk(); k=+this.value; d3.select('#kv').text(k); render();});
+d3.select('#n').on('input',function(){nIter=+this.value; renderNewton();});
+d3.select('#rootm').on('change',function(){rootMethod=this.value; renderNewton();});
+d3.select('#gdn').on('input',function(){gdN=+this.value; renderGD();});
+d3.select('#lr').on('change',function(){gdLr=+this.value; renderGD();});
+d3.select('#act').on('change',function(){actName=this.value; reset1();});
+d3.select('#H1').on('input',function(){H1=+this.value; d3.select('#H1v').text(H1);}).on('change',reset1);
+d3.select('#net').on('change',function(){which=this.value; render();});
+d3.select('#ds').on('change',function(){dataset=this.value; setPlaying(false); reset();});
+d3.select('#sheet').on('change',function(){showSheet=this.checked; render();});
+d3.select('#trails').on('change',function(){showTrails=this.checked; render();});
+
+const q=new URLSearchParams(location.search);
+if(q.get('depth')){L=+q.get('depth'); d3.select('#L').property('value',L);}
+if(q.get('ds')){dataset=q.get('ds'); d3.select('#ds').property('value',dataset);}
+if(q.get('net')){which=q.get('net'); d3.select('#net').property('value',which);}
+if(q.get('h1')){H1=+q.get('h1'); d3.select('#H1').property('value',H1);}
+if(q.get('n')){nIter=Math.min(5,+q.get('n')); d3.select('#n').property('value',nIter);}
+if(q.get('rootm')){rootMethod=q.get('rootm'); d3.select('#rootm').property('value',rootMethod);}
+if(q.get('act')){actName=q.get('act'); d3.select('#act').property('value',actName);}
+if(q.get('lr')){gdLr=+q.get('lr'); d3.select('#lr').property('value',q.get('lr'));}
+if(q.get('gdn')){gdN=Math.min(8,+q.get('gdn'));}
+if(q.get('mode')){mode=q.get('mode');}
+if(q.get('ph')){ph=+q.get('ph');}
+if(q.get('arch')){arch=q.get('arch'); d3.select('#arch').property('value',arch);}
+if(q.get('insp')){const [row,l]=q.get('insp').split(':'); insp={row,l:+l};}
+make1(); reset(); renderNewton(); renderGD(); buildPaths(); renderPaths();
+if(q.get('steps')){const n=+q.get('steps'); for(let i=0;i<n;i++){step(); step1();}}
+if(q.get('k')){stopWalk(); k=Math.min(+q.get('k'),L); d3.select('#k').property('value',k); d3.select('#kv').text(k);}
+if(q.get('mstage')){mstage=+q.get('mstage');}
+render();
+matHash();
+})();
+</script>
