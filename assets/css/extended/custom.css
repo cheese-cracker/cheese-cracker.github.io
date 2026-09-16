@@ -19,7 +19,7 @@
   /* PaperMod reserves this in .main's min-height; the identity block below
      the <footer> is extra, so the reservation has to grow with it. */
   --footer-height: 175px;
-  --main-width: 800px;   /* a bit wider than PaperMod's 720 to give the card room */
+  --main-width: 900px;   /* card room for images, tables, code and embedded visuals; prose is capped below */
 }
 
 /* Reading face for prose; Averia kept for the brand so the site still
@@ -155,6 +155,11 @@ body {
   color: var(--primary);
 }
 .post-content table tr:hover td { background: var(--ir-tint); }
+
+/* measure: prose stays at 80ch inside the wider card; figures, tables, code,
+   embeds and display maths take the full card width */
+.post-content > p, .post-content > ul, .post-content > ol, .post-content > blockquote,
+.post-content > h2, .post-content > h3, .post-content > h4 { max-width: 80ch; }
 
 /* section rules and headings */
 .post-content hr {
