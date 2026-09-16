@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><title>ch3d</title>
-<style>html,body{margin:0;background:#fffdf8;overflow:hidden}canvas{display:block}</style>
+<style>html,body{margin:0;background:#fbf7f0;overflow:hidden}canvas{display:block}</style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 </head><body>
 <script type="module">
@@ -8,7 +8,7 @@ import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 const W=3200,H=1800,K=1.15;
 const P2=[[-0.92,0.35],[-0.55,0.82],[0.05,0.95],[0.62,0.7],[0.95,0.15],[0.8,-0.5],[0.3,-0.9],[-0.35,-0.85],[-0.85,-0.4],[-0.3,0.25],[0.2,0.4],[0.35,-0.25],[-0.25,-0.3],[0.05,0.02],[0.6,0.15],[-0.6,0.05]];
 const lift=([x,y])=>new THREE.Vector3(x,y,K*(x*x+y*y));
-const scene=new THREE.Scene(); scene.background=new THREE.Color('#fffdf8');
+const scene=new THREE.Scene(); scene.background=new THREE.Color('#fbf7f0');
 const cam=new THREE.PerspectiveCamera(30,W/H,0.1,100); cam.up.set(0,0,1); cam.position.set(3.0,-3.5,2.6); cam.lookAt(0,0,0.5);
 scene.add(new THREE.AmbientLight(0xffffff,0.75)); const dl=new THREE.DirectionalLight(0xffffff,0.9); dl.position.set(2,-3,5); scene.add(dl);
 // paraboloid sheet
@@ -16,28 +16,28 @@ const seg=64, rings=28, R=1.22, pos=[], idx=[];
 for(let i=0;i<=rings;i++){const r=R*i/rings;for(let j=0;j<=seg;j++){const a=j/seg*Math.PI*2;pos.push(r*Math.cos(a),r*Math.sin(a),K*r*r);}}
 for(let i=0;i<rings;i++)for(let j=0;j<seg;j++){const a=i*(seg+1)+j,b=a+seg+1;idx.push(a,b,a+1,b,b+1,a+1);}
 const pg=new THREE.BufferGeometry(); pg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); pg.setIndex(idx); pg.computeVertexNormals();
-scene.add(new THREE.Mesh(pg,new THREE.MeshStandardMaterial({color:'#b57614',transparent:true,opacity:0.11,side:THREE.DoubleSide,depthWrite:false,roughness:1})));
-const wire=new THREE.LineSegments(new THREE.WireframeGeometry(pg),new THREE.LineBasicMaterial({color:'#b57614',transparent:true,opacity:0.10})); scene.add(wire);
+scene.add(new THREE.Mesh(pg,new THREE.MeshStandardMaterial({color:'#6f5500',transparent:true,opacity:0.11,side:THREE.DoubleSide,depthWrite:false,roughness:1})));
+const wire=new THREE.LineSegments(new THREE.WireframeGeometry(pg),new THREE.LineBasicMaterial({color:'#6f5500',transparent:true,opacity:0.10})); scene.add(wire);
 // hull of lifted points, split into lower (Delaunay) and upper faces
 const P3=P2.map(lift); const hull=new ConvexGeometry(P3); const hp=hull.attributes.position.array;
 const lower=[],upper=[]; const A=new THREE.Vector3(),B=new THREE.Vector3(),C=new THREE.Vector3(),N=new THREE.Vector3();
 for(let i=0;i<hp.length;i+=9){A.set(hp[i],hp[i+1],hp[i+2]);B.set(hp[i+3],hp[i+4],hp[i+5]);C.set(hp[i+6],hp[i+7],hp[i+8]);N.copy(B).sub(A).cross(C.clone().sub(A));(N.z<0?lower:upper).push(...hp.slice(i,i+9));}
 const mk=arr=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(arr,3));g.computeVertexNormals();return g;};
 const gl=mk(lower), gu=mk(upper);
-scene.add(new THREE.Mesh(gl,new THREE.MeshStandardMaterial({color:'#076678',transparent:true,opacity:0.46,side:THREE.DoubleSide,flatShading:true,roughness:0.85})));
-scene.add(new THREE.LineSegments(new THREE.EdgesGeometry(gl,1),new THREE.LineBasicMaterial({color:'#04424d',transparent:true,opacity:0.9})));
-scene.add(new THREE.Mesh(gu,new THREE.MeshStandardMaterial({color:'#2a2925',transparent:true,opacity:0.14,side:THREE.DoubleSide,flatShading:true,depthWrite:false})));
-scene.add(new THREE.LineSegments(new THREE.EdgesGeometry(gu,1),new THREE.LineBasicMaterial({color:'#2a2925',transparent:true,opacity:0.35})));
+scene.add(new THREE.Mesh(gl,new THREE.MeshStandardMaterial({color:'#3548cf',transparent:true,opacity:0.46,side:THREE.DoubleSide,flatShading:true,roughness:0.85})));
+scene.add(new THREE.LineSegments(new THREE.EdgesGeometry(gl,1),new THREE.LineBasicMaterial({color:'#0031a9',transparent:true,opacity:0.9})));
+scene.add(new THREE.Mesh(gu,new THREE.MeshStandardMaterial({color:'#1a1a1a',transparent:true,opacity:0.14,side:THREE.DoubleSide,flatShading:true,depthWrite:false})));
+scene.add(new THREE.LineSegments(new THREE.EdgesGeometry(gu,1),new THREE.LineBasicMaterial({color:'#1a1a1a',transparent:true,opacity:0.35})));
 // plane: projected Delaunay edges (lower faces flattened), points, projection lines
 const tri=[]; for(let i=0;i<lower.length;i+=9){const a=[lower[i],lower[i+1],0],b=[lower[i+3],lower[i+4],0],c=[lower[i+6],lower[i+7],0];tri.push(...a,...b,...b,...c,...c,...a);}
 const tg=new THREE.BufferGeometry(); tg.setAttribute('position',new THREE.Float32BufferAttribute(tri,3));
-scene.add(new THREE.LineSegments(tg,new THREE.LineBasicMaterial({color:'#af3a03'})));
-const sph=new THREE.SphereGeometry(0.024,16,12), red=new THREE.MeshStandardMaterial({color:'#9d0006'}), ink=new THREE.MeshStandardMaterial({color:'#04424d'});
+scene.add(new THREE.LineSegments(tg,new THREE.LineBasicMaterial({color:'#884900'})));
+const sph=new THREE.SphereGeometry(0.024,16,12), red=new THREE.MeshStandardMaterial({color:'#a60000'}), ink=new THREE.MeshStandardMaterial({color:'#0031a9'});
 for(const [x,y] of P2){const m=new THREE.Mesh(sph,red);m.position.set(x,y,0);scene.add(m);const u=new THREE.Mesh(sph,ink);u.position.copy(lift([x,y]));scene.add(u);}
 const dash=[]; for(const [x,y] of P2){dash.push(x,y,0,x,y,K*(x*x+y*y));}
 const dg=new THREE.BufferGeometry(); dg.setAttribute('position',new THREE.Float32BufferAttribute(dash,3));
-const dl2=new THREE.LineSegments(dg,new THREE.LineDashedMaterial({color:'#5c5850',dashSize:0.05,gapSize:0.035,transparent:true,opacity:0.7})); dl2.computeLineDistances(); scene.add(dl2);
+const dl2=new THREE.LineSegments(dg,new THREE.LineDashedMaterial({color:'#595959',dashSize:0.05,gapSize:0.035,transparent:true,opacity:0.7})); dl2.computeLineDistances(); scene.add(dl2);
 // faint plane grid
-const grid=new THREE.GridHelper(3.2,16,'#e6e0d2','#ece7db'); grid.rotation.x=Math.PI/2; grid.position.z=-0.002; scene.add(grid);
+const grid=new THREE.GridHelper(3.2,16,'#e7e1d4','#efe9dd'); grid.rotation.x=Math.PI/2; grid.position.z=-0.002; scene.add(grid);
 const r=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true}); r.setPixelRatio(1); r.setSize(W,H); document.body.appendChild(r.domElement); r.render(scene,cam); document.title='done';
 </script></body></html>

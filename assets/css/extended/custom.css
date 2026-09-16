@@ -1,21 +1,21 @@
-/* One scheme, light: "paper". Warm-white reading card on a faint warm-grey
-   ground, near-black ink, gruvbox accents (base16 gruvbox-light-medium:
-   base0D accent, base09 hot, base08 crit, base0B good). Code blocks are
-   PaperMod's default dark blocks, coloured by Chroma "gruvbox". */
+/* One scheme, light: Modus Operandi Tinted (Emacs modus-themes; WCAG AAA on
+   warm paper). bg-dim ground, bg-main card, fg-main ink, fg-dim meta; blue /
+   yellow / red / green for accent / hot / crit / good. Code blocks are
+   PaperMod's default dark blocks, coloured by Chroma "modus-vivendi". */
 :root {
-  --theme: #f4f0e6;           /* ground: page, header, home list */
-  --entry: #fffdf8;           /* reading card, post cards */
-  --primary: #1c1b19;         /* headings, strong */
-  --content: #2a2925;         /* body text */
-  --secondary: #5c5850;       /* meta */
-  --tertiary: #ece7db;        /* tag chips, hover fills */
-  --border: #d6cfc0;
-  --code-bg: #f4f0e6;         /* also the home-list ground in PaperMod */
-  --code-block-bg: #282828;   /* gruvbox dark bg0, matches Chroma "gruvbox" */
-  --ir-accent: #076678;       /* links, ToC, table heads, rules */
-  --ir-hot: #af3a03;          /* attention; also the Voronoi cell edges */
-  --ir-crit: #9d0006;         /* contrast / wrong; also the seed points */
-  --ir-good: #79740e;
+  --theme: #efe9dd;           /* bg-dim: page ground, header, home list */
+  --entry: #fbf7f0;           /* bg-main: reading card, post cards */
+  --primary: #000000;         /* fg-main: headings, strong */
+  --content: #1a1a1a;         /* body text */
+  --secondary: #595959;       /* fg-dim: meta */
+  --tertiary: #e7e1d4;        /* tag chips, hover fills */
+  --border: #cfc8bb;
+  --code-bg: #efe9dd;         /* also the home-list ground in PaperMod */
+  --code-block-bg: #000000;   /* modus-vivendi ground */
+  --ir-accent: #0031a9;       /* blue: links, ToC, table heads, rules */
+  --ir-hot: #6f5500;          /* yellow: attention; also the Voronoi cell edges */
+  --ir-crit: #a60000;         /* red: contrast / wrong; also the seed points */
+  --ir-good: #006800;
   /* PaperMod reserves this in .main's min-height; the identity block below
      the <footer> is extra, so the reservation has to grow with it. */
   --footer-height: 175px;

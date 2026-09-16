@@ -48,7 +48,7 @@ summaryLength = 30
   codeFences = true
   guessSyntax = false
   noClasses = true
-  style = "gruvbox"
+  style = "modus-vivendi"
 
 [markup.tableOfContents]
   startLevel = 2
@@ -61,7 +61,7 @@ summaryLength = 30
   keywords = ["mathematics", "computational geometry", "numerical analysis", "economics", "engineering"]
   DateFormat = "January 2, 2006"
   defaultTheme = "light"
-  disableThemeToggle = true   # one scheme: light "paper" with gruvbox accents
+  disableThemeToggle = true   # one scheme: Modus Operandi Tinted
   mainSections = ["posts"]
   disableSpecial1stPost = true   # every post gets the same card, incl. the newest
   math = true
@@ -80,8 +80,8 @@ summaryLength = 30
   showtoc = true
 
   [params.assets]
-    disableHLJS = true   # chroma handles highlighting (gruvbox, dark blocks = PaperMod default, noClasses)
-    theme_color = "#f4f0e6"
+    disableHLJS = true   # chroma handles highlighting (modus-vivendi, dark blocks = PaperMod default, noClasses)
+    theme_color = "#efe9dd"
     favicon = "/favicon.ico"
     favicon16x16 = "/favicon-16x16.png"
     favicon32x32 = "/favicon-32x32.png"
