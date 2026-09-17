@@ -1,3 +1,4 @@
+<div class="subscribe-band">{{ partial "subscribe.html" . }}</div>
 {{- with site.Params.profile }}
 {{- $name := .name }}
 <div class="footer-identity">
@@ -9,3 +10,8 @@
   </div>
 </div>
 {{- end }}
+<div class="footer-legal">
+  <span>{{ site.Copyright | markdownify }}</span> ·
+  <span>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a> &amp;
+  <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a></span>
+</div>

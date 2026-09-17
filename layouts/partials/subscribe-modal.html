@@ -1,0 +1,31 @@
+{{- /* End-of-post subscribe dialog. Disable with `subscribeModal = false` in
+       hugo.toml. Native <dialog>: focus trap + Esc for free, no dependency. */}}
+<div id="post-end"></div>
+<dialog id="subscribe-modal">
+  <button class="subscribe-close" aria-label="Close">&times;</button>
+  <h3>Thanks for reading to the end.</h3>
+  {{ partial "subscribe.html" . }}
+</dialog>
+<script>
+  (() => {
+    const dlg = document.getElementById('subscribe-modal');
+    const KEY = 'subscribe-dismissed';
+    if (!dlg || localStorage.getItem(KEY)) return;
+    dlg.querySelector('.subscribe-close').onclick = () => dlg.close();
+    dlg.addEventListener('close', () => {
+      localStorage.setItem(KEY, '1');           // once per visitor, not per page
+      document.body.classList.remove('modal-open');
+    });
+    // plain scroll check: IntersectionObserver only fires on *changes*, so an
+    // instant jump past the sentinel (deep link, Ctrl+End) never triggers it
+    const end = document.getElementById('post-end');
+    const check = () => {
+      if (scrollY < 100 || end.getBoundingClientRect().top > innerHeight) return;
+      removeEventListener('scroll', check);
+      document.body.classList.add('modal-open');
+      dlg.showModal();
+    };
+    addEventListener('scroll', check, { passive: true });
+    check();
+  })();
+</script>

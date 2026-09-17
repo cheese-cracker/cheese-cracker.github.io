@@ -1,0 +1,10 @@
+{{- with site.Params.substack }}
+<form class="subscribe" action="https://{{ . }}.substack.com/api/v1/free?nojs=true"
+      method="post" target="_blank">
+  <span class="subscribe-pitch">New posts, occasionally. No spam.</span>
+  <span class="subscribe-row">
+    <input type="email" name="email" placeholder="you@domain" aria-label="Email address" autocomplete="email" required>
+    <button type="submit">subscribe</button>
+  </span>
+</form>
+{{- end }}

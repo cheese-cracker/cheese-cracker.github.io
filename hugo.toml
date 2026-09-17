@@ -56,6 +56,8 @@ summaryLength = 30
   ordered = false
 
 [params]
+  substack = "chinmayhebbar"    # publication handle -> https://<handle>.substack.com
+  subscribeModal = true         # end-of-post blur + subscribe dialog; false to disable
   author = "Chinmay Hebbar"
   description = "A place for interesting ideas, notes and blogposts"
   keywords = ["mathematics", "computational geometry", "numerical analysis", "economics", "engineering"]

@@ -197,3 +197,93 @@ body {
 /* list entries: same treatment so the feed and the article agree */
 .post-entry .entry-header h2 { color: var(--ir-title); }
 .post-entry:hover .entry-header h2 { color: var(--ir-accent); }
+
+/* ── subscribe (Substack list-only, plain form POST) ──────────────────── */
+.subscribe {
+  display: flex; flex-direction: column; gap: 8px;
+  margin: calc(var(--gap) * 1.5) 0 var(--gap);
+  padding: 16px 18px;
+  background: var(--ir-tint);
+  border: 1px solid var(--ir-edge);
+  border-radius: var(--radius);
+}
+.subscribe-pitch { font-size: 15px; color: var(--secondary); }
+.subscribe-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.subscribe input[type=email] {
+  flex: 1 1 14rem; min-width: 0;
+  padding: 8px 10px;
+  font: inherit; font-size: 15px;
+  color: var(--content);
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.subscribe input[type=email]:focus-visible {
+  outline: 2px solid var(--ir-accent); outline-offset: 1px; border-color: var(--ir-accent);
+}
+.subscribe button {
+  padding: 8px 16px;
+  font: inherit; font-size: 15px; font-weight: 600;
+  color: var(--entry); background: var(--ir-accent);
+  border: 0; border-radius: 4px; cursor: pointer;
+}
+.subscribe button:hover { background: var(--primary); }
+
+
+/* theme's copyright block is re-emitted at the very bottom by extend_footer */
+body > footer.footer { display: none; }
+.footer-legal {
+  max-width: calc(var(--main-width) + var(--gap) * 2);
+  margin: 0 auto; padding: 10px var(--gap) 28px;
+  text-align: center; font-size: 12px; color: var(--secondary);
+}
+.footer-legal a { color: inherit; text-decoration: underline; text-underline-offset: .25rem; }
+
+/* footer form: solid card, below the divider, ahead of the identity block */
+.subscribe-band {
+  border-top: 1px solid var(--border);
+  margin-top: var(--gap);
+  padding-top: calc(var(--gap) * 1.1);
+}
+.subscribe {
+  align-items: center;
+  margin: 0 auto 4px;
+  max-width: 34rem;
+  background: var(--entry);            /* solid card, not a tint */
+  border: 2px solid var(--ir-accent);
+  box-shadow: 0 2px 0 var(--border);
+}
+.subscribe-row { justify-content: center; }
+.subscribe-pitch { color: var(--primary); font-weight: 600; }
+/* one divider in the footer, and it belongs above the form */
+.footer-identity { border-top: 0; }
+
+/* newest post gets a one-line nudge, not a form */
+.subscribe-note {
+  margin-top: calc(var(--gap) * 1.2);
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 15px; color: var(--secondary);
+}
+
+/* ── end-of-article subscribe dialog ─────────────────────────────────── */
+#subscribe-modal {
+  border: 2px solid var(--ir-accent);
+  border-radius: var(--radius);
+  background: var(--entry);
+  color: var(--content);
+  padding: 22px 24px 20px;
+  max-width: 30rem; width: calc(100% - 2 * var(--gap));
+  box-shadow: 0 8px 24px rgb(0 0 0 / .18);
+}
+#subscribe-modal::backdrop { background: rgb(0 0 0 / .35); }
+#subscribe-modal h3 { margin: 0 0 4px; font-size: 18px; color: var(--primary); }
+#subscribe-modal .subscribe { border: 0; box-shadow: none; background: none; padding: 8px 0 0; max-width: none; }
+.subscribe-close {
+  position: absolute; top: 6px; right: 10px;
+  background: none; border: 0; cursor: pointer;
+  font-size: 22px; line-height: 1; color: var(--secondary);
+}
+#post-end { height: 1px; }   /* zero-area elements are unreliable for IntersectionObserver */
+/* delete this one rule to drop the blur and keep the plain modal */
+body.modal-open > *:not(dialog) { filter: blur(3px); }

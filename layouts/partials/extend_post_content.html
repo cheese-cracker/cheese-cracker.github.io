@@ -1,0 +1,8 @@
+{{- if and (eq .Section "posts") site.Params.substack }}
+{{- $latest := index (where site.RegularPages "Section" "posts").ByDate.Reverse 0 }}
+{{- if and $latest (eq $.Permalink $latest.Permalink) }}
+<p class="subscribe-note">If you like this, consider
+  <a href="https://{{ site.Params.substack }}.substack.com/subscribe">subscribing to my email list</a>!</p>
+{{- end }}
+{{- if site.Params.subscribeModal }}{{ partial "subscribe-modal.html" . }}{{ end }}
+{{- end }}
