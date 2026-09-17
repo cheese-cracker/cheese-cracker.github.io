@@ -112,9 +112,10 @@ cover:
 :where(.post-content) .jstrip i b{display:block;height:100%;width:0;background:var(--accent);}
 :where(.post-content) .walkwrap{position:relative;}
 :where(.post-content) .walkwrap.locked>.viz{filter:blur(3px);opacity:.5;pointer-events:none;user-select:none;}
-:where(.post-content) .walkwrap .lock{display:none;position:absolute;inset:0;place-items:center;font-family:'Fira Sans',system-ui,sans-serif;font-size:.95rem;color:var(--ink-2);}
+:where(.post-content) .walkwrap .lock{display:none;position:absolute;inset:0;place-items:center;align-content:center;gap:10px;font-family:'Fira Sans',system-ui,sans-serif;font-size:.95rem;color:var(--ink-2);}
 :where(.post-content) .walkwrap.locked .lock{display:grid;}
 :where(.post-content) .walkwrap .lock button{font-size:1rem;padding:10px 20px;box-shadow:0 4px 16px rgba(0,0,0,.12);}
+:where(.post-content) .walkwrap .lock .lockhint{font-size:.85rem;color:var(--ink-2);background:var(--paper);padding:3px 10px;border-radius:999px;text-align:center;}
 :where(.post-content) .tb-play, :where(.post-content) .lockrun, :where(.post-content) .play1{background-image:linear-gradient(90deg,rgba(0,0,0,.28) var(--p,0%),transparent var(--p,0%));}
 :where(.post-content) .mat text{font-family:'Fira Code',ui-monospace,Menlo,monospace;font-size:9.5px;fill:var(--ink-1);}
 :where(.post-content) .mat .op{font-family:'Fira Sans',system-ui,sans-serif;font-size:16px;fill:var(--ink-2);}
@@ -361,7 +362,7 @@ of paper pushed through the same blocks.</p>
 <span>dashed line = the readout's one straight cut</span>
 <span>frame ± = how far the plane has been stretched</span>
 </div></div>
-<div class="lock"><button class="primary lockrun" type="button">▶ run the training</button></div></div>
+<div class="lock"><button class="primary lockrun" type="button">▶ run the training</button><span class="lockhint">the views below unlock once the 500 steps finish</span></div></div>
 <div class="note"><b>What you are looking at.</b> The actual x<sub>out</sub> of every point after k blocks, plotted on a plane.<br>Follow the trace lines: the basic neural network re-maps the whole plane at every block (x ← f(x)), so points jump and pile up; the ResNet only nudges each point a little from where it was (x ← x + f(x)), so the sheet stays a sheet.</div>
 </section>
 
@@ -1186,7 +1187,8 @@ function render(){
   d3.selectAll('.tb-steps').text(steps); d3.selectAll('.tb-play,.lockrun').style('--p',(100*steps/MAX_STEPS)+'%');
   const done=steps>=MAX_STEPS; d3.selectAll('.tb-play').property('disabled',done); d3.selectAll('.tb-step').property('disabled',done);
   d3.select('#walkwrap').classed('locked',!done);   // the after-k-blocks walk waits for a finished run; its button runs it
-  d3.select('.lockrun').property('disabled',playing).text(playing?'training · '+steps+' / '+MAX_STEPS:steps>0?'▶ run the training · '+steps+' / '+MAX_STEPS+' done':'▶ run the training');
+  d3.select('.lockrun').property('disabled',playing).text(playing?'training · '+steps+' / '+MAX_STEPS:steps>0?'▶ resume · '+steps+' / '+MAX_STEPS:'▶ run the training');
+  d3.select('.lockhint').text(playing?'these views unlock when the '+MAX_STEPS+' steps finish':steps>0?'paused at '+steps+' · click to finish the run and unlock':'the views below unlock once the '+MAX_STEPS+' steps finish');
   if(done&&!walkUnlocked){ walkUnlocked=true; startWalk(); } else if(!done&&walkUnlocked){ walkUnlocked=false; stopWalk(); }
   d3.selectAll('.whichName').text(which==='res'?'ResNet':'basic neural network');
 }
@@ -1208,7 +1210,7 @@ function renderWalk(){
   d3.select('#journey .jwalk').text(walking?'❚❚ stop':'▶ walk');
 }
 function loop(){ if(!playing) return; for(let i=0;i<STEPS_PER_FRAME;i++) step(); render(); if(steps>=MAX_STEPS){ setPlaying(false); render(); return;} requestAnimationFrame(loop); }
-function setPlaying(p){ playing=p; d3.selectAll('.tb-play').text(p?'❚❚ pause':'▶ train'); if(p) requestAnimationFrame(loop); }
+function setPlaying(p){ playing=p; d3.selectAll('.tb-play').text(p?'❚❚ pause':'▶ train'); if(p) requestAnimationFrame(loop); else render(); }
 let playing1=false;
 function loop1(){ if(!playing1) return; for(let i=0;i<STEPS_PER_FRAME;i++) step1(); render1(); if(steps1>=MAX_STEPS){setPlaying1(false); return;} requestAnimationFrame(loop1); }
 function setPlaying1(p){ playing1=p; d3.selectAll('.play1').text(p?'❚❚ pause':'▶ train'); if(p) requestAnimationFrame(loop1); }
